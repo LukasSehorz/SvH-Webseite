@@ -1,0 +1,331 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #001a23;
+  --color-ink-deep: #0a1015;
+  --color-muted: #4b585d;
+  --color-brand: #0092d4;
+  --color-brand-bright: #00bcff;
+  --color-brand-deep: #0074ab;
+  --color-tint-1: #b6eaff;
+  --color-tint-2: #def4ff;
+  --color-tint-3: #effaff;
+  --color-paper: #fcfeff;
+
+  --font-serif: var(--font-newsreader), "Times New Roman", serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius-card: 28px;
+  --radius-slab: 40px;
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  --shell: 1280px;
+  --gutter: 24px;
+  --section-y: 120px;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --section-y: 72px;
+  }
+}
+
+/* Die Referenz laesst dem Inhalt auf dem Telefon nur 16px Rand. */
+@media (max-width: 640px) {
+  :root {
+    --gutter: 16px;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-optical-sizing: auto;
+  color: var(--color-ink);
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-tint-1);
+  color: var(--color-ink);
+}
+
+/* ---------- Layout-Bausteine ---------- */
+
+/*
+ * `--shell` ist die Breite des INHALTS, nicht die der Box: die Referenz stellt
+ * bei 1440px eine 1280px breite Spalte (Rand 80px). Der Innenabstand kommt also
+ * oben drauf und greift erst, wenn das Fenster schmaler wird.
+ */
+.shell {
+  width: 100%;
+  max-width: calc(var(--shell) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+/* ---------- Typo-Skalen (fluid, entspricht der Referenz bei 1440px) ---------- */
+
+.t-hero {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(38px, 4.86vw, 70px);
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+}
+
+.t-slab {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(40px, 6.04vw, 87px);
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+}
+
+.t-h2 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(34px, 3.75vw, 54px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.t-h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(24px, 2.22vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.t-num {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  line-height: 0.75;
+  letter-spacing: -0.02em;
+}
+
+.t-eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.t-body {
+  color: var(--color-muted);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.t-lead {
+  color: var(--color-muted);
+  font-size: clamp(17px, 1.39vw, 20px);
+  line-height: 1.55;
+}
+
+/* ---------- Flächen ---------- */
+
+.slab {
+  border-radius: var(--radius-slab);
+  background: linear-gradient(180deg, #00a6e8 0%, #0092d4 55%, #7ed4f5 100%);
+  color: #fff;
+  overflow: hidden;
+  position: relative;
+}
+
+.slab h1,
+.slab h2,
+.slab h3 {
+  color: #fff;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid rgba(0, 26, 35, 0.06);
+  border-radius: var(--radius-card);
+  box-shadow:
+    0 1px 2px rgba(0, 26, 35, 0.04),
+    0 12px 32px -16px rgba(0, 26, 35, 0.12);
+}
+
+.card-hover {
+  transition:
+    transform 0.28s var(--ease-out-expo),
+    box-shadow 0.28s var(--ease-out-expo),
+    border-color 0.28s var(--ease-out-expo);
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+  border-color: var(--color-tint-1);
+  box-shadow:
+    0 2px 4px rgba(0, 26, 35, 0.05),
+    0 28px 60px -28px rgba(0, 146, 212, 0.35);
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 56px;
+  padding-inline: 32px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+  transition:
+    transform 0.25s var(--ease-out-expo),
+    box-shadow 0.25s var(--ease-out-expo),
+    filter 0.25s var(--ease-out-expo);
+}
+
+.btn-dark {
+  color: #fff;
+  background: linear-gradient(160deg, #0a1015 0%, #001a23 45%, #0b3a4e 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 10px 30px -12px rgba(0, 146, 212, 0.55);
+}
+
+.btn-dark:hover {
+  transform: translateY(-2px) scale(1.015);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 18px 44px -14px rgba(0, 146, 212, 0.75);
+}
+
+.btn-light {
+  color: var(--color-ink);
+  background: linear-gradient(180deg, #ffffff 0%, #def4ff 100%);
+  border: 1px solid var(--color-tint-1);
+  box-shadow: 0 8px 24px -14px rgba(0, 146, 212, 0.45);
+}
+
+.btn-light:hover {
+  transform: translateY(-2px) scale(1.015);
+  border-color: var(--color-brand-bright);
+  filter: brightness(1.03);
+}
+
+.btn-sm {
+  height: 44px;
+  padding-inline: 22px;
+  font-size: 15px;
+}
+
+/* ---------- Utility ---------- */
+
+.mask-fade-x {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+
+/* Karten der Leistungsübersicht: Text + Mockup, abwechselnd seitenverkehrt */
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+@media (min-width: 900px) {
+  .overview-grid {
+    grid-template-columns: 1.05fr 1fr;
+    gap: 44px;
+    align-items: center;
+  }
+  .overview-mock.is-left {
+    order: -1;
+  }
+}
+
+.grid-dots {
+  background-image: radial-gradient(circle at center, rgba(0, 146, 212, 0.18) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -1,0 +1,30 @@
+# Abhängigkeiten
+/node_modules
+/.pnp
+.pnp.*
+
+# Next.js
+/.next/
+/out/
+/build
+next-env.d.ts
+*.tsbuildinfo
+
+# Laufzeit / Protokolle
+dev.log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Zugangsdaten
+.env
+.env.*
+!.env.example
+
+# Prüf-Screenshots (lokal, mehrere hundert MB)
+/_ref/shots/
+
+# Betriebssystem
+.DS_Store
+Thumbs.db
