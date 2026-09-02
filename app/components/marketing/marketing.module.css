@@ -2962,11 +2962,30 @@
    vier Fenster auf DENSELBEN Fluchtpunkt drehen. Steht sie am Rahmen,
    hat jeder seinen eigenen, und die Reihe faellt in vier Richtungen
    auseinander. */
+/* Die Fenster fahren an beiden Raendern des Bildes vorbei, und dort
+   schnitt die Kante des Fensters sie hart ab. Ein Lauf, der sichtbar
+   ueber den Rand hinausgeht, braucht einen weichen Auslauf, sonst wirkt
+   er abgeschnitten statt fortgesetzt. Achtzig Bildpunkte reichen dafuer
+   und nehmen dem mittleren Fenster nichts weg. */
 .scViewport {
   position: relative;
   width: 100%;
   perspective: 1800px;
   perspective-origin: 50% 50%;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 80px,
+    #000 calc(100% - 80px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 80px,
+    #000 calc(100% - 80px),
+    transparent 100%
+  );
 }
 
 .scTrack {

@@ -85,13 +85,14 @@ export default function WebseitenPage() {
               <p className={s.heroLead}>{c.hero.lead}</p>
 
               <div className={s.heroActions}>
-                {/* M12. Die Handlungsfarbe steht hier und im Abschluss. */}
-                <Link className={s.act} href={c.hero.cta.href}>
+                {/* Eine Hauptform fuer die eine Handlung. Die Farbe dieser
+                    Seite kommt aus den Knopfvariablen an .page. */}
+                <Link className="btn-solid" href={c.hero.cta.href}>
                   {c.hero.cta.label}
                   <ArrowIcon size={15} />
                 </Link>
-                <a className={s.quiet} href={c.hero.secondary.href}>
-                  <span>{c.hero.secondary.label}</span>
+                <a className="btn-dash" href={c.hero.secondary.href}>
+                  {c.hero.secondary.label}
                 </a>
               </div>
             </div>
@@ -181,12 +182,12 @@ export default function WebseitenPage() {
               </h2>
               <p className={s.closeLead}>{c.close.lead}</p>
               <div className={s.closeActions}>
-                <Link className={s.act} href={c.close.cta.href}>
+                <Link className="btn-solid" href={c.close.cta.href}>
                   {c.close.cta.label}
                   <ArrowIcon size={15} />
                 </Link>
-                <Link className={s.quiet} href={c.close.secondary.href}>
-                  <span>{c.close.secondary.label}</span>
+                <Link className="btn-dash" href={c.close.secondary.href}>
+                  {c.close.secondary.label}
                 </Link>
               </div>
             </Fade>

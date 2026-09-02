@@ -20,6 +20,16 @@
    ===================================================================== */
 
 .page {
+  /* Die Handlungsfarbe dieser Seite. Sie steht nicht mehr in einer eigenen
+     Knopfform, sondern faerbt die eine globale Hauptform btn-solid. Die
+     Schrift steht in fast Schwarz, denn Weisz erreicht auf diesem Verlauf
+     nur 3,3 zu eins. Der Rand bleibt unsichtbar, weil eine Fuellung aus
+     einem Verlauf keine Randfarbe hergibt. */
+  --btn-fill: linear-gradient(92deg, #5b8cff 0%, #7c6aff 100%);
+  --btn-fill-hover: linear-gradient(92deg, #6f9bff 0%, #8b7bff 100%);
+  --btn-edge: transparent;
+  --btn-edge-hover: transparent;
+  --btn-ink: #050507;
   --tone-blue: #5b8cff;
   --tone-mid: #6a7cff;
   --tone-violet: #7c6aff;
@@ -179,12 +189,28 @@
   background: var(--tone);
 }
 
+/* Die Beizeile des Spots. Sie stand auf 6,2cqmin, und weil cqmin in den
+   schmalen Bandkacheln die kurze Seite misst, waren daraus gemessene 4,9
+   Bildpunkte geworden. Das ist keine Schrift mehr, das ist ein Muster.
+   Sie haengt jetzt an der Breite und traegt eine Untergrenze von neun
+   Bildpunkten. */
 .spotLine {
   font-family: var(--font-sans);
-  font-size: 6.2cqmin;
+  font-size: max(9px, 4cqw);
   line-height: 1.25;
   font-weight: 500;
   color: #3b3358;
+}
+
+/* Unter dieser Behaeltergroesze traegt der Spot nur noch Wort und Fusz.
+   Eine Zeile, die dort auf ihre Untergrenze faellt, waere breiter als
+   die helle Flaeche und wuerde vier- oder fuenfmal umbrechen. Weg ist
+   besser als unleserlich. */
+@container (max-width: 168px) {
+  .spotLine,
+  .spotRule {
+    display: none;
+  }
 }
 
 .spotFoot {
@@ -375,10 +401,19 @@
 
 /* M15. Der Grund wechselt auf die zweite dunkle Ebene. Keine Karten und
    keine Rahmen, nur drei Zeilen und je ein ruhiges Zeichen. */
+/* Die zweite dunkle Ebene setzte frueher mit einer Haarlinie und einem
+   Sprung in der Helligkeit an. Gemessen lag die Kante als gerade Linie
+   quer durch das Bild, und der Hero endete dort wie abgeschnitten. Der
+   Wechsel laeuft jetzt oben wie unten ueber 120 Bildpunkte. Die Kante
+   ist damit weg und die Ebene trotzdem zu erkennen. */
 .gruende {
-  background: var(--deep);
-  border-top: 1px solid var(--line-2);
-  border-bottom: 1px solid var(--line-2);
+  background: linear-gradient(
+    180deg,
+    #050507 0px,
+    var(--deep) 120px,
+    var(--deep) calc(100% - 120px),
+    #050507 100%
+  );
   padding-block: clamp(88px, 11vw, 164px);
 }
 
@@ -527,11 +562,17 @@
 
 /* M14. Waagerechtes Band aus Beispielen, ziehbar mit Maus und Finger und
    mit der Tastatur erreichbar. */
+/* Die zweite dunkle Ebene, mit demselben weichen Ansatz wie bei den
+   Gruenden. Siehe dort. */
 .band {
   padding-block: clamp(52px, 6.5vw, 92px);
-  background: var(--deep);
-  border-top: 1px solid var(--line-2);
-  border-bottom: 1px solid var(--line-2);
+  background: linear-gradient(
+    180deg,
+    #050507 0px,
+    var(--deep) 120px,
+    var(--deep) calc(100% - 120px),
+    #050507 100%
+  );
 }
 
 /* Der Hinweis am Band ist ein ganzer Satz und steht deshalb heller als
@@ -621,41 +662,21 @@
 
 /* Die gezeichneten Kacheln zeigen den Spot auf einer angedeuteten Tafel
    im Raum, damit sie neben den Fotos nicht als Grafik herausfallen. */
-.bandSpotWrap {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:
-    radial-gradient(ellipse 60% 46% at 50% 96%, rgba(91, 140, 255, 0.24), transparent 70%),
-    linear-gradient(168deg, #121223 0%, #08080f 100%);
-}
-
-.bandSpotScreen {
-  position: relative;
-  width: 34%;
-  aspect-ratio: 9 / 15.5;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow:
-    0 0 0 3px #14141f,
-    0 0 34px rgba(124, 106, 255, 0.42);
-}
-
-.bandText {
-  margin-top: 16px;
-  max-width: 32ch;
-}
-
+/* Die Ortsart steht als Erstes unter dem Bild und liegt damit auf jeder
+   Kachel auf derselben Hoehe, gleich wie lang der Satz darunter wird. */
 .bandOrt {
-  margin-top: 8px;
+  margin-top: 16px;
   font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--tone-lav);
+}
+
+.bandText {
+  margin-top: 8px;
+  max-width: 32ch;
 }
 
 /* --------------------------------------------- S4 Was auf der Tafel laeuft */
@@ -691,7 +712,11 @@
   transform-origin: 50% 240%;
   /* Im geschlossenen Zustand liegen die Karten leicht versetzt
      uebereinander wie ein Stapel und nicht deckungsgleich. */
-  transform: rotate(calc((var(--a0) + (var(--a) - var(--a0)) * var(--fan, 0)) * 1deg));
+  transform: rotate(
+    calc(
+      (var(--a0) + (var(--a) - var(--a0)) * var(--fan, 0)) * var(--fan-weite, 1) * 1deg
+    )
+  );
   /* Ein leiser dunkler Verlauf ueber dem Ton gibt der Karte Koerper und
      haelt sie zugleich unter der Helligkeit des Schirms. */
   background:
@@ -699,11 +724,29 @@
     var(--tone);
   color: #0d0820;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 16px 15px 18px;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 12px;
   box-shadow: 0 26px 50px -22px rgba(0, 0, 0, 0.85);
+}
+
+/* Zeichen und Wort drehen gegen die Karte zurueck und stehen dadurch
+   aufrecht, waehrend der Faecher aufgeht. Vorher kippten sie mit, und in
+   den beiden aeuszeren Karten stand das Wort um vierzig Grad geneigt
+   ueber der oberen Kante. Der Anker liegt in der Mitte der Karte, denn
+   ein Inhalt, der oben links haengt, schwingt beim Drehen am weitesten
+   aus. */
+.fanInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  transform: rotate(
+    calc(
+      (var(--a0) + (var(--a) - var(--a0)) * var(--fan, 0)) * var(--fan-weite, 1) * -1deg
+    )
+  );
 }
 
 .fanIcon {
@@ -724,6 +767,42 @@
   letter-spacing: -0.015em;
 }
 
+/* Der Faecher auf schmalen Schirmen.
+
+   Bei vollem Winkel reichte die aeuszere Karte bei 390 Bildpunkten bis
+   469 und schob die Seite um 89 Bildpunkte zur Seite. Nur den Winkel zu
+   verkleinern hilft nicht, denn dann liegen die vier Karten so dicht
+   uebereinander, dass drei Woerter verdeckt sind. Vier Karten auf einem
+   Bogen brauchen ungefaehr die vierfache Kartenbreite an Platz, also
+   wird die Karte schmaler und der Winkel bleibt fast voll. Gerechnet mit
+   74 Bildpunkten Breite und dem Faktor 0,88 endet die aeuszere Karte bei
+   367 von 380 verfuegbaren, und zwischen zwei Kartenmitten liegen 78
+   Bildpunkte bei 74 Bildpunkten Breite, sie beruehren sich also gerade
+   nicht. */
+@media (max-width: 560px) {
+  .fanWrap {
+    --fan-weite: 0.88;
+  }
+
+  .fanCard {
+    width: 74px;
+    padding: 12px 6px;
+  }
+
+  .fanInner {
+    gap: 8px;
+  }
+
+  .fanIcon {
+    width: 19px;
+    height: 19px;
+  }
+
+  .fanWord {
+    font-size: 13px;
+  }
+}
+
 .fanNote {
   margin-top: clamp(26px, 3vw, 40px);
   text-align: center;
@@ -740,15 +819,20 @@
   margin-top: clamp(64px, 8vw, 118px);
 }
 
-/* M12. Die helle Textkarte ueberlappt die dunkle Medienkarte um wenige
-   Bildpunkte. Sie ist das einzige helle Band der ganzen Seite und bleibt
-   dabei messbar dunkler als der Schirm. */
+/* M12. Die Textkarte ueberlappt die Medienkarte um wenige Bildpunkte.
+   Sie stand einmal auf einem hellen Grau und war damit die einzige helle
+   Flaeche der Seite auszer dem Schirm. Gemessen erreichte ihre Ueberschrift
+   darauf nur 3,9 zu eins, und im Gesamtbild sah die Karte aus, als waere
+   sie aus einer anderen Seite herueberkopiert. Sie steht jetzt im Dunkeln
+   wie alles andere. Ihr Grund liegt eine Stufe ueber dem der Medienkarte
+   daneben, dazu eine Haarlinie, damit die Ueberlappung sichtbar bleibt. */
 .lichtKarte {
   position: relative;
   z-index: 2;
   margin-right: -18px;
-  background: var(--light-card);
-  color: var(--light-ink);
+  background: #13131e;
+  border: 1px solid var(--line);
+  color: var(--ink);
   border-radius: 24px;
   padding: clamp(28px, 3vw, 42px) clamp(26px, 2.8vw, 40px);
   box-shadow: 0 34px 70px -30px rgba(0, 0, 0, 0.9);
@@ -761,15 +845,16 @@
   line-height: 1.14;
   letter-spacing: -0.02em;
   margin: 0;
-  color: #0b0b12;
+  color: var(--ink);
 }
 
+/* Gemessen 11,0 zu eins auf diesem Grund. */
 .lichtBody {
   margin: 16px 0 0;
   font-family: var(--font-sans);
   font-size: 15.5px;
   line-height: 1.6;
-  color: #2c2c40;
+  color: var(--ink-2);
   max-width: 40ch;
 }
 
@@ -848,9 +933,13 @@
 /* ------------------------------------------------------ S5 So laeuft es ab */
 
 .ablauf {
-  background: var(--deep);
-  border-top: 1px solid var(--line-2);
-  border-bottom: 1px solid var(--line-2);
+  background: linear-gradient(
+    180deg,
+    #050507 0px,
+    var(--deep) 120px,
+    var(--deep) calc(100% - 120px),
+    #050507 100%
+  );
   padding-block: clamp(96px, 12vw, 172px);
 }
 
@@ -1090,34 +1179,11 @@
   text-wrap: balance;
 }
 
-/* Der einzige gefuellte Knopf der ganzen Seite. Die Schrift steht in fast
-   Schwarz, denn Weisz erreicht auf diesem Verlauf nur 3,3 zu eins. */
-.cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+/* Hier stand eine eigene Knopfform mit eigener Hoehe und eigenem Schatten.
+   Sie ist entfallen, es gilt btn-solid aus globals.css. Was von ihr
+   bleibt, ist der Abstand nach oben. */
+.ctaAbstand {
   margin-top: 38px;
-  height: 56px;
-  padding-inline: 32px;
-  border-radius: 9999px;
-  background: linear-gradient(92deg, var(--tone-blue) 0%, var(--tone-violet) 100%);
-  color: #050507;
-  font-family: var(--font-sans);
-  font-size: 15.5px;
-  font-weight: 600;
-  letter-spacing: -0.005em;
-  box-shadow: 0 20px 44px -20px rgba(91, 140, 255, 0.7);
-  transition:
-    transform 0.35s var(--ease-out-expo),
-    box-shadow 0.35s var(--ease-out-expo);
-}
-
-.cta:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 24px 54px -20px rgba(185, 165, 255, 0.85),
-    0 0 36px rgba(185, 165, 255, 0.42);
 }
 
 .abschlussNote {

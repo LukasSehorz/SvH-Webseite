@@ -112,7 +112,7 @@ export default function Hero() {
                   key={value}
                   className="t-label hero-value"
                   style={
-                    { "--d": `${0.5 + index * 0.14}s` } as React.CSSProperties
+                    { "--d": `${0.5 + index * 0.08}s` } as React.CSSProperties
                   }
                 >
                   {value}
@@ -177,7 +177,14 @@ export default function Hero() {
         }
 
         /* Die Werte sind der Gewinn des geordneten Zustands. Sie steigen
-           nacheinander auf und gehen gemeinsam wieder. */
+           nacheinander auf und gehen gemeinsam wieder.
+
+           Sie standen als t-label auf elf Bildpunkten in einem Ton, der
+           gemessen 3,2 zu eins erreichte, und waren damit das leiseste
+           Element des ersten Bildschirms. Drei Woerter, die unsere Arbeit
+           beschreiben, duerfen nicht leiser stehen als die Bildunterschrift
+           darueber. Sie tragen jetzt dreizehn Bildpunkte in der zweiten
+           Tonstufe. */
         .hero-values {
           display: flex;
           flex-wrap: wrap;
@@ -189,7 +196,9 @@ export default function Hero() {
         }
 
         .hero-value {
-          color: rgba(226, 230, 255, 0.7);
+          font-size: 13px;
+          letter-spacing: 0.08em;
+          color: var(--ink-2);
           opacity: 0;
           transform: translateY(5px);
           transition:
@@ -220,7 +229,7 @@ export default function Hero() {
 
         @media (max-width: 640px) {
           .hero-value {
-            font-size: 10px;
+            font-size: 11.5px;
             letter-spacing: 0.07em;
           }
 

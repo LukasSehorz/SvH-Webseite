@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "../components/system/Navbar";
 import Footer from "../components/system/Footer";
 import ContactCards from "../components/pages/ContactCards";
-import ContactForm from "../components/pages/ContactForm";
+import ContactDirect from "../components/pages/ContactDirect";
 import ContactDetails from "../components/pages/ContactDetails";
 import { contactPage, meta } from "../copy";
 import { SplitHeadline } from "../components/system/ui";
@@ -36,7 +36,12 @@ export default function ContactPage() {
 
         <ContactCards />
 
-        <ContactForm />
+        {/* Statt des Formulars stehen hier Telefon und E-Mail. Die
+            Komponente ContactForm bleibt gebaut und ungerendert, weil der
+            Empfaenger noch nicht feststeht und eine Erfolgsmeldung ohne
+            Versand eine Luege waere. Sobald der Versand angebunden ist,
+            wird ContactDirect wieder gegen ContactForm getauscht. */}
+        <ContactDirect />
 
         <ContactDetails />
       </main>

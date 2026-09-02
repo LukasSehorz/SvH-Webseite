@@ -77,8 +77,59 @@ Ergebnis, gemessen:
 | `innnatur-hero.webp` | 1200 x 750 | 58 KB |
 | `innnatur-voll.webp` | 1400 x 6860 | 127 KB |
 
-Alle acht Dateien zusammen wiegen rund 1,0 Megabyte statt der rund 50
-Megabyte der Rohaufnahmen. Die vier ganzseitigen Aufnahmen werden
-auszerdem erst geholt, wenn die Sektion in die Naehe kommt, und auf
-Schirmen unter 860 Bildpunkten Breite gar nicht, dort steht nur der
-Kopfbereich.
+Die vier ganzseitigen Aufnahmen werden erst geholt, wenn die Sektion in
+die Naehe kommt, und auf Schirmen unter 860 Bildpunkten Breite gar
+nicht, dort steht nur der Kopfbereich.
+
+## Neuaufnahme der ganzen Seiten am 02.09.2026
+
+Die Gesamtpruefung vor dem Livegang hat die vier ganzseitigen Aufnahmen
+beanstandet. Sie waren zu 65 bis 74 Prozent strukturlos, denn das erste
+Skript hat nur 600 Bildpunkte weit angescrollt und wieder zurueck. Die
+Kundenseiten blenden ihre Abschnitte beim Erreichen ein, und was nie
+erreicht wurde, blieb unsichtbar. Im Referenzfenster der Unterseite
+Webseiten lief deshalb ueber weite Strecken eine leere Flaeche durch.
+
+Die Neuaufnahme steht in `_ref3/projekte-voll.mjs`. Sie faehrt in
+Schritten von 380 Bildpunkten mit je 150 Millisekunden Pause bis ganz
+nach unten, wartet dort, faehrt zurueck nach oben und wartet danach
+noch drei Sekunden. Erst dann wird ausgeloest. Das Skript kann die
+Einblendungen zusaetzlich per Stil erzwingen, und diese zweite Fassung
+ist verworfen: bei brandhuber.gmbh stand danach das Aufklappmenue der
+Kundenseite offen im Bild. Der Durchlauf allein genuegt.
+
+Gemessen wird mit `_ref3/leeranteil.mjs`. Das Bild geht auf 350
+Bildpunkte Breite in Graustufen und wird in Baender von 16 Zeilen
+geteilt. Ein Band gilt als leer, wenn seine Standardabweichung unter
+acht liegt. Der Leeranteil allein sagt wenig, denn Ruhe zwischen zwei
+Abschnitten gehoert zum Entwurf der Kundenseite. Aussagekraeftig ist
+die laengste zusammenhaengende leere Strecke.
+
+| Datei | Leeranteil vorher | nachher | laengste leere Strecke vorher | nachher |
+| --- | --- | --- | --- | --- |
+| `brandhuber-voll.webp` | 70,2 % | 16,3 % | 65 Baender | 4 Baender |
+| `world-of-less-voll.webp` | 65,2 % | 8,9 % | 35 Baender | 2 Baender |
+| `taxi-izi-voll.webp` | 74,0 % | 24,4 % | 60 Baender | 5 Baender |
+| `innnatur-voll.webp` | 67,3 % | 24,3 % | 35 Baender | 6 Baender |
+
+taxi-izi.de und innnatur-heilpraktiker.de liegen ueber der Marke von 20
+Prozent, und das ist kein Fehler der Aufnahme. Beide Seiten stehen auf
+hellem Grund und arbeiten mit sehr groszem Abstand um ihre Abschnitte
+herum. Die laengste leere Strecke betraegt dort fuenf beziehungsweise
+sechs Baender, also rund 380 Bildpunkte einer ueber 8000 Bildpunkte
+hohen Seite. Die Sichtpruefung der Aufnahmen zeigt durchgehend Inhalt.
+Der Rueckfall mit stehendem Kopfbereich war deshalb nicht noetig, alle
+vier Karten behalten den Durchlauf.
+
+Die Wandlung nach WebP lief mit demselben Aufruf wie oben.
+
+| Datei | Groesze in Bildpunkten | Dateigroesze vorher | nachher |
+| --- | --- | --- | --- |
+| `brandhuber-voll.webp` | 1400 x 9064 | 205 KB | 656 KB |
+| `world-of-less-voll.webp` | 1400 x 8674 | 206 KB | 478 KB |
+| `taxi-izi-voll.webp` | 1400 x 8128 | 158 KB | 488 KB |
+| `innnatur-voll.webp` | 1400 x 6860 | 127 KB | 333 KB |
+
+Die Dateien wiegen jetzt zusammen rund 1,9 statt 0,7 Megabyte. Der
+Aufschlag ist der Inhalt, der vorher gefehlt hat, und er faellt erst
+an, wenn die Sektion in die Naehe kommt.

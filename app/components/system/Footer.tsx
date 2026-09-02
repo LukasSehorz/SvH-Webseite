@@ -64,11 +64,12 @@ export default function Footer() {
           <p className="t-label" style={{ textTransform: "none", letterSpacing: "0.02em" }}>
             © {year} {company.legalName}
           </p>
-          <nav aria-label="Rechtliche Seiten" className="footer-legal-links">
-            <Link href="/impressum">Impressum</Link>
-            <Link href="/datenschutz">Datenschutz</Link>
-            <Link href="/agb">AGB</Link>
-          </nav>
+          {/* Hier stand dieselbe Reihe aus Impressum, Datenschutz und AGB
+              noch einmal, obwohl sie zwei Handbreit darueber schon als
+              Spalte Rechtliches steht. Zwei Wege zu derselben Seite in
+              einem Blickfeld lassen den Leser suchen, welcher der richtige
+              ist. Die Spalte bleibt, denn sie steht in copy.ts neben den
+              anderen Spalten. */}
           <p className="t-label" style={{ textTransform: "none", letterSpacing: "0.02em" }}>
             {footer.claim}
           </p>

@@ -8,9 +8,10 @@
 
    Unten die Tafel grosz vor der unscharfen Wand aus vielen kleinen
    Ausschnitten nach M8. Die Wand ist das Rohmaterial, der scharfe Schirm
-   davor ist das fertige Ergebnis. Daneben liegt die helle Textkarte, die
-   die dunkle Medienkarte um wenige Bildpunkte ueberlappt, nach M12. Sie
-   ist zugleich das einzige helle Band der ganzen Seite nach M15.
+   davor ist das fertige Ergebnis. Daneben liegt die Textkarte, die die
+   Medienkarte um wenige Bildpunkte ueberlappt, nach M12. Sie stand
+   einmal auf hellem Grau und gehoerte damit sichtbar nicht zu dieser
+   Seite; sie steht seit dem 02.09.2026 im Dunkeln wie alles andere.
 
    Die Wand traegt die zweite der drei Schleifen. Sie wandert langsam in
    einer eigenen Schleife und bekommt zusaetzlich eine Verschiebung gegen
@@ -119,10 +120,14 @@ export default function Inhalte({ spots }: Readonly<{ spots: readonly SpotDaten[
                 } as CSSProperties
               }
             >
-              <span className={styles.fanIcon}>
-                <Icon name={karte.icon} />
+              {/* Der Inhalt dreht gegen die Karte zurueck und steht
+                  dadurch aufrecht, egal wie weit der Faecher offen ist. */}
+              <span className={styles.fanInner}>
+                <span className={styles.fanIcon}>
+                  <Icon name={karte.icon} />
+                </span>
+                <span className={styles.fanWord}>{karte.wort}</span>
               </span>
-              <span className={styles.fanWord}>{karte.wort}</span>
             </div>
           ))}
         </motion.div>

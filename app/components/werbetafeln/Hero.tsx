@@ -59,8 +59,14 @@ export default function Hero({
 
             <Rise delay={0.22}>
               <div className={styles.heroAction}>
-                <Link href={t.hero.link.href} className={styles.quiet}>
-                  <span>{t.hero.link.label}</span>
+                {/* Der Verweis fuehrt ins Erstgespraech und ist damit die
+                    Haupthandlung der Seite. Er traegt deshalb dieselbe Form
+                    wie auf jeder anderen Seite und nicht mehr die leise
+                    Schrift mit Unterstrich. Der leise Verweis .quiet bleibt
+                    fuer die Stellen im Lauf der Seite, wo kein Knopf stehen
+                    soll. */}
+                <Link href={t.hero.link.href} className="btn-solid">
+                  {t.hero.link.label}
                   <IconPfeil />
                 </Link>
               </div>

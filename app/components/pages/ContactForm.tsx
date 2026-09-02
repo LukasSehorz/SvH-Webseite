@@ -1,3 +1,20 @@
+/*
+ * DIESE KOMPONENTE WIRD SEIT DEM 02.09.2026 NICHT GERENDERT.
+ *
+ * Grund. Das Formular hat beim Absenden eine Erfolgsmeldung gezeigt,
+ * ohne dass die Angaben irgendwohin gegangen waeren. Ein Empfaenger ist
+ * bis heute nicht benannt. Eine Bestaetigung ohne Versand ist auf einer
+ * Seite, die fuer Zuverlaessigkeit steht, der schwerste Fehler von
+ * allen, deshalb hat der Auftraggeber entschieden, das Formular vorerst
+ * auszublenden.
+ *
+ * An seiner Stelle steht unter demselben Anker `#anfrage` die Komponente
+ * ContactDirect mit Telefon und E-Mail. Der Bau bleibt hier vollstaendig
+ * erhalten, samt Pruefung der Felder und Gestaltung, damit er nur noch
+ * an einen Versand gehaengt und in app/kontakt/page.tsx wieder
+ * eingesetzt werden muss.
+ */
+
 "use client";
 
 import Link from "next/link";

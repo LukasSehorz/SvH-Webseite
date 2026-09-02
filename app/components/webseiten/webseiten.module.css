@@ -14,6 +14,17 @@
    ===================================================================== */
 
 .page {
+  /* M12. Die Handlungsfarbe dieser Seite. Sie steht nicht mehr in einem
+     eigenen Knopf, sondern faerbt die eine globale Hauptform btn-solid.
+     Hoehe, Radius und Schatten bleiben damit ueberall dieselben, und die
+     Seite behaelt trotzdem ihre Farbe. Die Schrift steht in fast Schwarz,
+     denn Weisz auf #5b8cff erreicht nur 3,2 zu eins, Schwarz dagegen
+     6,4 zu eins. */
+  --btn-fill: #5b8cff;
+  --btn-edge: #5b8cff;
+  --btn-ink: #050507;
+  --btn-fill-hover: #6f9bff;
+  --btn-edge-hover: #6f9bff;
   /* Der eigene Sektionstakt. Mit dem globalen Wert von 160 Bildpunkten
      stand die Seite bei 1440 mal 900 auf gemessenen 14,71 Bildhoehen.
      Der Auftrag setzt die Marke bei rund elf. Ein Teil der Strecke kommt
@@ -41,67 +52,12 @@
 
 /* ------------------------------------------------------- Handlungsfarbe */
 
-/* M12. Genau diese Farbe und sonst nichts loest etwas aus. Die Schrift
-   steht in fast Schwarz, denn Weisz auf #5b8cff erreicht nur 3,2 zu eins,
-   Schwarz dagegen 6,4 zu eins. */
-.act {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  height: 54px;
-  padding-inline: 28px;
-  border-radius: 9999px;
-  background: #5b8cff;
-  color: #050507;
-  border: 1px solid #5b8cff;
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: -0.005em;
-  white-space: nowrap;
-  box-shadow: 0 10px 34px rgba(91, 140, 255, 0.26);
-  transition:
-    transform 0.45s var(--ease-out-expo),
-    background-color 0.45s var(--ease-out-expo),
-    box-shadow 0.45s var(--ease-out-expo);
-}
-
-.act:hover {
-  transform: translateY(-2px);
-  background: #6f9bff;
-  box-shadow: 0 16px 44px rgba(91, 140, 255, 0.34);
-}
-
-.act svg {
-  flex: 0 0 auto;
-}
-
-/* Der stille Zweitweg. Er traegt keine Flaeche und keinen Rahmen, nur
-   eine Linie unter der Schrift, damit die Handlungsfarbe allein steht. */
-.quiet {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  height: 54px;
-  color: var(--ink-2);
-  font-size: 15px;
-  transition: color 0.35s var(--ease-out-expo);
-}
-
-.quiet span {
-  border-bottom: 1px solid rgba(244, 244, 246, 0.22);
-  padding-bottom: 2px;
-  transition: border-color 0.35s var(--ease-out-expo);
-}
-
-.quiet:hover {
-  color: var(--ink);
-}
-
-.quiet:hover span {
-  border-color: var(--ink-2);
-}
+/* Hier standen einmal zwei eigene Knopfformen, .act mit eigener Hoehe und
+   eigenem Schatten und .quiet als Schrift mit Unterstrich. Zusammen mit
+   den Formen der anderen Unterseiten waren daraus vier verschiedene
+   Knoepfe fuer ein und dieselbe Handlung geworden. Sie sind ersatzlos
+   entfallen. Es gelten jetzt btn-solid und btn-dash aus globals.css, und
+   die Farbe dieser Seite kommt allein aus den Variablen an .page. */
 
 /* --------------------------------------------------------------- Hero */
 
@@ -272,8 +228,7 @@
     gap: 6px;
   }
 
-  .heroActions .act,
-  .heroActions .quiet {
+  .heroActions > * {
     justify-content: center;
   }
 }
@@ -1488,8 +1443,7 @@
     gap: 6px;
   }
 
-  .closeActions .act,
-  .closeActions .quiet {
+  .closeActions > * {
     justify-content: center;
   }
 }

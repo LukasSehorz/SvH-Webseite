@@ -5,7 +5,7 @@ import { animate, motion, useMotionValue } from "framer-motion";
 import WordReveal from "../marketing/WordReveal";
 import { Reveal, useSafeReducedMotion } from "../system/ui";
 import { socialPage } from "../../copy";
-import { IconComment, IconHeart, IconReplay } from "./Icons";
+import { IconComment, IconHeart, IconReplay, IconRise } from "./Icons";
 import { useScenePlay } from "./usePlay";
 import styles from "./social.module.css";
 
@@ -78,9 +78,17 @@ function Counter({ playing }: Readonly<{ playing: boolean }>) {
     return () => controls.stop();
   }, [playing, value]);
 
+  /* Der Ruhezustand zeigt keine grosze Schrift mehr. Vorher stand hier
+     das Wort in der Groesze des Zaehlwerks, und die Szene sah aus wie ein
+     Zaehler, der haengengeblieben ist. Jetzt steht ein steigender Pfeil
+     neben der Beschriftung, und das liest sich als Absicht statt als
+     Ergebnis. */
   if (!playing) {
     return (
-      <p className={styles.counterRest}>{socialPage.growth.counterRest}</p>
+      <p className={styles.counterIdle}>
+        <IconRise />
+        <span>{socialPage.growth.counterLabel}</span>
+      </p>
     );
   }
 
@@ -108,13 +116,18 @@ function Counter({ playing }: Readonly<{ playing: boolean }>) {
         {shown.toLocaleString("de-DE")}
       </motion.p>
 
+      {/* Wohin der Lauf fuehrt, steht am Ende in derselben ruhigen Form
+          wie vor dem Lauf. Hier stand einmal ein Wort in der Groesze des
+          Zaehlwerks, und weil es liegen blieb, sah die fertige Szene aus
+          wie ein Zaehler, der haengengeblieben ist. */}
       <motion.p
-        className={styles.counterRest}
+        className={styles.counterIdle}
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, delay: FADE_AT + 0.5, ease: EASE }}
       >
-        {socialPage.growth.counterRest}
+        <IconRise />
+        <span>{socialPage.growth.counterLabel}</span>
       </motion.p>
     </>
   );
@@ -163,9 +176,23 @@ export default function GrowthScene() {
               vorn beginnt, statt aus ihrem Endzustand weiterzulaufen. */}
           <div key={run}>
             <div className={styles.stageInner} aria-hidden="true">
-              <p className={styles.counterLabel}>
-                {socialPage.growth.counterLabel}
-              </p>
+              {/* Die Beschriftung steht ueber den Ziffern und geht mit
+                  ihnen. Danach traegt sie der Pfeil im Feld darunter, und
+                  zweimal derselbe Satz waere einer zu viel. Der leere
+                  Absatz im Ruhezustand haelt die Hoehe, damit die Buehne
+                  beim Anlaufen nicht springt. */}
+              {playing ? (
+                <motion.p
+                  className={styles.counterLabel}
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: 0 }}
+                  transition={{ duration: 0.5, delay: FADE_AT, ease: EASE }}
+                >
+                  {socialPage.growth.counterLabel}
+                </motion.p>
+              ) : (
+                <p className={styles.counterLabel}>&nbsp;</p>
+              )}
               <div className={styles.counterSlot}>
                 <Counter playing={playing} />
               </div>

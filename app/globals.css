@@ -31,7 +31,15 @@
      Unterschied ist mit blossem Auge nicht zu sehen, hebt aber jede Zeile
      ueber die Marke. */
   --ink-2: rgba(244, 244, 246, 0.652);
-  --ink-3: rgba(244, 244, 246, 0.4);
+  /* Die dritte Stufe traegt Beschriftungen und Nebenzeilen und stand auf
+     0,4. Gemessen auf dem Grund ergab das rund 3,9 zu eins und lag damit
+     unter der Marke von 4,5, die fuer kleinen Text gilt. Mit 0,5 liegt
+     dieselbe Schrift bei rund 5,1 zu eins. */
+  --ink-3: rgba(244, 244, 246, 0.5);
+  /* Derselbe alte Wert, aber nur fuer schmueckende Striche wie die Ecken
+     der Rahmen. Wuerden die Haarlinien mitwandern, wuerden sie heller als
+     der Rahmen daneben und zoegen den Blick auf sich. */
+  --ink-3-zier: rgba(244, 244, 246, 0.4);
   --line: rgba(244, 244, 246, 0.12);
   --line-2: rgba(244, 244, 246, 0.06);
   --acc-blue: #5b8cff;
@@ -57,7 +65,11 @@
      bei 1920 rund 76, und ab 2200 haelt die Obergrenze von 88 den Rand
      davon ab, den Inhalt wieder einzuschnueren. */
   --gutter: clamp(20px, 4vw, 88px);
-  --section-y: 160px;
+  /* Der Abstand zwischen den Sektionen stand auf 160 Bildpunkten. Ueber
+     die ganze Seite gerechnet trennte das so stark, dass zwischen zwei
+     Gedanken ein leeres Feld von der Hoehe eines halben Bildschirms
+     stand. Mit 120 bleibt die Trennung deutlich und der Lesefluss haelt. */
+  --section-y: 120px;
   --nav-h: 84px;
   /* Das Zeichenmasz fuer Fliesztext. Absaetze bleiben bei rund siebzig
      Zeichen je Zeile lesbar, unabhaengig davon, wie breit die Schale auf
@@ -93,6 +105,11 @@
 html {
   -webkit-text-size-adjust: 100%;
   background: var(--bg);
+  /* Auch die Flaechen, die der Browser selbst zeichnet, gehoeren zum
+     Entwurf. Ohne diese Zeile stellt Windows eine hellgraue Bildlaufleiste
+     neben eine durchweg dunkle Seite. */
+  scrollbar-color: rgba(244, 244, 246, 0.22) var(--bg);
+  scrollbar-width: thin;
 }
 
 body {
@@ -133,6 +150,21 @@ button {
 ::selection {
   background: rgba(124, 106, 255, 0.32);
   color: var(--ink);
+}
+
+/* Der Schreibzeiger stand auf dem Weisz des Browsers und blinkte damit
+   heller als jede Schrift daneben. Er nimmt jetzt den Akzent auf. */
+input,
+textarea,
+select,
+[contenteditable] {
+  caret-color: var(--acc-lav);
+}
+
+/* Wo ein Feld von Hand hoeher gezogen werden darf, geschieht das nur nach
+   unten. Eine freie Breite wuerde das Raster der Karte sprengen. */
+textarea {
+  resize: vertical;
 }
 
 :focus-visible {
@@ -223,6 +255,15 @@ button {
   }
 }
 
+/* Auf dem Telefon fiel die Hauptzeile mit 52 Bildpunkten in drei Zeilen
+   auseinander, und die mittlere trug allein das Wort Ihren. Mit 44 stehen
+   die Woerter wieder paarweise und der Satz liest sich in einem Zug. */
+@media (max-width: 480px) {
+  .t-display {
+    font-size: 44px;
+  }
+}
+
 /* Genau EIN Wort pro Sektion traegt den Verlauf. */
 .grad-word {
   background: var(--grad);
@@ -289,16 +330,20 @@ button {
   will-change: transform;
 }
 
+/* Die eine Hauptform fuer die eine Handlung, auf jeder Seite dieselbe.
+   Eine Unterseite darf ihre Farbe mitbringen, aber nur ueber diese vier
+   Variablen an ihrer Seitenklasse. Hoehe, Radius, Schrift und Bewegung
+   bleiben ueberall gleich, sonst zerfaellt der Knopf in vier Knoepfe. */
 .btn-solid {
-  background: var(--ink);
-  color: #050507;
-  border: 1px solid var(--ink);
+  background: var(--btn-fill, var(--ink));
+  color: var(--btn-ink, #050507);
+  border: 1px solid var(--btn-edge, var(--ink));
 }
 
 .btn-solid:hover {
   transform: translateY(-1px);
-  background: rgba(244, 244, 246, 0.96);
-  border-color: rgba(244, 244, 246, 0.96);
+  background: var(--btn-fill-hover, rgba(244, 244, 246, 0.96));
+  border-color: var(--btn-edge-hover, rgba(244, 244, 246, 0.96));
 }
 
 .btn-line {
@@ -400,7 +445,7 @@ button {
   top: 0;
   width: 18px;
   height: 1px;
-  background-image: linear-gradient(90deg, var(--ink-3) 0 3px, transparent 3px 6px);
+  background-image: linear-gradient(90deg, var(--ink-3-zier) 0 3px, transparent 3px 6px);
   background-size: 6px 1px;
 }
 
@@ -409,7 +454,7 @@ button {
   top: 0;
   width: 1px;
   height: 18px;
-  background-image: linear-gradient(180deg, var(--ink-3) 0 3px, transparent 3px 6px);
+  background-image: linear-gradient(180deg, var(--ink-3-zier) 0 3px, transparent 3px 6px);
   background-size: 1px 6px;
 }
 
@@ -853,9 +898,15 @@ button {
   padding: 8px;
   border-radius: 20px;
   border: 1px solid var(--line);
-  background: rgba(9, 9, 13, 0.96);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  /* Der Grund muss allein tragen. Die Leiste darueber setzt selbst eine
+     Unschaerfe und wird damit zur Wurzel des Hintergrunds, deshalb sammelt
+     die Unschaerfe des Menues nichts mehr ein und die Ueberschrift der
+     Seite stand vorher mitten in den Eintraegen. Mit 0,97 steht das Menue
+     als geschlossene Flaeche, die Unschaerfe bleibt nur als Rueckfall fuer
+     Browser stehen, die den Hintergrund doch durchreichen. */
+  background: rgba(9, 9, 14, 0.97);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55);
 }
 
@@ -1261,9 +1312,22 @@ button {
   position: relative;
   overflow: hidden;
   /* Angehobene Fläche, damit das Band auch in den Ecken nicht in reines
-     Schwarz kippt. Die Schleier liegen darüber. */
-  background: var(--bg-raise);
-  border-top: 1px solid var(--line-2);
+     Schwarz kippt. Die Schleier liegen darüber.
+
+     Der Wechsel lief einmal ueber eine Haarlinie und einen Sprung in der
+     Helligkeit. Nach der Sektion mit den Fragen, die auf reinem Schwarz
+     steht, lag dort eine gerade Kante quer durch das Bild. Sie laeuft
+     jetzt ueber 120 Bildpunkte aus. */
+  background: linear-gradient(180deg, var(--bg) 0px, var(--bg-raise) 120px);
+}
+
+/* Der obere Schleier beginnt 110 Bildpunkte ueber der Sektion und wird
+   von deren overflow abgeschnitten. Diese Schnittkante war die eigentliche
+   Naht, denn sie lief als gerade helle Linie quer durchs Bild. Der
+   Schleier laeuft jetzt ueber dieselben 120 Bildpunkte an. */
+.final-cta .veil {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 120px);
+  mask-image: linear-gradient(180deg, transparent 0, #000 120px);
   min-height: 85vh;
   display: flex;
   flex-direction: column;
@@ -1382,20 +1446,6 @@ button {
   padding-top: 22px;
 }
 
-.footer-legal-links {
-  display: flex;
-  gap: 22px;
-}
-
-.footer-legal-links a {
-  font-size: 12px;
-  color: var(--ink-3);
-  transition: color 0.24s ease;
-}
-
-.footer-legal-links a:hover {
-  color: var(--ink);
-}
 
 @media (max-width: 860px) {
   .footer-grid {

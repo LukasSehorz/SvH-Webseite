@@ -7,9 +7,14 @@ import { RevealGroup, RevealItem } from "../system/ui";
 const { detailLabels } = contactPage;
 
 /**
- * Ruhige Kontaktdaten-Zeile unter dem Formular. Die Angaben stammen aus
- * content.ts, die Beschriftungen aus copy.ts, damit beides jeweils nur an
- * einer Stelle gepflegt wird.
+ * Ruhige Zeile unter den beiden Wegen. Die Angaben stammen aus content.ts,
+ * die Beschriftungen aus copy.ts, damit beides jeweils nur an einer Stelle
+ * gepflegt wird.
+ *
+ * Telefon und E-Mail standen hier bis zum 02.09.2026 ebenfalls. Seit an
+ * ihrer Stelle die Komponente ContactDirect steht, waeren sie zweimal
+ * innerhalb einer Bildhoehe zu lesen gewesen. Hier bleibt, was dort nicht
+ * steht.
  */
 export default function ContactDetails() {
   return (
@@ -19,23 +24,8 @@ export default function ContactDetails() {
 
         <RevealGroup as="ul" className="details-grid">
           <RevealItem as="li">
-            <p className="t-label">{detailLabels.phone}</p>
-            <p className="details-value">
-              <a href={`tel:${company.phoneHref}`} className="details-link">
-                {company.phone}
-              </a>
-            </p>
-            <p className="t-label details-note-label">{detailLabels.hours}</p>
-            <p className="t-body details-note">{company.hours}</p>
-          </RevealItem>
-
-          <RevealItem as="li">
-            <p className="t-label">{detailLabels.email}</p>
-            <p className="details-value">
-              <a href={`mailto:${company.email}`} className="details-link">
-                {company.email}
-              </a>
-            </p>
+            <p className="t-label">{detailLabels.hours}</p>
+            <p className="details-value">{company.hours}</p>
           </RevealItem>
 
           <RevealItem as="li">
@@ -61,7 +51,7 @@ export default function ContactDetails() {
 
         .contact-details .details-grid {
           display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 32px;
           list-style: none;
           margin: 0;
@@ -77,28 +67,6 @@ export default function ContactDetails() {
           color: var(--ink);
           margin: 14px 0 0;
           overflow-wrap: anywhere;
-        }
-
-        .contact-details .details-link {
-          text-decoration: underline;
-          text-underline-offset: 4px;
-          text-decoration-color: transparent;
-          transition: text-decoration-color 0.3s var(--ease-out-expo);
-        }
-
-        .contact-details .details-link:hover {
-          text-decoration-color: var(--line);
-        }
-
-        /* Die Erreichbarkeit gehört zur Telefonnummer und steht deshalb
-           als eigene, leise beschriftete Zeile in derselben Spalte. */
-        .contact-details .details-note-label {
-          margin-top: 22px;
-        }
-
-        .contact-details .details-note {
-          margin-top: 8px;
-          color: var(--ink-2);
         }
 
         @media (max-width: 720px) {

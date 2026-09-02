@@ -17,18 +17,28 @@ const R_BURST = 2.24;
 /** Anteil der Punkte, die eine Speiche zur Nabe tragen. */
 const SPOKE_SHARE = 0.78;
 
-/** Zyklus. 4.4s halten, 2.8s Übergang, 4.4s halten, 2.8s zurück. */
-const HOLD = 4.4;
+/*
+ * Zyklus. 3.4s ungeordnet halten, 2.8s Uebergang, 6.4s geordnet halten,
+ * 2.8s zurueck.
+ *
+ * Die beiden Haltezeiten waren einmal gleich lang. Der geordnete Zustand
+ * ist aber die Aussage der Szene, und nur in ihm stehen die drei Werte am
+ * Feldrand. Bei gleicher Dauer war die Haelfte der Zeit fuer den Zustand
+ * reserviert, den wir gerade nicht meinen. Der geordnete Zustand steht
+ * deshalb fast doppelt so lang.
+ */
+const HOLD_CHAOS = 3.4;
+const HOLD_ORDER = 6.4;
 const MORPH = 2.8;
 /**
- * Vorlauf der Uhr. Ohne ihn stünde der ungeordnete Zustand die vollen 4.4s,
+ * Vorlauf der Uhr. Ohne ihn stünde der ungeordnete Zustand die vollen 3.4s,
  * und wer nur kurz bleibt, sähe den Wechsel nie. Mit dem Vorlauf beginnt er
- * nach knapp zwei Sekunden.
+ * nach knapp einer Sekunde.
  */
 const LEAD_IN = 2.6;
 /** Individueller Versatz je Punkt, damit die Wolke nicht wie ein Block gleitet. */
 const STAGGER = 0.4;
-const CYCLE = HOLD * 2 + MORPH * 2;
+const CYCLE = HOLD_CHAOS + HOLD_ORDER + MORPH * 2;
 
 const LINE_CHAOS = 0.1;
 const LINE_ORDER = 0.16;
@@ -321,20 +331,20 @@ function Constellation({
       let mix: number;
       let base: number;
       let forward: boolean;
-      if (phase < HOLD) {
+      if (phase < HOLD_CHAOS) {
         mix = 0;
         base = 0;
         forward = true;
-      } else if (phase < HOLD + MORPH) {
-        base = phase - HOLD;
+      } else if (phase < HOLD_CHAOS + MORPH) {
+        base = phase - HOLD_CHAOS;
         forward = true;
         mix = power2InOut(clamp01(base / MORPH));
-      } else if (phase < HOLD * 2 + MORPH) {
+      } else if (phase < HOLD_CHAOS + MORPH + HOLD_ORDER) {
         mix = 1;
         base = 0;
         forward = false;
       } else {
-        base = phase - (HOLD * 2 + MORPH);
+        base = phase - (HOLD_CHAOS + MORPH + HOLD_ORDER);
         forward = false;
         mix = 1 - power2InOut(clamp01(base / MORPH));
       }
@@ -393,7 +403,7 @@ function Constellation({
     if (!still) return;
     const g = group.current;
     if (g) g.rotation.set(-0.16, 0.4, 0);
-    paint(sample(HOLD + MORPH + 0.5, false));
+    paint(sample(HOLD_CHAOS + MORPH + 0.5, false));
     state.current = "order";
     report.current?.("order");
     invalidate();

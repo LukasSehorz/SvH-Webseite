@@ -70,7 +70,7 @@ export default function WerbetafelnPage() {
         <Hero spots={spots.slice(0, 3)} bewegt={bewegt} />
         <Gruende />
         <Orte />
-        <Band spots={spots} />
+        <Band />
         <Inhalte spots={[spots[3], spots[0]]} />
         <Ablauf spot={spots[1]} />
         <Abschluss spot={spots[2]} />

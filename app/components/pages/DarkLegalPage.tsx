@@ -120,11 +120,15 @@ const LEGAL_CSS = `
 const DEFAULT_LABEL = "Rechtliches";
 
 /**
- * Hinweis über dem Rechtstext. ❗TODO Entfällt, sobald die Texte
- * anwaltlich geprüft sind.
+ * Hinweis über dem Rechtstext.
+ *
+ * Die alte Fassung nannte den Text einen Entwurf und kuendigte eine
+ * anwaltliche Pruefung "vor dem Livegang" an. Auf der laufenden Seite
+ * widerspricht dieser Satz sich selbst, deshalb steht hier nur noch der
+ * uebliche Vorbehalt.
+ * ❗TODO Entfällt, sobald die Texte anwaltlich geprüft sind.
  */
-const DEFAULT_NOTE =
-  "Dieser Text ist ein sorgfältig vorbereiteter Entwurf und ersetzt keine Rechtsberatung. Er wird vor dem Livegang anwaltlich geprüft.";
+const DEFAULT_NOTE = "Dieser Text ersetzt keine Rechtsberatung.";
 
 export default function DarkLegalPage({
   title,

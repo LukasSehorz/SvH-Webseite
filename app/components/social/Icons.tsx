@@ -122,3 +122,14 @@ export function IconArrow() {
     </svg>
   );
 }
+
+/* Der steigende Pfeil steht im Ruhezustand der Wachstumsszene. Er sagt in
+   einer Linie, wohin die Szene laeuft, ohne eine Zahl zu behaupten. */
+export function IconRise() {
+  return (
+    <svg {...base}>
+      <path d="M4.5 16.5 10 11l3.5 3.5L19.5 8" />
+      <path d="M14.4 8h5.1v5.1" />
+    </svg>
+  );
+}

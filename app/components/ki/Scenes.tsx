@@ -77,7 +77,14 @@ function useScene(
   reduced: boolean,
   replay: number
 ): Beat {
-  const [beat, setBeat] = useState<Beat>({ stage: 0, cycle: 0 });
+  /* DER RUHEZUSTAND IST DIE RUHEETAPPE UND NICHT DER RUECKSPRUNG.
+     Vorher stand hier Etappe 0, also der Ruecksprung, in dem
+     verabredungsgemaesz nichts sichtbar ist. Vor dem ersten Lauf und
+     auszerhalb des Blickfelds zeigten die Kacheln deshalb nur ihre leeren
+     gestrichelten Rechtecke, gemessen bei E-Mail, Angebote und Dokumente
+     am deutlichsten. Jetzt steht dort der fertige Zustand, und die
+     Schleife setzt von ihm aus ein. */
+  const [beat, setBeat] = useState<Beat>({ stage: spec.rest, cycle: 0 });
 
   useEffect(() => {
     if (reduced || !active) return;

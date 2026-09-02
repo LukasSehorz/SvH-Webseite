@@ -87,6 +87,10 @@ export default function KiLayers() {
         const q = gsap.utils.selector(stageEl);
         const agents = q('[data-plate="agents"]');
         const llm = q('[data-plate="llm"]');
+        // Die Beschriftungen der beiden einfahrenden Platten laufen eigene
+        // Wege, siehe unten bei Schritt 3 und 4.
+        const agentsText = q('[data-plate="agents"] .kl-text');
+        const llmText = q('[data-plate="llm"] .kl-text');
         const systems = q('[data-plate="systems"]');
         const tiles = q("[data-tiles]");
         const tile = q("[data-tile]");
@@ -177,6 +181,18 @@ export default function KiLayers() {
         );
         tl.to(systems, { "--y": LAYOUT.systemsStart + 3, duration: 1.4 }, 2.2);
 
+        // DIE BESCHRIFTUNG KOMMT ERST, WENN DIE PLATTE STEHT. Sie sitzt in
+        // der Mitte ihrer Platte, und solange die Platte noch 14,6 Einheiten
+        // hoeher steht als ihr Platz, liegt die Schrift ueber der Platte
+        // darueber. Gemessen liefen so zwei Zeilen ineinander. Der Weg der
+        // Platte dauert 1.4, deshalb beginnt die Schrift bei 3.6.
+        tl.fromTo(
+          agentsText,
+          { autoAlpha: 0 },
+          { ...START, autoAlpha: 1, duration: 0.45 },
+          3.6,
+        );
+
         // 4 · Corporate LLM folgt aus derselben Tiefe, das Logo-Feld erscheint.
         tl.fromTo(
           llm,
@@ -195,6 +211,12 @@ export default function KiLayers() {
           3.4,
         );
         tl.to(systems, { "--y": LAYOUT.systemsStart + 6, duration: 1.4 }, 3.4);
+        tl.fromTo(
+          llmText,
+          { autoAlpha: 0 },
+          { ...START, autoAlpha: 1, duration: 0.45 },
+          4.8,
+        );
         if (badge) {
           tl.fromTo(
             badge,

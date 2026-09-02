@@ -369,11 +369,14 @@ export default function IsoStage() {
           margin: 0;
         }
 
+        /* Die Unterzeile stand auf 0,44 und erreichte damit gemessen 3,3 zu
+           eins. Mit 0,5 liegt sie bei rund 5,1, wie die dritte Tonstufe der
+           uebrigen Seite. */
         .kl-plate-body {
           margin: calc(0.9 * var(--u)) 0 0;
           font-size: clamp(9px, calc(1.62 * var(--u)), 13px);
           line-height: 1.35;
-          color: rgba(244, 244, 246, 0.44);
+          color: rgba(244, 244, 246, 0.5);
         }
 
         /* ---------------------------------------------------------------- */

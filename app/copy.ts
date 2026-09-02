@@ -13,23 +13,23 @@
 
 export const meta = {
   home: {
-    title: "SVH Consulting | KI, Marketing und Webdesign für wachsende Betriebe",
+    title: "SVH Consulting | KI, Webseiten und Marketing für Betriebe",
     description:
-      "SVH Consulting baut KI-Automatisierungen und Agenten, betreut Social-Media-Marketing samt Werbetafeln und entwickelt Webseiten, die messbar Anfragen bringen.",
+      "SVH Consulting macht Ihren Betrieb digital. Wir bauen KI, die Arbeit abnimmt, entwickeln Webseiten, die Kunden bringen, und betreuen Ihr Marketing.",
   },
   ki: {
-    title: "KI-Automatisierung und Agenten",
+    title: "KI-Automatisierung für Ihren Betrieb",
     /* Die alte Beschreibung versprach ein Corporate LLM, Voice Agents und
        ein Operating System, und davon steht seit dem Umbau der KI-Seite
        nichts mehr auf ihr. Eine Suchmaschinenbeschreibung darf nur
        tragen, was die Seite auch zeigt. */
     description:
-      "Wir automatisieren die Arbeit, die sich in Ihrem Betrieb jeden Tag wiederholt. In drei Schritten, beginnend mit einer kostenlosen Potenzialanalyse.",
+      "Wir automatisieren die Arbeit, die sich in Ihrem Betrieb jeden Tag wiederholt. Der erste Schritt ist ein kostenloses Gespräch von zwanzig Minuten.",
   },
   marketing: {
-    title: "Marketing mit Social Media, Werbetafeln und Webdesign",
+    title: "Marketing mit Webseiten, Social Media und Werbetafeln",
     description:
-      "Sichtbarkeit dort, wo Ihre Kunden wirklich sind. Social-Media-Betreuung, digitale Werbetafeln an frequenzstarken Standorten und Webseiten, die verkaufen.",
+      "Drei Wege, damit man Sie sieht. Eine Webseite, die Anfragen bringt, Ihre Kanäle auf Instagram und TikTok und digitale Tafeln an gut besuchten Orten.",
   },
   about: {
     title: "Über uns",
@@ -42,7 +42,7 @@ export const meta = {
   contact: {
     title: "Kontakt",
     description:
-      "Ein erstes Gespräch dauert zwanzig Minuten, kostet nichts und zeigt Ihnen, wo sich KI, Marketing und Webdesign bei Ihnen zuerst lohnen.",
+      "Ein erstes Gespräch dauert zwanzig Minuten, kostet nichts und zeigt Ihnen, wo sich KI, Webseiten und Marketing bei Ihnen zuerst lohnen.",
   },
 };
 
@@ -79,19 +79,22 @@ export const nav: {
         {
           label: "Social Media",
           href: "/marketing/social-media",
-          note: "Reichweite auf Instagram und TikTok",
+          note: "Sichtbar auf Instagram und TikTok",
         },
         {
           label: "Werbetafeln",
           href: "/marketing/werbetafeln",
-          note: "Digitale Displays an belebten Orten",
+          note: "Digitale Tafeln an belebten Orten",
         },
       ],
     },
     { label: "Über uns", href: "/ueber-uns" },
   ],
   contact: { label: "Kontakt", href: "/kontakt" },
-  cta: { label: "Strategiegespräch", href: "/kontakt" },
+  /* Die eine Handlung heiszt ueberall gleich. In der Leiste stand ein
+     kuerzeres Wort, und wer von der Startseite kam, las dort drei
+     verschiedene Beschriftungen fuer denselben Termin. */
+  cta: { label: "Kostenloses Strategiegespräch", href: "/kontakt" },
   submenu: {
     open: "Untermenü öffnen",
     close: "Untermenü schließen",
@@ -105,12 +108,15 @@ export const footer = {
     {
       title: "Leistungen",
       links: [
-        { label: "KI-Automatisierung und Agenten", href: "/ki" },
+        { label: "KI-Automatisierung", href: "/ki" },
         /* Seit dem 02.09.2026 hat Marketing drei Unterseiten, und die
-           Fusszeile fuehrt direkt dorthin statt auf die Uebersicht. */
-        { label: "Social Media Marketing", href: "/marketing/social-media" },
-        { label: "Digitale Werbetafeln", href: "/marketing/werbetafeln" },
-        { label: "Webdesign", href: "/marketing/webseiten" },
+           Fusszeile fuehrt direkt dorthin statt auf die Uebersicht.
+           Die Beschriftungen sind dieselben wie im Aufklappmenue der
+           Leiste, damit ueberall dasselbe Wort fuer dieselbe Leistung
+           steht. */
+        { label: "Webseiten", href: "/marketing/webseiten" },
+        { label: "Social Media", href: "/marketing/social-media" },
+        { label: "Werbetafeln", href: "/marketing/werbetafeln" },
       ],
     },
     {
@@ -121,7 +127,7 @@ export const footer = {
         /* Der Anker lag auf /marketing, wo die Referenzen seit dem Umbau
            zur Uebersicht nicht mehr stehen. Die vier Projekte tragen auf
            der Webseiten-Unterseite den Abschnitt mit dieser Kennung. */
-        { label: "Referenzen", href: "/marketing/webseiten#referenzen" },
+        { label: "Unsere Arbeiten", href: "/marketing/webseiten#referenzen" },
       ],
     },
     {
@@ -147,7 +153,7 @@ export const hero = {
   titleAfter: "",
   lead: "Wir bauen KI, die Arbeit abnimmt, betreuen Ihr Marketing und entwickeln Webseiten, die Kunden bringen. So sparen Sie Kosten, gewinnen Zeit und wachsen.",
   primary: { label: "Kostenloses Strategiegespräch", href: "/kontakt" },
-  secondary: { label: "Referenzen ansehen", href: "#referenzen" },
+  secondary: { label: "Unsere Arbeiten ansehen", href: "#referenzen" },
 };
 
 /* ------------------------------------------------------------------ */
@@ -155,11 +161,11 @@ export const hero = {
 /* ------------------------------------------------------------------ */
 
 export const manifesto = {
-  label: "01 · Problem",
+  label: "01 · Warum jetzt",
   title: "Mit KI schafft Ihr Team mehr.",
   paragraphs: [
-    "Ein Team ohne KI kommt voran, aber langsam. Ein Team, das KI richtig nutzt, schafft in der gleichen Zeit deutlich mehr.",
-    "Diesen Abstand schließen wir als Partner und setzen die Projekte gemeinsam mit Ihnen um.",
+    "Ein Team ohne KI kommt voran, aber langsam. Ein Team, das KI richtig nutzt, schafft in derselben Zeit deutlich mehr.",
+    "Diesen Abstand schließen wir mit Ihnen und setzen die Projekte gemeinsam um.",
   ],
   chart: {
     axisX: "Zeit",
@@ -186,7 +192,7 @@ export const manifesto = {
 /* ------------------------------------------------------------------ */
 
 export const showcase = {
-  label: "05 · Referenzen",
+  label: "05 · Arbeiten",
   title: "Arbeit, die man ansehen kann.",
   intro:
     "Vier Seiten, die wir gebaut haben. Jede ist einzeln entwickelt, lädt schnell und ist darauf ausgelegt, Anfragen zu bringen. Ein Klick öffnet die Seite.",
@@ -268,23 +274,23 @@ export const faqLanding = {
   items: [
     {
       q: "Wie schnell sehen wir erste Ergebnisse?",
-      a: "Der erste produktive Baustein steht in der Regel nach zwei bis sechs Wochen. Wir beginnen bewusst mit dem Ablauf, der Ihnen sofort am meisten Zeit zurückgibt, statt monatelang an einem großen Wurf zu bauen.",
+      a: "Wir fangen mit der Aufgabe an, die Ihnen sofort am meisten Zeit zurückgibt. So sehen Sie früh etwas laufen, statt lange auf einen großen Wurf zu warten.",
     },
     {
       q: "Müssen wir unsere Programme wechseln?",
-      a: "Meistens bleibt Ihre Werkzeuglandschaft bestehen und wir verbinden sie. Wo sich ein Wechsel wirklich rechnet, sagen wir es offen und begründen es nachvollziehbar.",
+      a: "Meistens bleiben Ihre Programme so, wie sie sind, und wir verbinden sie miteinander. Wo sich ein Wechsel wirklich lohnt, sagen wir es offen und begründen es.",
     },
     {
       q: "Wie gehen Sie mit Datenschutz um?",
-      a: "Wir schließen einen Auftragsverarbeitungsvertrag, wählen wo möglich Anbieter mit Verarbeitung in der EU und dokumentieren, welche Daten wohin fließen. Ihr Wissen bleibt Ihr Eigentum.",
+      a: "Wir schließen mit Ihnen einen Vertrag über die Verarbeitung Ihrer Daten und wählen wo möglich Anbieter, die in der EU arbeiten. Ihr Wissen bleibt Ihr Eigentum.",
     },
     {
       q: "Was kostet die Zusammenarbeit?",
-      a: "Nach der Bestandsaufnahme erhalten Sie ein Angebot mit festem Umfang, festem Preis und einem Zeitplan. Offene Abrechnungen nach Aufwand vermeiden wir bewusst.",
+      a: "Nach dem ersten Gespräch erhalten Sie ein Angebot mit festem Umfang, festem Preis und einem Zeitplan. Sie wissen also vorher, woran Sie sind.",
     },
     {
       q: "Sind wir danach von Ihnen abhängig?",
-      a: "Alles, was wir bauen, wird dokumentiert und an Ihr Team übergeben. Viele Kunden bleiben trotzdem, weil sie wollen und nicht weil sie müssen.",
+      a: "Alles, was wir bauen, schreiben wir auf und übergeben es an Ihr Team. Sie können jederzeit selbst weitermachen, und viele Kunden bleiben trotzdem bei uns.",
     },
   ],
 };
@@ -297,7 +303,7 @@ export const finalCta = {
   titleBefore: "Ihr Betrieb kann",
   gradientWord: "mehr.",
   titleAfter: "",
-  lead: "In zwanzig Minuten wissen Sie, wo KI, Marketing und Webdesign bei Ihnen am meisten bewirken.",
+  lead: "In zwanzig Minuten wissen Sie, wo KI, Webseiten und Marketing bei Ihnen am meisten bewirken.",
   primary: { label: "Kostenloses Strategiegespräch", href: "/kontakt" },
   secondary: { label: "Schreiben Sie uns", href: "/kontakt#anfrage" },
 };
@@ -320,7 +326,7 @@ export const kiPage = {
   services: {
     title: "Was wir automatisieren.",
     intro:
-      "Acht Aufgaben, die in fast jedem Betrieb jeden Tag anfallen und ab sofort von allein laufen.",
+      "Acht Aufgaben, die in fast jedem Betrieb jeden Tag anfallen. Wir bringen sie dazu, von allein zu laufen.",
     items: [
       {
         id: "email",
@@ -360,7 +366,7 @@ export const kiPage = {
       {
         id: "report",
         name: "Zahlen",
-        body: "Ihre Auswertung stellt sich selbst zusammen, statt am Monatsende gesammelt zu werden.",
+        body: "Ihre Zahlen stellen sich von allein zu einem fertigen Bericht zusammen.",
       },
     ],
   },
@@ -441,11 +447,11 @@ export const marketingPage = {
     },
     {
       q: "Was kostet die Zusammenarbeit?",
-      a: "Nach dem ersten Gespräch erhalten Sie ein Angebot mit festem Umfang, festem Preis und einem Zeitplan. Offene Abrechnungen nach Aufwand vermeiden wir bewusst.",
+      a: "Nach dem ersten Gespräch erhalten Sie ein Angebot mit festem Umfang, festem Preis und einem Zeitplan. Sie wissen also vorher, woran Sie sind.",
     },
     {
       q: "Wie schnell geht es los?",
-      a: "Im Gespräch legen wir fest, womit wir anfangen. In der Regel beginnen wir innerhalb weniger Wochen mit dem Schritt, der bei Ihnen am meisten bewirkt.",
+      a: "Im Gespräch legen wir fest, womit wir anfangen. Danach beginnen wir mit dem Schritt, der bei Ihnen am meisten bewirkt.",
     },
   ],
 };
@@ -461,7 +467,7 @@ export const socialPage = {
   meta: {
     title: "Social Media auf Instagram und TikTok",
     description:
-      "SVH Consulting baut Ihre Marke auf Instagram und TikTok auf. Redaktionsplan, Dreh im Betrieb, Schnitt, Kampagnen und ein Bericht jeden Monat.",
+      "SVH Consulting baut Ihre Marke auf Instagram und TikTok auf. Plan, Dreh im Betrieb, Schnitt, Werbeanzeigen und ein Bericht jeden Monat.",
   },
   hero: {
     /* Die Ueberschrift steht in zwei festen Zeilen. Der Umbruch nach dem
@@ -493,8 +499,12 @@ export const socialPage = {
     title: "Was passiert, wenn es läuft.",
     body: "Mehr Menschen folgen Ihnen, mehr Menschen reagieren, und jeder neue Beitrag erreicht mehr als der davor.",
     counterLabel: "Menschen, die Ihnen folgen",
-    /** Steht im Zaehlerfeld, solange die Szene ruht. Eine feste Endzahl
-        stuende dort als Versprechen, und versprochen ist hier nichts. */
+    /** ❗TODO Wird seit dem 02.09.2026 nicht gezeigt. Das Wort stand im
+        Zaehlerfeld in der Groesze des Zaehlwerks und blieb nach dem Lauf
+        dort stehen, wodurch die Szene wie ein haengengebliebener Zaehler
+        aussah. Im Ruhezustand steht jetzt ein steigender Pfeil neben der
+        Beschriftung. Der Merkposten bleibt, falls das Feld spaeter wieder
+        eine grosze Zeile bekommt. */
     counterRest: "werden mehr",
     postCaption: "Ein neuer Beitrag ist online",
     replay: "Noch einmal ansehen",
@@ -503,10 +513,10 @@ export const socialPage = {
   scope: {
     title: "Was dazugehört.",
     items: [
-      { id: "plan", label: "Redaktionsplan" },
+      { id: "plan", label: "Plan für den Monat" },
       { id: "shoot", label: "Dreh vor Ort" },
       { id: "cut", label: "Schnitt und Texte" },
-      { id: "ads", label: "Kampagnen" },
+      { id: "ads", label: "Werbeanzeigen" },
       { id: "care", label: "Laufende Betreuung" },
       { id: "report", label: "Bericht jeden Monat" },
     ],
@@ -542,7 +552,7 @@ export const aboutPage = {
     titleBefore: "Ein Partner für",
     gradientWord: "alles",
     titleAfter: "Digitale.",
-    lead: "Wir bringen Webseite, Social Media und KI in Ihrem Betrieb zusammen, damit mehr hereinkommt und weniger Zeit verloren geht.",
+    lead: "Wir bringen Webseite, Social Media und KI in Ihrem Betrieb zusammen, damit mehr Anfragen hereinkommen und weniger Zeit verloren geht.",
     cta: { label: "Kostenloses Strategiegespräch", href: "/kontakt" },
   },
 
@@ -599,7 +609,7 @@ export const aboutPage = {
       },
       {
         title: "Schnelle Arbeit",
-        body: "Sie sehen schon nach wenigen Wochen ein erstes laufendes Ergebnis statt erst nach einem halben Jahr.",
+        body: "Wir fangen zügig an, und Sie sehen früh ein erstes Ergebnis, das schon für Sie arbeitet.",
       },
       {
         title: "Zuverlässigkeit",
@@ -654,11 +664,23 @@ export const contactPage = {
       cta: "Kontakt aufnehmen",
     },
   ],
+  /* Eine Antwortzeit stand hier bis zum 02.09.2026 als Zusage. Belegt ist
+     sie nicht, also steht jetzt an ihrer Stelle, was belegt ist. */
   facts: [
-    { label: "Ansprechpartner", value: "Regional und direkt" },
-    { label: "Antwort in der Regel binnen", value: "24 Stunden" },
     { label: "Erstgespräch", value: "Kostenlos" },
+    { label: "Dauer", value: "Rund zwanzig Minuten" },
+    { label: "Ansprechpartner", value: "Die beiden Gründer" },
   ],
+  /* Steht unter dem Anker anfrage anstelle des Formulars. Solange kein
+     Empfaenger feststeht, waere ein Formular ein Versprechen ohne Deckung,
+     deshalb fuehren hier die beiden Wege, die sicher ankommen. */
+  direct: {
+    title: "Direkt zu uns",
+    body: "Ein Anruf oder eine Mail genügt. Das Erstgespräch dauert rund zwanzig Minuten und kostet nichts.",
+  },
+  /* ❗TODO Das Formular ist gebaut, wird aber nicht gerendert, solange der
+     Empfaenger fehlt. Diese Texte bleiben hier als Merkposten stehen und
+     werden gebraucht, sobald der Versand angebunden ist. */
   form: {
     title: "Allgemeine Anfrage",
     body: "Schreiben Sie uns kurz, worum es geht. Je konkreter Ihre Nachricht, desto besser können wir uns vorbereiten.",
@@ -670,17 +692,19 @@ export const contactPage = {
       topic: "Worum geht es?",
       message: "Ihre Nachricht",
     },
+    /* Dieselben Worte wie in Leiste und Fusszeile, damit der Besucher
+       seine Leistung im Auswahlfeld sofort wiederfindet. */
     topics: [
-      "KI-Automatisierung und Agenten",
-      "Social Media Marketing",
-      "Digitale Werbetafeln",
-      "Webdesign",
+      "KI-Automatisierung",
+      "Webseiten",
+      "Social Media",
+      "Werbetafeln",
       "Etwas anderes",
     ],
     consent:
       "Mit dem Absenden stimmen Sie zu, dass wir Ihre Angaben zur Bearbeitung Ihrer Anfrage verwenden. Einzelheiten stehen in der Datenschutzerklärung.",
     submit: "Anfrage senden",
-    success: "Danke, Ihre Anfrage ist angekommen. Wir melden uns in der Regel innerhalb von 24 Stunden.",
+    success: "Danke, Ihre Anfrage ist angekommen. Wir melden uns bei Ihnen.",
     selectPlaceholder: "Bitte wählen",
     errors: {
       name: "Bitte geben Sie Ihren Namen an.",
@@ -720,7 +744,7 @@ export const kiLayers = {
   label: "02 · KI",
   title: "Eine neue Ebene in Ihrem Betrieb.",
   intro:
-    "Zwischen Ihrem Team und Ihren Systemen entsteht eine neue Ebene. Sie kennt Ihren Betrieb, erledigt die tägliche Fleißarbeit und lernt dabei dazu.",
+    "Zwischen Ihrem Team und Ihren Programmen entsteht eine neue Ebene. Sie kennt Ihren Betrieb, erledigt die tägliche Fleißarbeit und lernt dabei dazu.",
   /** Drei Karten wandern links an der Bühne vorbei. Die aktive ist dunkel. */
   cards: [
     {
@@ -731,12 +755,12 @@ export const kiLayers = {
     {
       tag: "Das Fundament",
       title: "Eine Ebene, die Ihren Betrieb kennt.",
-      body: "Im Kern liegt der Corporate LLM, ein lebendes Abbild Ihres Betriebs mit seinem Wissen und seinen Abläufen. Darauf arbeiten Agenten, die verstehen und ausführen.",
+      body: "Im Kern liegt das Wissen Ihres Betriebs, geordnet und immer aktuell. Darauf arbeitet die KI und erledigt damit Ihre täglichen Aufgaben.",
     },
     {
-      tag: "Die autonome Ebene",
-      title: "Systeme, die selbst handeln.",
-      body: "Die meisten Werkzeuge geben nur Empfehlungen. Unsere Ebene erledigt die Arbeit selbst und wird dabei besser, während Ihr Team die Richtung vorgibt.",
+      tag: "Der Unterschied",
+      title: "Eine KI, die selbst handelt.",
+      body: "Viele Werkzeuge schlagen Ihnen etwas vor. Unsere Ebene erledigt die Arbeit selbst und wird dabei besser, während Ihr Team die Richtung vorgibt.",
     },
   ],
   layers: [
@@ -749,20 +773,20 @@ export const kiLayers = {
     {
       id: "agents",
       role: "added",
-      title: "SVH Agenten und Automatisierungen",
-      body: "Übernehmen wiederkehrende Arbeit auf allen Kanälen.",
+      title: "KI, die mitarbeitet",
+      body: "Übernimmt die Arbeit, die sich jeden Tag wiederholt.",
     },
     {
       id: "llm",
       role: "added",
-      title: "Corporate LLM",
-      body: "Ihr Firmenwissen als lebendes Modell Ihres Betriebs.",
+      title: "Wissen über Ihren Betrieb",
+      body: "Alles, was Ihr Betrieb weiß, an einem Ort und immer aktuell.",
     },
     {
       id: "systems",
       role: "given",
-      title: "Ihre Systeme",
-      body: "CRM, E-Mail, Kalender, Buchhaltung und alles darum herum.",
+      title: "Ihre Programme",
+      body: "Kundenliste, E-Mail, Kalender, Buchhaltung und alles darum herum.",
     },
   ],
   integrations: {
@@ -778,7 +802,7 @@ export const kiLayers = {
 /* ------------------------------------------------------------------ */
 
 export const kiTiles = {
-  title: "Was diese Ebene konkret erledigt",
+  title: "Was diese Ebene für Sie erledigt",
   intro:
     "Jede Kachel ist ein Baustein, den wir einzeln bei Ihnen einbauen. Zusammen ergeben sie einen Betrieb, in dem nichts mehr liegen bleibt.",
   hint: "Zeigen Sie auf eine Kachel, dann läuft sie noch einmal.",
@@ -833,12 +857,12 @@ export const marketingDna = {
   gradientWord: "Marketing-DNA.",
   titleAfter: "",
   intro:
-    "Wir optimieren Ihre digitale Präsenz und Ihren Internetauftritt, sorgen für planbar mehr Anfragen über den digitalen Weg und bauen mit Ihnen eine Marke auf, die in Ihrer Region hängen bleibt.",
+    "Wir bringen Ihren Betrieb im Netz nach vorn. Mehr Menschen finden Sie, und aus Ihrem Namen wird eine Marke, die in Ihrer Region hängen bleibt.",
   /* Der zweite Absatz fuehrt die drei Straenge ein, bevor sie einzeln
      aufgeschlagen werden. Er gibt dem Leser das Bild, das die Sektion
      danach ausbuchstabiert. */
   introMore:
-    "Dahinter stehen drei Stränge, die derselben Handschrift folgen. Ihre Webseite ist der Ort, an dem aus Interesse eine Anfrage wird, Social Media hält Sie zwischen zwei Aufträgen im Gespräch, und die digitalen Werbetafeln bringen Ihren Namen dorthin, wo Ihre Kundschaft ohnehin unterwegs ist.",
+    "Dahinter stehen drei Stränge in derselben Handschrift. Ihre Webseite macht aus Interesse eine Anfrage, Social Media hält Sie im Gespräch, und die Werbetafeln bringen Ihren Namen dorthin, wo Ihre Kundschaft täglich unterwegs ist.",
   /** Ringe zeichnen sich beim Eintritt in die Sektion. Werte vom Auftraggeber genannt. */
   rings: [
     { value: "35+", label: "Umgesetzte Projekte" },
@@ -854,6 +878,14 @@ export const marketingDna = {
      Stranges und ist dafuer neu geschrieben, also einfacher und ohne Bild.
      Die alten Absaetze sind nicht geparkt, sondern weg; was von ihnen
      gebraucht wird, steht auf den drei Unterseiten. */
+  /* Die Felder `lang` an den Marken und `body` an den Schritten werden
+     seit dem 02.09.2026 nicht mehr gezeigt. Sie standen im Titelattribut
+     der Kacheln, und ein Titelattribut erscheint erst nach Sekunden, nur
+     mit einer Maus und nie auf dem Telefon. Es war damit an genau der
+     Stelle die einzige Erklaerung, an der ein Besucher sie brauchen
+     wuerde. Die Saetze bleiben hier als Merkposten stehen, denn sie sind
+     der Stoff fuer eine sichtbare Fassung, sobald die Sektion Platz
+     dafuer bekommt. */
   strands: [
     {
       n: "01",
@@ -866,7 +898,7 @@ export const marketingDna = {
         { icon: "pen", text: "Texte und Bilder", lang: "Aufbau, Texte und Bildsprache aus einer Hand" },
         { icon: "gauge", text: "Kurze Ladezeiten", lang: "Kurze Ladezeiten am Schreibtisch wie am Telefon" },
         { icon: "search", text: "Sichtbar bei Google", lang: "Saubere technische Grundlagen für die Google-Suche" },
-        { icon: "form", text: "Anfragen ins System", lang: "Formulare, die Anfragen direkt in Ihre Systeme geben" },
+        { icon: "form", text: "Anfragen kommen an", lang: "Formulare, die jede Anfrage direkt zu Ihnen bringen" },
         { icon: "cycle", text: "Pflege danach", lang: "Pflege und Weiterentwicklung nach dem Start" },
       ],
       stepsTitle: "So läuft es ab",
@@ -906,10 +938,10 @@ export const marketingDna = {
       kicker: "Ihre Kundschaft sieht Sie auch dann, wenn sie gerade nichts sucht.",
       pointsTitle: "Was dazugehört",
       points: [
-        { icon: "calendar", text: "Fester Redaktionsplan", lang: "Redaktionsplan mit festen Veröffentlichungen" },
+        { icon: "calendar", text: "Ein fester Plan", lang: "Ein fester Plan, was wann veröffentlicht wird" },
         { icon: "camera", text: "Produktion vor Ort", lang: "Foto- und Videoproduktion bei Ihnen vor Ort" },
         { icon: "scissors", text: "Schnitt und Texte", lang: "Schnitt, Texte und Veröffentlichung übernehmen wir" },
-        { icon: "megaphone", text: "Meta, Instagram, TikTok", lang: "Kampagnen auf Meta, Instagram und TikTok" },
+        { icon: "megaphone", text: "Meta, Instagram, TikTok", lang: "Werbeanzeigen auf Meta, Instagram und TikTok" },
         { icon: "chat", text: "Kommentare betreut", lang: "Betreuung von Kommentaren und Nachrichten nach Absprache" },
         { icon: "chart", text: "Monatlicher Bericht", lang: "Monatlicher Bericht in verständlicher Sprache" },
       ],
@@ -936,7 +968,7 @@ export const marketingDna = {
       /* Die beiden Beschriftungen am Zaehler und an der Kurve. Eine Endzahl
          steht bewusst nirgends, denn belegt ist sie nicht. Der Zaehler
          laeuft von null hoch und beginnt danach wieder von vorn. */
-      szene: { zaehler: "Follower", kurve: "Reichweite" },
+      szene: { zaehler: "Wer Ihnen folgt", kurve: "Aufrufe" },
     },
     {
       n: "03",
@@ -954,7 +986,7 @@ export const marketingDna = {
         { icon: "palette", text: "Motive in Ihrem Stil", lang: "Gestaltung der Motive im Stil Ihrer Marke" },
         { icon: "remote", text: "Aus der Ferne bespielt", lang: "Inhalte werden aus der Ferne bespielt" },
         { icon: "clock", text: "Kurzfristig änderbar", lang: "Aktionen, Öffnungszeiten und offene Stellen kurzfristig anpassbar" },
-        { icon: "link", text: "Verzahnt mit online", lang: "Abstimmung mit Ihren Kampagnen im Netz" },
+        { icon: "link", text: "Passend zum Netz", lang: "Abgestimmt auf Ihre Werbung im Netz" },
         /* ❗TODO Verfügbare Standorte, Buchungszeiträume und Preisrahmen
            ergänzen, sobald der Auftraggeber sie liefert. Die Marke stand
            bis zum 02.09.2026 sichtbar in der Liste; für den Livegang hat
@@ -989,7 +1021,7 @@ export const marketingDna = {
   ],
   closingLabel: "Zusammenspiel",
   closing:
-    "Erst zusammen ergeben die drei Stränge eine DNA. Wer Sie auf einer Tafel gesehen hat, erkennt Sie im Netz wieder, und wer Ihnen dort folgt, landet auf einer Seite, die dieselbe Sprache spricht. Deshalb betreuen wir alle drei aus einer Hand und stimmen jede Veröffentlichung auf die anderen beiden ab.",
+    "Erst zusammen ergeben die drei Stränge eine DNA. Wer Sie auf einer Tafel gesehen hat, erkennt Sie im Netz wieder und landet auf einer Seite, die dieselbe Sprache spricht. Deshalb betreuen wir alle drei aus einer Hand.",
   link: { label: "Marketing im Detail", href: "/marketing" },
 };
 
@@ -1073,7 +1105,7 @@ export const webseitenPage = {
       },
       {
         head: "35+",
-        body: "Webseiten haben wir für Betriebe schon gebaut und betreuen sie bis heute weiter.",
+        body: "Projekte haben wir für Betriebe umgesetzt, Webseiten gehören dazu.",
       },
     ],
   },
@@ -1114,8 +1146,8 @@ export const webseitenPage = {
       {
         art: "ki",
         head: "Von KI-Suchmaschinen gelesen",
-        body: "Immer mehr Leute fragen eine KI. Ihre Seite ist so gebaut, dass die KI sie versteht und Sie nennt.",
-        points: ["Saubere Struktur", "Klare Antworten", "Als Quelle genannt"],
+        body: "Immer mehr Leute fragen eine KI um Rat. Ihre Seite ist so gebaut, dass eine KI sie versteht und Sie nennen kann.",
+        points: ["Klarer Aufbau", "Klare Antworten", "Als Quelle lesbar"],
       },
       {
         art: "kunden",
@@ -1294,7 +1326,7 @@ export const werbetafelnPage = {
     titleAfter: ", an dem alle vorbeigehen",
     lead: "Wir stellen kleine digitale Tafeln dort auf, wo jeden Tag Leute stehen und Zeit haben. Ihr Betrieb läuft dort mit, und die Inhalte machen wir.",
     link: { label: "Kostenloses Strategiegespräch", href: "/kontakt" },
-    steleLabel: "Digitale Werbetafel in Personengröße, auf ihrem Schirm wechseln die Spots",
+    steleLabel: "Schlanke digitale Werbetafel, auf ihrem Schirm wechseln die Spots",
   },
 
   /* S2 Warum lokale Praesenz wirkt. Drei Gedanken, jeder in einem Satz.
@@ -1355,48 +1387,47 @@ export const werbetafelnPage = {
   band: {
     srTitle: "Beispiele für Tafeln an verschiedenen Orten",
     hinweis: "Ziehen Sie das Band zur Seite.",
+    /* Jede Kachel zeigt eine Tafel an einem echten Ort. Die dritte und
+       die sechste trugen frueher statt eines Ortsfotos den gezeichneten
+       Spot vor dunklem Grund und sprangen dadurch aus der Reihe. Es gibt
+       vier Ortsfotos fuer sechs Kacheln, deshalb steht jedes zweimal,
+       und die Reihenfolge haelt beide Paare drei Plaetze auseinander. */
     items: [
       {
-        spot: null,
         bild: "/tafeln/ort-gym.webp",
         alt: "Schlanke digitale Werbetafel in einem dunklen Trainingsraum",
         ort: "Gym",
         text: "Der Kursplan steht neben dem Eingang.",
       },
       {
-        spot: null,
         bild: "/tafeln/ort-restaurant.webp",
         alt: "Schlanke digitale Werbetafel am Eingang eines Restaurants",
         ort: "Restaurant",
         text: "Die Karte des Tages läuft neben der Theke.",
       },
       {
-        spot: "club",
-        bild: null,
-        alt: null,
+        bild: "/tafeln/ort-club.webp",
+        alt: "Schlanke digitale Werbetafel in einer dunklen Lounge",
         ort: "Club",
         text: "An der Bar sieht jeder, wer heute auf der Bühne steht.",
       },
       {
-        spot: null,
         bild: "/tafeln/ort-event.webp",
         alt: "Schlanke digitale Werbetafel im Foyer einer Abendveranstaltung",
         ort: "Event",
         text: "Am Eingang leuchtet, worum es hier geht.",
       },
       {
-        spot: null,
+        bild: "/tafeln/ort-restaurant.webp",
+        alt: "Schlanke digitale Werbetafel am Eingang eines Restaurants",
+        ort: "Restaurant",
+        text: "Neben der Ausgabe steht, was frisch gekocht wird.",
+      },
+      {
         bild: "/tafeln/ort-club.webp",
         alt: "Schlanke digitale Werbetafel in einer dunklen Lounge",
         ort: "Club",
         text: "In der Lounge läuft Ihr Spot zwischen den Sets.",
-      },
-      {
-        spot: "restaurant",
-        bild: null,
-        alt: null,
-        ort: "Restaurant",
-        text: "Neben der Ausgabe steht, was frisch gekocht wird.",
       },
     ],
   },

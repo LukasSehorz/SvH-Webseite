@@ -35,7 +35,7 @@ export default function Abschluss({ spot }: Readonly<{ spot: SpotDaten }>) {
           </Rise>
 
           <Rise delay={0.18}>
-            <Link href={t.abschluss.cta.href} className={styles.cta}>
+            <Link href={t.abschluss.cta.href} className={`btn-solid ${styles.ctaAbstand}`}>
               {t.abschluss.cta.label}
             </Link>
           </Rise>

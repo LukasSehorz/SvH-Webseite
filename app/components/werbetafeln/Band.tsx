@@ -12,12 +12,11 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import Spot, { type SpotDaten } from "./Spot";
 import Rise from "./Rise";
 import styles from "./werbetafeln.module.css";
 import { werbetafelnPage as t } from "../../copy";
 
-export default function Band({ spots }: Readonly<{ spots: readonly SpotDaten[] }>) {
+export default function Band() {
   const spur = useRef<HTMLDivElement>(null);
   const [zieht, setZieht] = useState(false);
   const start = useRef({ x: 0, links: 0 });
@@ -67,39 +66,28 @@ export default function Band({ spots }: Readonly<{ spots: readonly SpotDaten[] }
         onPointerCancel={ende}
         style={zieht ? { userSelect: "none" } : undefined}
       >
-        {t.band.items.map((item, index) => {
-          const spot = item.spot ? spots.find((s) => s.id === item.spot) : undefined;
-          return (
-            <Rise key={`${item.ort}-${index}`} delay={Math.min(index, 3) * 0.06} className={styles.bandItem}>
-              <div className={styles.bandMedia}>
-                {item.bild ? (
-                  <>
-                    <Image
-                      src={item.bild}
-                      alt={item.alt ?? ""}
-                      width={1400}
-                      height={788}
-                      sizes="(max-width: 1023px) 70vw, 26vw"
-                      draggable={false}
-                    />
-                    <span className={styles.bandShade} aria-hidden="true" />
-                  </>
-                ) : null}
+        {t.band.items.map((item, index) => (
+          <Rise key={`${item.ort}-${index}`} delay={Math.min(index, 3) * 0.06} className={styles.bandItem}>
+            <div className={styles.bandMedia}>
+              <Image
+                src={item.bild}
+                alt={item.alt}
+                width={1400}
+                height={788}
+                sizes="(max-width: 1023px) 70vw, 26vw"
+                draggable={false}
+              />
+              <span className={styles.bandShade} aria-hidden="true" />
+            </div>
 
-                {spot ? (
-                  <span className={styles.bandSpotWrap}>
-                    <span className={styles.bandSpotScreen}>
-                      <Spot spot={spot} groesze="128px" />
-                    </span>
-                  </span>
-                ) : null}
-              </div>
-
-              <p className={`t-body ${styles.bandText}`}>{item.text}</p>
-              <p className={styles.bandOrt}>{item.ort}</p>
-            </Rise>
-          );
-        })}
+            {/* Die Ortsart steht oben und der Satz darunter. Vorher lag es
+                umgekehrt, und weil ein Satz mal eine und mal zwei Zeilen
+                braucht, standen die Ortsarten der vier sichtbaren Kacheln
+                auf drei verschiedenen Hoehen. */}
+            <p className={styles.bandOrt}>{item.ort}</p>
+            <p className={`t-body ${styles.bandText}`}>{item.text}</p>
+          </Rise>
+        ))}
       </div>
     </section>
   );

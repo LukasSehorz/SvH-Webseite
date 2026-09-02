@@ -315,7 +315,7 @@ export default function Navbar() {
           </Link>
 
           {/* Mitte · Bereiche */}
-          <nav aria-label="Bereiche">
+          <nav aria-label="Hauptmenü">
             <ul className="nav-center-list">{nav.links.map(renderCenter)}</ul>
           </nav>
 
@@ -359,7 +359,7 @@ export default function Navbar() {
             exit={{ opacity: 0 }}
             transition={{ duration: reduced ? 0.15 : 0.4, ease: EASE }}
           >
-            <nav aria-label="Hauptmenü">
+            <nav aria-label="Alle Seiten">
               <ul className="nav-overlay-list">
                 {[...nav.links, nav.contact].map((link, index) => (
                   <motion.li

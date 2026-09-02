@@ -192,7 +192,6 @@ function Points({
           <li
             className={styles.markChip}
             key={point.text}
-            title={point.lang}
             style={{ "--i": i } as React.CSSProperties}
           >
             <Mark id={point.icon} />
@@ -214,15 +213,13 @@ function Steps({
         {strand.stepsTitle}
       </h4>
       {/* DER ABLAUF TRAEGT NUR NOCH SEINE DREI TITEL. Die erklaerenden
-          Saetze stehen weiterhin in copy.ts und wandern ins
-          Titelattribut, gezeigt wird aber allein die Folge. Als Kette
-          gelesen sagt sie ohnehin mehr als die Saetze. */}
+          Saetze stehen weiterhin in copy.ts, gezeigt wird aber allein die
+          Folge. Als Kette gelesen sagt sie ohnehin mehr als die Saetze. */}
       <ol className={styles.stepTrack} data-fluss={fluss}>
         {strand.steps.map((step, i) => (
           <li
             className={styles.stepChip}
             key={step.n}
-            title={step.body}
             style={{ "--i": i } as React.CSSProperties}
           >
             <span className={styles.stepDot} aria-hidden="true" />
@@ -345,8 +342,11 @@ function Strand({ strand }: Readonly<{ strand: Strang }>) {
             {buehne}
             <Steps strand={strand} fluss="senkrecht" />
           </div>
+          {/* Zwei Spalten und nicht drei. Dieser Strang traegt fuenf
+              Marken, und in einem Dreierraster stand die letzte Reihe mit
+              zwei Kacheln neben einer leeren dritten Spalte. */}
           <div className={styles.strandTeil}>
-            <Points strand={strand} spalten={3} />
+            <Points strand={strand} spalten={2} />
           </div>
         </div>
       )}

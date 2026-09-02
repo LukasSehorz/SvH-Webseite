@@ -53,7 +53,9 @@
     ".next-landc/types/**/*.ts",
     ".next-landc/dev/types/**/*.ts",
     ".next-landb/types/**/*.ts",
-    ".next-landb/dev/types/**/*.ts"
+    ".next-landb/dev/types/**/*.ts",
+    ".next-fix/types/**/*.ts",
+    ".next-fix/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -402,11 +402,14 @@ h1.heroTitle {
   margin-top: 24px;
 }
 
+/* Die einzige belegte Zahl der ganzen Seite. Sie stand in der dritten
+   Tonstufe und war damit leiser als jede andere Zeile daneben, obwohl sie
+   als Einzige einen Beleg traegt. Sie steht jetzt in der zweiten. */
 .growthProof {
   margin-top: 34px;
   padding-top: 18px;
   border-top: 1px solid var(--line-2);
-  color: var(--ink-3);
+  color: var(--ink-2);
   font-size: 13.5px;
   letter-spacing: 0.02em;
 }
@@ -502,6 +505,30 @@ h1.heroTitle {
 
 .counterRest {
   color: var(--ink-2);
+}
+
+/* Der Ruhezustand des Zaehlwerks. Pfeil und Beschriftung stehen in
+   Beschriftungsgroesze auf einer Linie, damit die Buehne wartet statt zu
+   behaupten. */
+.counterIdle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--ink-2);
+}
+
+.counterIdle svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  color: var(--acc-lav);
 }
 
 /* Der gezeichnete Beitrag auf der Buehne. */
