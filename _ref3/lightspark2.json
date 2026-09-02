@@ -1,0 +1,15 @@
+{
+  "url": "https://www.lightspark.com/",
+  "ziel": "_ref3/webseiten/lightspark",
+  "ausschnitte": [
+    { "name": "30-hero-parallaxe-a", "y": 0 },
+    { "name": "31-hero-parallaxe-b", "y": 260 },
+    { "name": "32-hero-parallaxe-c", "y": 520 },
+    { "name": "33-reihe-eintritt-a", "y": 2040 },
+    { "name": "34-reihe-eintritt-b", "y": 2180 },
+    { "name": "35-reihe-eintritt-c", "y": 2330 },
+    { "name": "36-reihe-austritt", "y": 2520 },
+    { "name": "37-zahlen-a", "y": 1420 },
+    { "name": "38-zahlen-b", "y": 1560 }
+  ]
+}

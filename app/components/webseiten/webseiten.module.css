@@ -1,0 +1,1452 @@
+/* =====================================================================
+   /marketing/webseiten · Welt "Fenster im Dunkeln"
+
+   Ein einziger Baustein traegt diese Seite, und er heiszt Fenster. Ein
+   Fenster ist ein gerundetes Rechteck mit einer Haarlinie, einem sehr
+   dunklen Inneren und einem farbigen Nebel dahinter, der ueber die
+   Kanten hinausleuchtet. Alles auf dieser Seite ist ein Fenster: die
+   Kacheln im Hero, die sechs gezeichneten Oberflaechen, die vier echten
+   Kundenseiten und die vier Schritte des Ablaufs.
+
+   Die Palette ist die der ganzen Website. Neu ist allein die Regel, dass
+   #5b8cff hier ausschlieszlich an Knoepfen steht, die etwas ausloesen.
+   Kein Text und keine Linie traegt diese Farbe.
+   ===================================================================== */
+
+.page {
+  /* Der Nebel ist der einzige Farbtraeger der Seite. Sein Grundwert steht
+     hier, jede Sektion setzt ihn auf ihren eigenen Ton um. */
+  --mist: #5b8cff;
+  --mist-2: #7c6aff;
+  /* Das Innere jedes Fensters liegt eine Spur ueber dem Seitengrund,
+     damit die Haarlinie nicht die einzige Kante ist. */
+  --win-bg: #08080c;
+  --win-line: rgba(244, 244, 246, 0.11);
+  --win-radius: 18px;
+}
+
+/* ------------------------------------------------------- Handlungsfarbe */
+
+/* M12. Genau diese Farbe und sonst nichts loest etwas aus. Die Schrift
+   steht in fast Schwarz, denn Weisz auf #5b8cff erreicht nur 3,2 zu eins,
+   Schwarz dagegen 6,4 zu eins. */
+.act {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 54px;
+  padding-inline: 28px;
+  border-radius: 9999px;
+  background: #5b8cff;
+  color: #050507;
+  border: 1px solid #5b8cff;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  box-shadow: 0 10px 34px rgba(91, 140, 255, 0.26);
+  transition:
+    transform 0.45s var(--ease-out-expo),
+    background-color 0.45s var(--ease-out-expo),
+    box-shadow 0.45s var(--ease-out-expo);
+}
+
+.act:hover {
+  transform: translateY(-2px);
+  background: #6f9bff;
+  box-shadow: 0 16px 44px rgba(91, 140, 255, 0.34);
+}
+
+.act svg {
+  flex: 0 0 auto;
+}
+
+/* Der stille Zweitweg. Er traegt keine Flaeche und keinen Rahmen, nur
+   eine Linie unter der Schrift, damit die Handlungsfarbe allein steht. */
+.quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 54px;
+  color: var(--ink-2);
+  font-size: 15px;
+  transition: color 0.35s var(--ease-out-expo);
+}
+
+.quiet span {
+  border-bottom: 1px solid rgba(244, 244, 246, 0.22);
+  padding-bottom: 2px;
+  transition: border-color 0.35s var(--ease-out-expo);
+}
+
+.quiet:hover {
+  color: var(--ink);
+}
+
+.quiet:hover span {
+  border-color: var(--ink-2);
+}
+
+/* --------------------------------------------------------------- Hero */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: clamp(146px, 20vh, 226px);
+  padding-bottom: clamp(80px, 10vh, 140px);
+  min-height: min(96vh, 1000px);
+  display: flex;
+  align-items: center;
+}
+
+/* Das Kachelfeld liegt hinter allem und wird zum unteren Rand hin
+   weggeblendet, damit der Uebergang zum Bausteinband weich ist. */
+.heroField {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 12%,
+    #000 62%,
+    transparent 97%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    #000 12%,
+    #000 62%,
+    transparent 97%
+  );
+}
+
+/* Die Kachel selbst schneidet nichts ab, denn ihr Schein muss ueber die
+   Kanten hinausleuchten koennen. Beschnitten wird erst der Ausschnitt
+   darin. */
+.tile {
+  position: absolute;
+  /* Jede Kachel steht auf ihrer eigenen Deckkraft, die im Bauteil
+     gesetzt wird. Helle Kundenseiten stehen tiefer als dunkle, sonst
+     wird die hellste Kachel heller als die Ueberschrift. */
+  will-change: transform;
+}
+
+.tileClip {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.tileClip img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Der Schein liegt hinter der Kachel und laeuft ueber ihre Kanten
+   hinaus. Ohne ihn verschwinden die dunklen Kacheln im Grund. */
+.tileGlow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(58px);
+  pointer-events: none;
+}
+
+/* Eine Haarlinie auf der Kachel macht sie zum Fenster statt zum Bild. */
+.tileEdge {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(244, 244, 246, 0.14);
+  pointer-events: none;
+}
+
+/* Auf schmalen Schirmen bleiben nur sechs Kacheln stehen. Zwoelf waeren
+   auf 390 Bildpunkten ein Teppich und keine Konstellation mehr. */
+@media (max-width: 900px) {
+  .tileSmallHide {
+    display: none;
+  }
+}
+
+.heroCore {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Der Kern der Ueberschrift bekommt einen eigenen Lichthof aus dem
+   Seitengrund. Er senkt alles unmittelbar hinter der Schrift ab, damit
+   die Ueberschrift die hellste Stelle im Bild bleibt. */
+.heroHalo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(1180px, 118%);
+  height: 132%;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(5, 5, 7, 0.94) 0%,
+    rgba(5, 5, 7, 0.82) 44%,
+    rgba(5, 5, 7, 0) 76%
+  );
+  pointer-events: none;
+}
+
+.heroTitle {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: clamp(46px, 7.4vw, 108px);
+  font-weight: 300;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin: 0;
+  color: var(--ink);
+}
+
+.heroLine {
+  display: block;
+}
+
+.heroLead {
+  position: relative;
+  max-width: 44ch;
+  margin: 30px auto 0;
+  font-size: 19px;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.heroActions {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 26px;
+  margin-top: 44px;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    min-height: auto;
+    padding-top: 132px;
+    padding-bottom: 72px;
+  }
+
+  .heroLead {
+    font-size: 17px;
+    margin-top: 24px;
+  }
+
+  .heroActions {
+    margin-top: 34px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .heroActions .act,
+  .heroActions .quiet {
+    justify-content: center;
+  }
+}
+
+/* ------------------------------------------------- Sektionskopf nach M2 */
+
+/* Ueberschrift links und gross, ein einziger Satz weit rechts daneben,
+   dazwischen Leere. Das ist der Taktgeber der ganzen Seite. */
+.head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: end;
+  gap: 40px 64px;
+  margin-bottom: 72px;
+}
+
+.headTitle {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 4.2vw, 62px);
+  font-weight: 300;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  margin: 0;
+  max-width: 15ch;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.headAside {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 42ch;
+  justify-self: end;
+  padding-bottom: 6px;
+}
+
+@media (max-width: 900px) {
+  .head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    margin-bottom: 44px;
+  }
+
+  .headAside {
+    justify-self: start;
+  }
+}
+
+/* ------------------------------------------------- S2 Bausteinband (M9) */
+
+.band {
+  position: relative;
+  padding-block: 22px 0;
+}
+
+.bandNote {
+  color: var(--ink-2);
+  font-size: 15px;
+  margin: 0 0 26px;
+  max-width: 46ch;
+}
+
+/* Die Maske laeuft nach #050507 aus, damit die Karten aus dem Nichts
+   kommen und ins Nichts gehen. */
+.bandRows {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 9%,
+    #000 91%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 9%,
+    #000 91%,
+    transparent 100%
+  );
+}
+
+/* Der Inhalt steht zweimal hintereinander, deshalb ist die Strecke von
+   minus fuenfzig Prozent genau eine Runde und der Sprung unsichtbar. */
+@keyframes bandLauf {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.bandRow {
+  display: flex;
+  width: max-content;
+  gap: 12px;
+  will-change: transform;
+  animation: bandLauf 46s linear infinite;
+}
+
+.bandRowBack {
+  animation-direction: reverse;
+  animation-duration: 54s;
+}
+
+/* Stillstand, solange der Zeiger auf dem Band steht. */
+.bandRows:hover .bandRow {
+  animation-play-state: paused;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  height: 52px;
+  padding-inline: 20px;
+  border-radius: 14px;
+  border: 1px solid var(--win-line);
+  background: var(--win-bg);
+  color: var(--ink-2);
+  font-size: 14.5px;
+  white-space: nowrap;
+  transition:
+    color 0.4s var(--ease-out-expo),
+    border-color 0.4s var(--ease-out-expo);
+}
+
+.chipIcon {
+  display: inline-flex;
+  color: var(--acc-lav);
+  opacity: 0.8;
+}
+
+.bandRows:hover .chip {
+  color: var(--ink);
+}
+
+/* ------------------------------------------------- S3 Warum, Band nach M7 */
+
+.whyGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+}
+
+/* Die senkrechten Haarlinien trennen die Spalten. Die erste Spalte
+   bekommt keine, damit die Kante nicht doppelt steht. */
+.whyCell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 272px;
+  padding: 34px 30px 26px 0;
+  border-left: 1px solid var(--line);
+  padding-left: 30px;
+}
+
+.whyCell:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.whyHead {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 2.3vw, 36px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+  color: var(--ink);
+}
+
+.whyBody {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 30ch;
+}
+
+.whyNum {
+  margin-top: auto;
+  padding-top: 26px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 900px) {
+  .whyGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .whyCell {
+    min-height: 210px;
+    padding: 26px 18px 20px;
+    border-top: 0;
+  }
+
+  .whyCell:nth-child(3),
+  .whyCell:nth-child(4) {
+    border-top: 1px solid var(--line);
+  }
+
+  .whyCell:nth-child(odd) {
+    border-left: 0;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .whyGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .whyCell {
+    border-left: 0;
+    padding-left: 0;
+    min-height: 0;
+  }
+
+  .whyCell + .whyCell {
+    border-top: 1px solid var(--line);
+  }
+}
+
+/* ------------------------------------------------- S4 Was wir tun (M5) */
+
+/* Haarlinie mit zweistelliger Nummer. Sie ist der Taktstrich zwischen
+   zwei Leistungen und traegt die einzige Zaehlung der Seite. */
+.rowRule {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.rowRule::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--line);
+}
+
+.rowNum {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: 40px;
+  min-height: 470px;
+  padding-block: 34px;
+}
+
+.rowText {
+  align-self: center;
+}
+
+.rowHead {
+  font-family: var(--font-display);
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+
+.rowBody {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 34ch;
+}
+
+.rowList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  justify-self: end;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rowList li {
+  font-family: var(--font-display);
+  font-size: clamp(17px, 1.5vw, 22px);
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  color: var(--ink-2);
+}
+
+.rowStage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1023px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    min-height: 0;
+    padding-block: 30px 42px;
+  }
+
+  .rowStage {
+    order: -1;
+  }
+
+  .rowList {
+    text-align: left;
+    justify-self: start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+  }
+
+  .rowList li {
+    font-size: 16px;
+  }
+}
+
+/* Die kompakte Dreierreihe. Sie steht bereit, falls S4 auf dem fertigen
+   Schirm zu lang wird, und traegt dann die letzten drei Punkte. */
+.trio {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  padding-block: 42px 8px;
+}
+
+.trioCell {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.trioList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+}
+
+.trioList li {
+  font-size: 14px;
+  color: var(--ink-3);
+}
+
+@media (max-width: 1023px) {
+  .trio {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 44px;
+  }
+}
+
+/* ------------------------------------------ Fenster und gezeichnete Kunst */
+
+/* Das Fenster nach M3. Der Nebel liegt dahinter und leuchtet ueber die
+   Kanten hinaus, der Rahmen selbst traegt nur Rundung und Haarlinie. */
+.win {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+}
+
+.winMist {
+  position: absolute;
+  inset: -16% -12%;
+  border-radius: 9999px;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    var(--mist) 0%,
+    var(--mist-2) 46%,
+    transparent 72%
+  );
+  filter: blur(52px);
+  opacity: 0.34;
+  pointer-events: none;
+}
+
+.winBody {
+  position: relative;
+  border-radius: var(--win-radius);
+  border: 1px solid var(--win-line);
+  background: var(--win-bg);
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+/* Die gezeichneten Oberflaechen bestehen aus Haarlinien und Balken. Sie
+   zeigen keinen einzigen fremden Namen und kein fremdes Zeichen. */
+.artBar {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-inline: 14px;
+  border-bottom: 1px solid var(--line-2);
+}
+
+.artDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: rgba(244, 244, 246, 0.2);
+}
+
+.artAddr {
+  flex: 1 1 auto;
+  height: 18px;
+  margin-left: 10px;
+  border-radius: 9999px;
+  background: rgba(244, 244, 246, 0.055);
+}
+
+.artPad {
+  padding: 20px 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Ein Balken steht fuer eine Textzeile. Seine Breite und Helligkeit
+   sagen, wie wichtig die Zeile ist. */
+.bar {
+  height: 8px;
+  border-radius: 3px;
+  background: rgba(244, 244, 246, 0.13);
+}
+
+.barStrong {
+  height: 13px;
+  background: rgba(244, 244, 246, 0.5);
+}
+
+.barSoft {
+  background: rgba(244, 244, 246, 0.075);
+}
+
+.block {
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: rgba(244, 244, 246, 0.03);
+}
+
+.rowFlex {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.colFlex {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Das Telefon in der Oberflaeche "mobil optimiert". */
+.phone {
+  width: 132px;
+  margin-inline: auto;
+  border-radius: 20px;
+  border: 1px solid rgba(244, 244, 246, 0.18);
+  background: #0a0a10;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.phoneNotch {
+  width: 36px;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(244, 244, 246, 0.16);
+  margin: 0 auto 4px;
+}
+
+.tapRing {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  border: 1px solid rgba(244, 244, 246, 0.3);
+}
+
+/* Die Ladeanzeige in der Oberflaeche "schnelle Ladezeiten". Sie steht
+   voll, weil die Seite eben schon da ist. Es steht keine Zahl daran. */
+.loadTrack {
+  height: 3px;
+  border-radius: 9999px;
+  background: rgba(244, 244, 246, 0.08);
+  overflow: hidden;
+}
+
+.loadFill {
+  height: 100%;
+  width: 100%;
+  border-radius: 9999px;
+  background: rgba(244, 244, 246, 0.55);
+}
+
+.loadFillShort {
+  width: 34%;
+  background: rgba(244, 244, 246, 0.16);
+}
+
+/* Das Suchergebnis. Die erste Zeile ist das Ergebnis, das gefunden
+   werden soll, die beiden darunter stehen blasser. */
+.searchField {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 34px;
+  padding-inline: 12px;
+  border-radius: 9999px;
+  border: 1px solid var(--win-line);
+  color: var(--ink-3);
+}
+
+.hit {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 12px 12px;
+  border-radius: 10px;
+}
+
+.hitLead {
+  background: rgba(244, 244, 246, 0.035);
+  border: 1px solid var(--line-2);
+}
+
+/* Die KI-Antwort. Der Quellenhinweis unten macht sie als Antwort einer
+   KI lesbar, ohne dass ein fremdes Zeichen im Bild steht. */
+.answer {
+  display: flex;
+  gap: 11px;
+}
+
+.answerMark {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  border: 1px solid rgba(244, 244, 246, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-2);
+  margin-top: 1px;
+}
+
+.sourceChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding-inline: 11px;
+  border-radius: 9999px;
+  border: 1px solid var(--win-line);
+  color: var(--ink-2);
+  font-size: 11.5px;
+  align-self: flex-start;
+}
+
+/* Das ausgefuellte Kontaktformular. Die Felder tragen Haken, damit man
+   sieht, dass jemand sie schon ausgefuellt hat. */
+.formField {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 34px;
+  padding-inline: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--win-line);
+}
+
+/* Der Knopf in einer gezeichneten Oberflaeche loest nichts aus und
+   traegt deshalb nach M12 auch nicht die Handlungsfarbe. */
+.formSend {
+  height: 32px;
+  border-radius: 9999px;
+  background: rgba(244, 244, 246, 0.86);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.formSendBar {
+  width: 62px;
+  height: 7px;
+  border-radius: 3px;
+  background: rgba(5, 5, 7, 0.72);
+}
+
+.artLabel {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+/* ------------------------------------------------ S5 Referenzen (M8, M3) */
+
+.refGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  margin-bottom: clamp(80px, 9vw, 132px);
+}
+
+.refCard {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 26px 22px 22px;
+  border-left: 1px solid var(--line);
+  transition: background-color 0.5s var(--ease-out-expo);
+}
+
+.refCard:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.refCard:hover {
+  background: rgba(244, 244, 246, 0.02);
+}
+
+.refCardField {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+.refCardName {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* Das Vorschaubild steht als schwebende Kachel auf seinem Nebel, wie in
+   der Viererreihe der Referenzseite. */
+.refShot {
+  position: relative;
+  margin-top: auto;
+  padding-top: 22px;
+}
+
+.refShotMist {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 34%;
+  bottom: 6%;
+  border-radius: 9999px;
+  background: var(--mist);
+  filter: blur(40px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.refShotFrame {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--win-line);
+  aspect-ratio: 16 / 10;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+}
+
+.refShotFrame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0%;
+  opacity: 0.86;
+}
+
+.refCardNum {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1023px) {
+  .refGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .refCard {
+    padding: 22px 16px 20px;
+  }
+
+  .refCard:nth-child(odd) {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .refCard:nth-child(3),
+  .refCard:nth-child(4) {
+    border-top: 1px solid var(--line);
+  }
+}
+
+/* Die vier ausfuehrlichen Bloecke. Bild links und Text rechts, dann
+   umgekehrt. Der Abstand zwischen den Bloecken traegt auf dem Telefon
+   die Arbeit, die auf dem groszen Schirm der Wechsel leistet. */
+.refBlock {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: 56px;
+  scroll-margin-top: 120px;
+}
+
+.refBlock + .refBlock {
+  margin-top: clamp(96px, 11vw, 168px);
+}
+
+.refBlockFlip .refStage {
+  order: 2;
+}
+
+.refInfo {
+  max-width: 40ch;
+}
+
+.refField {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 14px;
+}
+
+.refName {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3.2vw, 46px);
+  font-weight: 300;
+  letter-spacing: -0.024em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0;
+}
+
+.refNameLink {
+  color: var(--ink);
+  border-bottom: 1px solid rgba(244, 244, 246, 0.2);
+  transition: border-color 0.4s var(--ease-out-expo);
+}
+
+.refNameLink:hover {
+  border-color: var(--ink);
+}
+
+.refBody {
+  font-size: 16px;
+  line-height: 1.62;
+  color: var(--ink-2);
+  margin: 22px 0 0;
+}
+
+.refHost {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 26px;
+  font-size: 14px;
+  color: var(--ink-2);
+  transition: color 0.35s var(--ease-out-expo);
+}
+
+.refHost:hover {
+  color: var(--ink);
+}
+
+.refHost svg {
+  color: var(--ink-3);
+}
+
+/* ---------------------------------------------- Browserfenster nach M4 */
+
+.frameWrap {
+  position: relative;
+}
+
+/* Der Lichthof in der Farbe des Projekts. Er faengt den weiszen Grund
+   dreier Kundenseiten ab, damit sie kein Loch in die Seite schlagen. */
+.frameMist {
+  position: absolute;
+  inset: -8% -6%;
+  border-radius: 9999px;
+  background: radial-gradient(
+    ellipse at 50% 45%,
+    var(--mist) 0%,
+    var(--mist-2) 52%,
+    transparent 74%
+  );
+  filter: blur(64px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.frame {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(244, 244, 246, 0.14);
+  background: var(--win-bg);
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.68);
+}
+
+.frameBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding-inline: 15px;
+  border-bottom: 1px solid var(--line-2);
+  background: #0a0a10;
+}
+
+.frameDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(244, 244, 246, 0.2);
+  flex: 0 0 8px;
+}
+
+.frameAddr {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 26px;
+  margin-left: 8px;
+  padding-inline: 12px;
+  border-radius: 9999px;
+  border: 1px solid var(--win-line);
+  background: rgba(244, 244, 246, 0.03);
+  color: var(--ink-2);
+  font-size: 12.5px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition:
+    color 0.35s var(--ease-out-expo),
+    border-color 0.35s var(--ease-out-expo);
+}
+
+.frameAddr:hover {
+  color: var(--ink);
+  border-color: var(--ink-3);
+}
+
+.frameAddr svg {
+  flex: 0 0 auto;
+  color: var(--ink-3);
+}
+
+/* Der Ausschnitt steht still, das Bild darin wandert. Die feste Hoehe
+   ist noetig, damit die Strecke des Bildes berechenbar bleibt. */
+.frameView {
+  position: relative;
+  height: clamp(360px, 46vw, 580px);
+  overflow: hidden;
+  background: #0a0a10;
+}
+
+.frameRun {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+  will-change: transform;
+}
+
+.frameStill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0%;
+}
+
+/* Die Abdunklung an den Kanten. Ohne sie blendet ein grosses helles
+   Fenster auf schwarzem Grund. */
+.frameShade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 46px 12px rgba(5, 5, 7, 0.62);
+}
+
+.frameNote {
+  margin-top: 16px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+@media (max-width: 1023px) {
+  .refBlock {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+  }
+
+  .refBlockFlip .refStage {
+    order: 0;
+  }
+
+  .refBlock + .refBlock {
+    margin-top: 104px;
+  }
+}
+
+/* ------------------------------------------------- S6 Ablauf (M10) */
+
+/* Die Sektion ist hoeher als der Schirm, damit die Liste beim Scrollen
+   durchschalten kann. Der Inhalt selbst klebt in der Mitte. */
+.stepWrap {
+  position: relative;
+  height: 220vh;
+}
+
+.stepSticky {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.stepGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 64px;
+  width: 100%;
+}
+
+.stepList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.stepItem {
+  position: relative;
+  padding: 22px 0 22px 34px;
+  border-top: 1px solid var(--line-2);
+  transition: opacity 0.55s var(--ease-out-expo);
+}
+
+.stepItem:last-child {
+  border-bottom: 1px solid var(--line-2);
+}
+
+/* Der aktive Schritt traegt einen Punkt in #7c6aff. Der Punkt ist kein
+   Handlungszeichen, deshalb steht hier Violett und nicht Blau. */
+.stepDot {
+  position: absolute;
+  left: 0;
+  top: 32px;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--acc-violet);
+  transform: scale(0);
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.stepItemOn .stepDot {
+  transform: scale(1);
+}
+
+.stepHead {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.6vw, 36px);
+  font-weight: 300;
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+  margin: 0;
+  color: var(--ink);
+}
+
+.stepBody {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 10px 0 0;
+  max-width: 38ch;
+}
+
+.stepNum {
+  position: absolute;
+  right: 0;
+  top: 26px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.stepStage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 340px;
+}
+
+.stepPanel {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 1023px) {
+  /* Auf schmalen Schirmen werden daraus vier gestapelte Bloecke ohne
+     Umschalten, weil ein klebender Bereich dort nur im Weg steht. */
+  .stepWrap {
+    height: auto;
+  }
+
+  .stepSticky {
+    position: static;
+    min-height: 0;
+  }
+
+  .stepGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .stepStack {
+    display: flex;
+    flex-direction: column;
+    gap: 54px;
+  }
+
+  .stepStackItem {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+}
+
+/* --------------------------------------------------- S7 Abschluss (M11) */
+
+.close {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding-block: clamp(130px, 17vw, 220px);
+  border-top: 1px solid var(--line-2);
+}
+
+.closeMist {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(1240px, 130vw);
+  height: 620px;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    var(--acc-violet) 0%,
+    var(--acc-blue) 48%,
+    transparent 74%
+  );
+  filter: blur(130px);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.closeInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.closeTitle {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 76px);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.028em;
+  margin: 0;
+  max-width: 17ch;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.closeLead {
+  margin: 28px 0 0;
+  max-width: 44ch;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: balance;
+}
+
+.closeActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 26px;
+  margin-top: 46px;
+}
+
+@media (max-width: 640px) {
+  .closeLead {
+    font-size: 16px;
+  }
+
+  .closeActions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 340px;
+    gap: 6px;
+  }
+
+  .closeActions .act,
+  .closeActions .quiet {
+    justify-content: center;
+  }
+}
+
+/* ------------------------------------------------------ Zugaenglichkeit */
+
+/* Ein Sprungziel, das nur mit der Tastatur sichtbar wird. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}

@@ -1,0 +1,14 @@
+{
+  "url": "https://deck.co/",
+  "ziel": "_ref3/webseiten/deck",
+  "ausschnitte": [
+    { "name": "30-liste-a", "y": 4450 },
+    { "name": "31-liste-b", "y": 4780 },
+    { "name": "32-liste-c", "y": 5080 },
+    { "name": "33-fenster-a", "y": 5450 },
+    { "name": "34-fenster-b", "y": 5750 },
+    { "name": "35-fenster-c", "y": 6050 },
+    { "name": "36-marquee-a", "y": 1620 },
+    { "name": "37-marquee-b", "y": 1660 }
+  ]
+}

@@ -1,22 +1,15 @@
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Marquee from "./components/Marquee";
-import IntroStatement from "./components/IntroStatement";
-import ImpactSection from "./components/ImpactSection";
-import ShowcaseVideo from "./components/ShowcaseVideo";
-import ServicesSection from "./components/ServicesSection";
-import ProcessSection from "./components/ProcessSection";
-import ProblemsSection from "./components/ProblemsSection";
-import RoiCalculator from "./components/RoiCalculator";
-import OfferingsSection from "./components/OfferingsSection";
-import Testimonials from "./components/Testimonials";
-import StatsBanner from "./components/StatsBanner";
-import AudienceSection from "./components/AudienceSection";
-import ResourcesSection from "./components/ResourcesSection";
-import NewsletterSection from "./components/NewsletterSection";
-import FaqSection from "./components/FaqSection";
-import FinalCta from "./components/FinalCta";
-import SiteFooter from "./components/SiteFooter";
+import Navbar from "./components/system/Navbar";
+import Footer from "./components/system/Footer";
+import Hero from "./components/landing/Hero";
+import Manifesto from "./components/landing/Manifesto";
+import KiLayers from "./components/landing/KiLayers";
+import KiTiles from "./components/landing/KiTiles";
+import ProcessPanel from "./components/landing/ProcessPanel";
+import MarketingDna from "./components/landing/MarketingDna";
+import Showcase from "./components/landing/Showcase";
+import DnaZone from "./components/marketing/DnaZone";
+import Faq from "./components/landing/Faq";
+import FinalCta from "./components/landing/FinalCta";
 
 export default function Home() {
   return (
@@ -24,24 +17,20 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <Marquee />
-        <IntroStatement />
-        <ImpactSection />
-        <ShowcaseVideo />
-        <ServicesSection />
-        <ProcessSection />
-        <ProblemsSection />
-        <RoiCalculator />
-        <OfferingsSection />
-        <Testimonials />
-        <StatsBanner />
-        <AudienceSection />
-        <ResourcesSection />
-        <NewsletterSection />
-        <FaqSection />
+        <Manifesto />
+        <KiLayers />
+        <KiTiles />
+        <ProcessPanel />
+        {/* Die DNA-Struktur liegt NUR hinter der Marketing-Sektion und
+            endet vor den Referenzen. */}
+        <DnaZone>
+          <MarketingDna />
+        </DnaZone>
+        <Showcase />
+        <Faq />
         <FinalCta />
       </main>
-      <SiteFooter />
+      <Footer />
     </>
   );
 }

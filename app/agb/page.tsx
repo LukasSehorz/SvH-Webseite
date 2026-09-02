@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { company } from "../content";
-import LegalPage from "../components/LegalPage";
+import DarkLegalPage from "../components/pages/DarkLegalPage";
 
 export const metadata: Metadata = {
-  title: `AGB – ${company.name}`,
+  title: "Allgemeine Geschäftsbedingungen",
   description: `Allgemeine Geschäftsbedingungen von ${company.name} für Beratungs-, Automatisierungs-, Marketing- und Webleistungen.`,
 };
 
 export default function AgbPage() {
   return (
-    <LegalPage title="Allgemeine Geschäftsbedingungen">
+    <DarkLegalPage title="Allgemeine Geschäftsbedingungen">
       <h2>§ 1 Geltungsbereich</h2>
       <p>
         Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen{" "}
@@ -139,15 +139,15 @@ export default function AgbPage() {
       <h2>§ 12 Schlussbestimmungen</h2>
       <p>
         Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts.
-        Erfüllungsort und – soweit der Auftraggeber Unternehmer, juristische Person des öffentlichen
-        Rechts oder öffentlich-rechtliches Sondervermögen ist – ausschließlicher Gerichtsstand ist der
-        Sitz des Auftragnehmers.
+        Erfüllungsort ist der Sitz des Auftragnehmers. Ist der Auftraggeber Unternehmer, juristische
+        Person des öffentlichen Rechts oder öffentlich-rechtliches Sondervermögen, so ist der Sitz
+        des Auftragnehmers zugleich ausschließlicher Gerichtsstand.
       </p>
       <p>
         Sollten einzelne Bestimmungen dieser AGB ganz oder teilweise unwirksam sein oder werden, bleibt
         die Wirksamkeit der übrigen Bestimmungen unberührt. An die Stelle der unwirksamen Bestimmung
         tritt die gesetzliche Regelung.
       </p>
-    </LegalPage>
+    </DarkLegalPage>
   );
 }

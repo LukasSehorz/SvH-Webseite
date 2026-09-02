@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="SVH Consulting">
+  <!--
+    Das Seitensymbol. Es fehlte bisher ganz, und die einzige Konsolenmeldung
+    der ganzen Seite war deshalb ein 404 auf favicon.ico.
+
+    Das Zeichen ist der verdrehte Streifen der Marketing-Sektion auf seine
+    Silhouette zurueckgefuehrt, also die Sanduhr mit ihrer Engstelle in der
+    Mitte. Buchstaben scheiden aus, weil ein Seitensymbol bei sechzehn
+    Bildpunkten Kantenlaenge steht und drei Buchstaben dort zu einem Fleck
+    zusammenlaufen. Eine geschlossene Form mit einer einzigen Einschnuerung
+    bleibt dagegen bis in diese Groesze erkennbar.
+
+    Die Farben sind die Akzente der dunklen Fassung, also Blau #5b8cff ueber
+    Violett #7c6aff nach Lavendel #b9a5ff, auf dem Grund #050507.
+
+    ACHTUNG BEIM AENDERN DIESES KOMMENTARS. Eine SVG-Datei ist XML, und XML
+    verbietet zwei aufeinanderfolgende Bindestriche innerhalb eines
+    Kommentars. Die Namen der Farbmerkmale aus globals.css duerfen hier also
+    nicht ausgeschrieben werden, sonst ist die Datei kein gueltiges XML mehr
+    und der Browser zeichnet gar kein Symbol. Der Entwicklungsserver liefert
+    sie trotzdem mit Rueckgabe 200 aus, und die Konsole schweigt dazu; der
+    Fehler faellt erst auf, wenn man die Datei durch einen Bildwandler
+    schickt.
+  -->
+  <defs>
+    <linearGradient id="svhBand" x1="6" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5b8cff" />
+      <stop offset="0.55" stop-color="#7c6aff" />
+      <stop offset="1" stop-color="#b9a5ff" />
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="#050507" />
+  <path
+    d="M8.5 5.5h15c0 5.2-3.1 8-7.5 10.5 4.4 2.5 7.5 5.3 7.5 10.5h-15c0-5.2 3.1-8 7.5-10.5C11.6 13.5 8.5 10.7 8.5 5.5Z"
+    fill="url(#svhBand)"
+  />
+</svg>

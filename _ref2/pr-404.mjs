@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch({ headless: false });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+const roh = [];
+page.on('response', (r) => roh.push(`${r.status()} ${r.request().resourceType()} ${r.url()}`));
+page.on('requestfailed', (r) => roh.push(`FAIL ${r.request?.().resourceType?.() || ''} ${r.url()} ${(r.failure()||{}).errorText}`));
+await page.goto('http://localhost:3100/', { waitUntil: 'load', timeout: 120000 });
+await page.waitForTimeout(6000);
+const schlecht = roh.filter((z) => !z.startsWith('200') && !z.startsWith('204') && !z.startsWith('304'));
+console.log(schlecht.length ? schlecht.join('\n') : 'alle Anfragen in Ordnung');
+await browser.close();

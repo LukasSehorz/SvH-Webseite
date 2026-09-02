@@ -1,0 +1,976 @@
+/* =====================================================================
+   Social-Welt
+
+   Traegt die Unterseite /marketing/social-media und die Uebersicht
+   /marketing. Farben, Linien und Typografie kommen unveraendert aus dem
+   Grundsystem in app/globals.css, hier steht allein, was diese beiden
+   Seiten zusaetzlich brauchen.
+
+   Die Schale ist absichtlich sehr breit. Begrenzt wird deshalb der
+   einzelne Absatz und nicht der Rahmen, damit auf grossen Schirmen die
+   Flaeche genutzt wird und die Zeile trotzdem lesbar bleibt.
+   ===================================================================== */
+
+/* ----------------------------------------------------- Seitenkopf mit Kugel */
+
+/* Die Leinwand der Kugel ragt seitlich ueber das Raster hinaus. Der
+   Kopf schneidet den Ueberstand ab, sonst scrollt die Seite waagerecht. */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: clamp(124px, 17vh, 196px);
+  padding-bottom: clamp(36px, 6vh, 76px);
+}
+
+.heroGrid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 80px);
+  align-items: center;
+  min-height: 540px;
+}
+
+.heroCanvas {
+  position: absolute;
+  top: -80px;
+  bottom: -80px;
+  left: -150px;
+  right: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Diese Flaeche wird gemessen. Aus ihrer Mitte und Breite berechnet der
+   Seitenkopf, wo die Kugel steht, damit Kugel und Text auf jeder
+   Bildbreite zueinander stehen. */
+.heroZone {
+  position: relative;
+  height: 520px;
+}
+
+/* Ruhiger Hof an der Stelle der Kugel. Er steht schon vor dem Aufbau der
+   Leinwand und verhindert, dass die Flaeche bis dahin leer wirkt. */
+.heroZone::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(84%, 520px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: radial-gradient(circle at 50% 50%, rgba(124, 106, 255, 0.16), transparent 66%);
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+.heroText {
+  position: relative;
+  z-index: 1;
+}
+
+/* Zwei Zeilen. Die Marke haelt den Umbruch nach dem Wort TikTok. */
+.heroTitle {
+  max-width: 26ch;
+}
+
+.heroLead {
+  margin-top: 28px;
+}
+
+.heroActions {
+  margin-top: 38px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+/* --------------------------------------------------- Kopf der Uebersicht */
+
+.head {
+  position: relative;
+  overflow: hidden;
+  padding-top: clamp(124px, 17vh, 196px);
+  padding-bottom: clamp(48px, 8vh, 96px);
+}
+
+.headStars {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.headInner {
+  position: relative;
+  z-index: 1;
+}
+
+.headTitle {
+  max-width: 18ch;
+}
+
+.headLead {
+  margin-top: 28px;
+}
+
+/* --------------------------------------------- Sektionskopf, allgemein */
+
+.secHead {
+  margin-bottom: clamp(40px, 6vh, 72px);
+}
+
+.secLead {
+  margin-top: 22px;
+}
+
+/* ------------------------------------------------ Instagram und TikTok */
+
+.platformGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 56px);
+}
+
+.platform {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: clamp(24px, 2.4vw, 42px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(244, 244, 246, 0.028), transparent 60%);
+}
+
+.platformStage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 300px;
+}
+
+/* Weicher Hof hinter dem gezeichneten Beitrag, damit die Haarlinien
+   nicht auf reinem Schwarz stehen. */
+.platformStage::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: radial-gradient(circle at 50% 50%, rgba(91, 140, 255, 0.16), transparent 68%);
+  filter: blur(44px);
+}
+
+.platformName {
+  margin: 0;
+}
+
+.platformBody {
+  margin-top: 16px;
+}
+
+/* ---------------------------------------- Gezeichneter Beitrag, hochkant */
+
+.post {
+  position: relative;
+  width: 232px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--bg-raise);
+  padding: 14px;
+  box-shadow: 0 26px 60px -30px rgba(5, 5, 7, 0.95);
+}
+
+.postHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.postAvatar {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  border-radius: 9999px;
+  background: var(--grad);
+  opacity: 0.8;
+}
+
+.postBars {
+  display: grid;
+  gap: 6px;
+  flex: 1 1 auto;
+}
+
+.bar {
+  display: block;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(244, 244, 246, 0.26);
+}
+
+.barSoft {
+  display: block;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(244, 244, 246, 0.12);
+}
+
+/* Die Bildflaeche des Beitrags. Das Seitenverhaeltnis ist das hochkante
+   Format, in dem auf beiden Plattformen veroeffentlicht wird. */
+.postMedia {
+  position: relative;
+  margin-top: 14px;
+  aspect-ratio: 4 / 5;
+  border-radius: 12px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(91, 140, 255, 0.3), transparent 62%),
+    radial-gradient(120% 90% at 90% 100%, rgba(185, 165, 255, 0.24), transparent 60%),
+    rgba(244, 244, 246, 0.05);
+}
+
+/* Ein einzelner heller Streifen wandert einmal ueber die Flaeche. */
+.postSheen {
+  position: absolute;
+  inset: -20% -60%;
+  background: linear-gradient(
+    100deg,
+    transparent 34%,
+    rgba(244, 244, 246, 0.2) 50%,
+    transparent 66%
+  );
+}
+
+.postActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  color: var(--ink-2);
+}
+
+.postActions svg {
+  width: 19px;
+  height: 19px;
+}
+
+.postFoot {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+/* ------------------------------------------ Gezeichnetes kurzes Video */
+
+.reel {
+  position: relative;
+  width: 210px;
+  aspect-ratio: 9 / 16;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 70% at 15% 8%, rgba(124, 106, 255, 0.32), transparent 60%),
+    radial-gradient(120% 70% at 88% 96%, rgba(91, 140, 255, 0.24), transparent 58%),
+    var(--bg-raise);
+  box-shadow: 0 26px 60px -30px rgba(5, 5, 7, 0.95);
+}
+
+.reelPlay {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px;
+  border-radius: 9999px;
+  border: 1px solid rgba(244, 244, 246, 0.3);
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  background: rgba(5, 5, 7, 0.4);
+  backdrop-filter: blur(4px);
+}
+
+.reelPlay svg {
+  width: 20px;
+  height: 20px;
+  margin-left: 3px;
+}
+
+/* Senkrechte Leiste der Zeichen am rechten Rand, wie sie kurze Videos
+   auf beiden Plattformen fuehren. */
+.reelRail {
+  position: absolute;
+  right: 12px;
+  bottom: 54px;
+  display: grid;
+  gap: 16px;
+  color: rgba(244, 244, 246, 0.72);
+}
+
+.reelRail svg {
+  width: 20px;
+  height: 20px;
+}
+
+.reelCaption {
+  position: absolute;
+  left: 14px;
+  right: 56px;
+  bottom: 30px;
+  display: grid;
+  gap: 6px;
+}
+
+.reelTrack {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(244, 244, 246, 0.14);
+  overflow: hidden;
+}
+
+.reelFill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border-radius: 3px;
+  background: var(--grad);
+  transform-origin: left center;
+}
+
+/* -------------------------------------------------- Szene des Wachstums */
+
+.growthGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(32px, 5vw, 88px);
+  align-items: center;
+}
+
+.growthBody {
+  margin-top: 24px;
+}
+
+.growthProof {
+  margin-top: 34px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-2);
+  color: var(--ink-3);
+  font-size: 13.5px;
+  letter-spacing: 0.02em;
+}
+
+.replay {
+  margin-top: 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-2);
+  font-size: 14px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 4px;
+  transition:
+    color 0.35s var(--ease-out-expo),
+    border-color 0.35s var(--ease-out-expo);
+}
+
+.replay:hover {
+  color: var(--ink);
+  border-color: var(--ink-2);
+}
+
+.replay svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* Die Buehne. Ein hochkantes Fenster, in dem der Zaehler laeuft, der
+   Beitrag erscheint und die Zeichen hereinkommen. */
+.stage {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 420px);
+  min-height: 460px;
+  padding: 26px 24px 30px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(244, 244, 246, 0.03), transparent 55%), var(--bg);
+  overflow: hidden;
+}
+
+.stageGlow {
+  position: absolute;
+  left: 50%;
+  top: 22%;
+  width: 340px;
+  height: 340px;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: radial-gradient(circle at 50% 50%, rgba(124, 106, 255, 0.22), transparent 68%);
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+.stageInner {
+  position: relative;
+  z-index: 1;
+}
+
+.counterLabel {
+  color: var(--ink-3);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+/* Feste Hoehe, damit der Wechsel zwischen Ziffern und Ruhewort die
+   darunterliegenden Teile der Buehne nicht verschiebt. */
+.counterSlot {
+  position: relative;
+  height: 74px;
+  margin-top: 6px;
+}
+
+.counterValue,
+.counterRest {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--font-display);
+  font-size: 58px;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.counterValue {
+  font-variant-numeric: tabular-nums;
+}
+
+.counterRest {
+  color: var(--ink-2);
+}
+
+/* Der gezeichnete Beitrag auf der Buehne. */
+.stagePost {
+  position: relative;
+  width: 176px;
+  margin: 34px auto 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--bg-raise);
+  padding: 12px;
+  z-index: 1;
+}
+
+/* Der Ring der Reichweite geht vom Beitrag aus nach aussen. */
+.reach {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 190px;
+  height: 190px;
+  margin: -95px 0 0 -95px;
+  border-radius: 9999px;
+  border: 1px solid rgba(124, 106, 255, 0.5);
+  pointer-events: none;
+}
+
+.stagePostCaption {
+  margin-top: 18px;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+/* Die kleinen Zeichen, die hereinkommen. Sie liegen ueber der Buehne und
+   steigen von unten auf. */
+.marks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.mark {
+  position: absolute;
+  bottom: 12%;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 1px solid rgba(244, 244, 246, 0.14);
+  background: rgba(11, 11, 16, 0.72);
+  color: var(--acc-lav);
+  backdrop-filter: blur(3px);
+}
+
+.mark svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* ------------------------------------------------------- Was dazugehoert */
+
+.scopeList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line-2);
+  border-block: 1px solid var(--line-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.scopeItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: clamp(24px, 2.6vw, 38px) clamp(16px, 2vw, 32px);
+  background: var(--bg);
+}
+
+.scopeIcon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  color: var(--acc-lav);
+}
+
+.scopeIcon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.scopeLabel {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------- Ablauf */
+
+.chain {
+  position: relative;
+  display: grid;
+  gap: clamp(44px, 7vh, 96px);
+  padding-left: 66px;
+}
+
+.rail {
+  position: absolute;
+  left: 17px;
+  top: 16px;
+  bottom: 16px;
+  width: 1px;
+  background: var(--line-2);
+  overflow: hidden;
+}
+
+.railFill {
+  position: absolute;
+  inset: 0;
+  background: var(--grad);
+  transform-origin: top center;
+}
+
+.step {
+  position: relative;
+  opacity: 0.34;
+  filter: saturate(0.4);
+  transition:
+    opacity 0.7s var(--ease-out-expo),
+    filter 0.7s var(--ease-out-expo);
+}
+
+.step[data-active="true"] {
+  opacity: 1;
+  filter: none;
+}
+
+.stepNode {
+  position: absolute;
+  left: -66px;
+  top: 0;
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  transition:
+    border-color 0.7s var(--ease-out-expo),
+    color 0.7s var(--ease-out-expo),
+    box-shadow 0.7s var(--ease-out-expo);
+}
+
+.step[data-active="true"] .stepNode {
+  border-color: rgba(124, 106, 255, 0.7);
+  color: var(--ink);
+  box-shadow: 0 10px 34px -14px rgba(124, 106, 255, 0.9);
+}
+
+.stepTitle {
+  margin: 0;
+}
+
+.stepBody {
+  margin-top: 16px;
+}
+
+/* ------------------------------------- Uebersicht, die drei Leistungen */
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 2vw, 34px);
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(26px, 2.4vw, 40px);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(244, 244, 246, 0.03), transparent 58%);
+  color: var(--ink);
+  transition:
+    border-color 0.5s var(--ease-out-expo),
+    transform 0.5s var(--ease-out-expo),
+    background-color 0.5s var(--ease-out-expo);
+}
+
+.field:hover,
+.field:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(244, 244, 246, 0.24);
+  background-color: rgba(244, 244, 246, 0.02);
+}
+
+/* Das bewegte Sinnbild der jeweiligen Welt. */
+.sigil {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: clamp(190px, 17vw, 250px);
+  margin-bottom: clamp(28px, 3vw, 44px);
+  overflow: hidden;
+}
+
+.sigil::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  width: 260px;
+  height: 260px;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: radial-gradient(circle at 50% 50%, rgba(124, 106, 255, 0.2), transparent 68%);
+  filter: blur(46px);
+}
+
+.fieldName {
+  margin: 0;
+}
+
+.fieldBody {
+  margin-top: 16px;
+}
+
+.fieldGo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line-2);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink-2);
+  transition: color 0.4s var(--ease-out-expo);
+}
+
+.field:hover .fieldGo {
+  color: var(--ink);
+}
+
+.fieldGo svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* --------------------------------------------- Sinnbild Webseiten */
+
+.sigWeb {
+  position: relative;
+  width: min(100%, 260px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg-raise);
+  overflow: hidden;
+}
+
+.sigWebBar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--line-2);
+}
+
+.sigWebDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(244, 244, 246, 0.2);
+}
+
+.sigWebAddr {
+  flex: 1 1 auto;
+  height: 6px;
+  margin-left: 6px;
+  border-radius: 3px;
+  background: rgba(244, 244, 246, 0.09);
+}
+
+.sigWebBody {
+  display: grid;
+  gap: 9px;
+  padding: 16px 14px 20px;
+}
+
+.sigWebRow {
+  display: flex;
+  gap: 9px;
+}
+
+.sigWebCard {
+  flex: 1 1 0;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(244, 244, 246, 0.07);
+}
+
+/* --------------------------------------------- Sinnbild Werbetafeln */
+
+.sigBoard {
+  position: relative;
+  display: grid;
+  justify-items: center;
+}
+
+.sigBoardScreen {
+  position: relative;
+  width: 176px;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background:
+    radial-gradient(110% 130% at 18% 0%, rgba(91, 140, 255, 0.3), transparent 62%),
+    var(--bg-raise);
+}
+
+.sigBoardSheen {
+  position: absolute;
+  inset: -30% -70%;
+  background: linear-gradient(
+    100deg,
+    transparent 36%,
+    rgba(244, 244, 246, 0.22) 50%,
+    transparent 64%
+  );
+}
+
+.sigBoardLines {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  display: grid;
+  gap: 7px;
+}
+
+.sigBoardPole {
+  width: 5px;
+  height: 44px;
+  border-radius: 3px;
+  background: rgba(244, 244, 246, 0.14);
+}
+
+.sigBoardFoot {
+  width: 74px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(244, 244, 246, 0.14);
+}
+
+/* --------------------------------------------- Sinnbild Social Media */
+
+.sigPost {
+  position: relative;
+  width: 158px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--bg-raise);
+  padding: 11px;
+}
+
+.sigHeart {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  border: 1px solid rgba(244, 244, 246, 0.14);
+  background: rgba(11, 11, 16, 0.78);
+  color: var(--acc-lav);
+}
+
+.sigHeart svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ------------------------------------------------------------ Schmaler */
+
+@media (max-width: 1100px) {
+  .fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sigil {
+    height: 220px;
+  }
+
+  .scopeList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    min-height: 0;
+  }
+
+  .heroCanvas {
+    left: -40px;
+    right: -40px;
+    top: -40px;
+    bottom: -40px;
+  }
+
+  .heroZone {
+    height: 300px;
+  }
+
+  .heroTitle {
+    max-width: 20ch;
+  }
+
+  .platformGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .growthGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 44px;
+  }
+
+  .stage {
+    justify-self: stretch;
+    min-height: 430px;
+  }
+}
+
+@media (max-width: 640px) {
+  .scopeList {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chain {
+    padding-left: 52px;
+  }
+
+  .rail {
+    left: 15px;
+  }
+
+  .stepNode {
+    left: -52px;
+    width: 31px;
+    height: 31px;
+  }
+
+  .counterValue,
+  .counterRest {
+    font-size: 46px;
+  }
+
+  .counterSlot {
+    height: 62px;
+  }
+
+  .platform {
+    padding: 22px;
+  }
+
+  .field {
+    padding: 22px;
+  }
+}
+
+/* Bei reduzierter Bewegung steht alles still. Die Uebergaenge auf den
+   Schritten und den Feldern gehoeren zur Gestaltung und nicht zur
+   Information, deshalb werden sie hier abgeschaltet. */
+@media (prefers-reduced-motion: reduce) {
+  .step,
+  .stepNode,
+  .field,
+  .fieldGo,
+  .replay {
+    transition: none;
+  }
+
+  .step {
+    opacity: 1;
+    filter: none;
+  }
+
+  .field:hover,
+  .field:focus-visible {
+    transform: none;
+  }
+}

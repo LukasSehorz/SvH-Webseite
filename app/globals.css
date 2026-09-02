@@ -1,80 +1,120 @@
 @import "tailwindcss";
 
+/* =====================================================================
+   SVH Consulting · Dunkles Design-System
+   Grundlage ist _ref2/SPEC-DARK.md §1. Basis Schwarz, ein blau-lila
+   Verlauf als einziger Akzent. Keine weiteren Buntfarben.
+   ===================================================================== */
+
 @theme {
-  --color-ink: #001a23;
-  --color-ink-deep: #0a1015;
-  --color-muted: #4b585d;
-  --color-brand: #0092d4;
-  --color-brand-bright: #00bcff;
-  --color-brand-deep: #0074ab;
-  --color-tint-1: #b6eaff;
-  --color-tint-2: #def4ff;
-  --color-tint-3: #effaff;
-  --color-paper: #fcfeff;
+  --color-bg: #050507;
+  --color-bg-raise: #0b0b10;
+  --color-ink: #f4f4f6;
+  --color-acc-blue: #5b8cff;
+  --color-acc-violet: #7c6aff;
+  --color-acc-lav: #b9a5ff;
 
-  --font-serif: var(--font-newsreader), "Times New Roman", serif;
+  --font-display: var(--font-inter-tight), system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
-
-  --radius-card: 28px;
-  --radius-slab: 40px;
 
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 :root {
-  --shell: 1280px;
-  --gutter: 24px;
-  --section-y: 120px;
+  --bg: #050507;
+  --bg-raise: #0b0b10;
+  --ink: #f4f4f6;
+  /* Die Deckkraft stand auf 0,640 und rendert damit zu 167 Stufen. Auf dem
+     Grund der Marketing-Sektion ergibt das einen Kontrast von 6,4 zu eins,
+     und damit blieben zwoelf Fliesztextzeilen unter der Marke von 7,0, die
+     fuer diese Seite gilt. Noetig sind 169,5 Stufen, also 0,652. Der
+     Unterschied ist mit blossem Auge nicht zu sehen, hebt aber jede Zeile
+     ueber die Marke. */
+  --ink-2: rgba(244, 244, 246, 0.652);
+  --ink-3: rgba(244, 244, 246, 0.4);
+  --line: rgba(244, 244, 246, 0.12);
+  --line-2: rgba(244, 244, 246, 0.06);
+  --acc-blue: #5b8cff;
+  --acc-violet: #7c6aff;
+  --acc-lav: #b9a5ff;
+  --grad: linear-gradient(92deg, #5b8cff 0%, #7c6aff 48%, #b9a5ff 100%);
+  --glow: 0 0 80px rgba(124, 106, 255, 0.35);
+
+  /* Die Schale stand auf 1200 Bildpunkten. Gemessen auf einem Schirm von
+     2560 begann der Inhalt damit bei 672 und endete bei 1872, es blieben
+     also links wie rechts 672 Bildpunkte schwarze Flaeche ohne Aufgabe,
+     und der Auftraggeber hat genau das beanstandet. Mit 2240 und einem
+     mitwachsenden Seitenrand beginnt der Inhalt bei 2560 nun bei 153 und
+     endet bei 2393. Bei 1920 und bei 1440 traegt die Schale die volle
+     Breite und der Seitenrand allein bestimmt die Kante, gemessen 76 bis
+     1829 sowie 57 bis 1368. Der Wert 2240 ist so gewaehlt, dass auf dem
+     groeszten hier geprueften Schirm ein Rand von rund sechs Prozent der
+     Bildbreite stehen bleibt; ohne diesen Rand liefe der Text gegen die
+     Kante des Glases. */
+  --shell: 2240px;
+  /* Der Seitenrand waechst mit der Bildbreite, statt bei 24 Bildpunkten zu
+     verharren. Bei 390 greift die Untergrenze von 20, bei 1440 sind es 57,
+     bei 1920 rund 76, und ab 2200 haelt die Obergrenze von 88 den Rand
+     davon ab, den Inhalt wieder einzuschnueren. */
+  --gutter: clamp(20px, 4vw, 88px);
+  --section-y: 160px;
+  --nav-h: 84px;
+  /* Das Zeichenmasz fuer Fliesztext. Absaetze bleiben bei rund siebzig
+     Zeichen je Zeile lesbar, unabhaengig davon, wie breit die Schale auf
+     einem groszen Schirm wird. Begrenzt wird deshalb der Absatz und nicht
+     die Schale.
+     Der Wert ist gemessen und nicht geschaetzt. Die Einheit ch misst die
+     Breite der Null, und die ist in Inter deutlich breiter als ein
+     durchschnittlicher Buchstabe deutscher Prosa. Mit 70ch standen in den
+     laengsten Absaetzen der Startseite gezaehlte 91 Zeichen je Zeile. Aus
+     dem Verhaeltnis 70 zu 91 folgt der Wert 54ch, und damit liegen
+     dieselben Absaetze bei rund siebzig Zeichen. */
+  --measure: 54ch;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   :root {
-    --section-y: 72px;
+    --section-y: 112px;
   }
 }
 
-/* Die Referenz laesst dem Inhalt auf dem Telefon nur 16px Rand. */
 @media (max-width: 640px) {
   :root {
-    --gutter: 16px;
+    --section-y: 88px;
   }
 }
+
+/* --------------------------------------------------------------- Basis */
 
 * {
   box-sizing: border-box;
 }
 
 html {
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  background: var(--bg);
 }
 
 body {
   margin: 0;
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--bg);
+  color: var(--ink);
   font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 15.5px;
+  line-height: 1.55;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
-h1,
-h2,
-h3,
-h4 {
-  margin: 0;
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-optical-sizing: auto;
-  color: var(--color-ink);
-  text-wrap: balance;
-}
-
-p {
-  margin: 0;
+img,
+svg,
+canvas,
+video {
+  display: block;
+  max-width: 100%;
 }
 
 a {
@@ -86,38 +126,120 @@ button {
   font: inherit;
   color: inherit;
   background: none;
-  border: 0;
+  border: none;
   cursor: pointer;
 }
 
-img,
-svg,
-video {
-  display: block;
-  max-width: 100%;
+::selection {
+  background: rgba(124, 106, 255, 0.32);
+  color: var(--ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-brand);
+  outline: 2px solid var(--acc-violet);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-::selection {
-  background: var(--color-tint-1);
-  color: var(--color-ink);
+/* --------------------------------------------------------- Typografie */
+
+.t-display {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 7vw, 104px);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.027em;
+  margin: 0;
+  color: var(--ink);
 }
 
-/* ---------- Layout-Bausteine ---------- */
+.t-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 4.6vw, 64px);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--ink);
+}
 
-/*
- * `--shell` ist die Breite des INHALTS, nicht die der Box: die Referenz stellt
- * bei 1440px eine 1280px breite Spalte (Rand 80px). Der Innenabstand kommt also
- * oben drauf und greift erst, wenn das Fenster schmaler wird.
- */
+.t-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3vw, 44px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--ink);
+}
+
+.t-h3 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--ink);
+}
+
+/* Beide Fliesztextklassen tragen das Zeichenmasz selbst. Eine engere
+   Hoechstbreite an einer spaeteren Stelle im Blatt gewinnt weiterhin, weil
+   sie bei gleicher Spezifitaet danach steht; die Marke wirkt also nur dort,
+   wo bisher gar keine Grenze stand. */
+.t-body-lg {
+  font-family: var(--font-sans);
+  font-size: 19px;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: var(--measure);
+}
+
+.t-body {
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: var(--measure);
+}
+
+.t-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .t-body-lg {
+    font-size: 17px;
+  }
+}
+
+/* Genau EIN Wort pro Sektion traegt den Verlauf. */
+.grad-word {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  /* Unterlaengen und Akzente nicht abschneiden */
+  padding-bottom: 0.06em;
+  display: inline-block;
+}
+
+/* ------------------------------------------------------------- Raster */
+
 .shell {
   width: 100%;
-  max-width: calc(var(--shell) + 2 * var(--gutter));
+  max-width: calc(var(--shell) + var(--gutter) * 2);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
@@ -126,206 +248,1223 @@ video {
   padding-block: var(--section-y);
 }
 
-/* ---------- Typo-Skalen (fluid, entspricht der Referenz bei 1440px) ---------- */
-
-.t-hero {
-  font-family: var(--font-serif);
-  font-weight: 500;
-  font-size: clamp(38px, 4.86vw, 70px);
-  line-height: 1.25;
-  letter-spacing: -0.04em;
+.hairline {
+  height: 1px;
+  background: var(--line);
+  border: 0;
+  margin: 0;
 }
 
-.t-slab {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: clamp(40px, 6.04vw, 87px);
-  line-height: 1.25;
-  letter-spacing: -0.04em;
+.hairline-dotted {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background-image: linear-gradient(90deg, var(--line) 0 4px, transparent 4px 10px);
+  background-size: 10px 1px;
+  background-repeat: repeat-x;
 }
 
-.t-h2 {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-size: clamp(34px, 3.75vw, 54px);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-}
+/* ------------------------------------------------------------ Buttons */
 
-.t-h3 {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-size: clamp(24px, 2.22vw, 32px);
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-}
-
-.t-num {
-  font-family: var(--font-serif);
-  font-weight: 500;
-  line-height: 0.75;
-  letter-spacing: -0.02em;
-}
-
-.t-eyebrow {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 1.1;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-}
-
-.t-body {
-  color: var(--color-muted);
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-.t-lead {
-  color: var(--color-muted);
-  font-size: clamp(17px, 1.39vw, 20px);
-  line-height: 1.55;
-}
-
-/* ---------- Flächen ---------- */
-
-.slab {
-  border-radius: var(--radius-slab);
-  background: linear-gradient(180deg, #00a6e8 0%, #0092d4 55%, #7ed4f5 100%);
-  color: #fff;
-  overflow: hidden;
-  position: relative;
-}
-
-.slab h1,
-.slab h2,
-.slab h3 {
-  color: #fff;
-}
-
-.card {
-  background: #fff;
-  border: 1px solid rgba(0, 26, 35, 0.06);
-  border-radius: var(--radius-card);
-  box-shadow:
-    0 1px 2px rgba(0, 26, 35, 0.04),
-    0 12px 32px -16px rgba(0, 26, 35, 0.12);
-}
-
-.card-hover {
-  transition:
-    transform 0.28s var(--ease-out-expo),
-    box-shadow 0.28s var(--ease-out-expo),
-    border-color 0.28s var(--ease-out-expo);
-}
-
-.card-hover:hover {
-  transform: translateY(-6px);
-  border-color: var(--color-tint-1);
-  box-shadow:
-    0 2px 4px rgba(0, 26, 35, 0.05),
-    0 28px 60px -28px rgba(0, 146, 212, 0.35);
-}
-
-/* ---------- Buttons ---------- */
-
-.btn {
+.btn-solid,
+.btn-line,
+.btn-dash {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  height: 56px;
-  padding-inline: 32px;
-  border-radius: 999px;
+  height: 52px;
+  padding-inline: 26px;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
   font-weight: 600;
-  font-size: 16px;
+  letter-spacing: -0.005em;
   white-space: nowrap;
   transition:
-    transform 0.25s var(--ease-out-expo),
-    box-shadow 0.25s var(--ease-out-expo),
-    filter 0.25s var(--ease-out-expo);
+    transform 0.35s var(--ease-out-expo),
+    background-color 0.35s var(--ease-out-expo),
+    border-color 0.35s var(--ease-out-expo),
+    color 0.35s var(--ease-out-expo);
+  will-change: transform;
 }
 
-.btn-dark {
-  color: #fff;
-  background: linear-gradient(160deg, #0a1015 0%, #001a23 45%, #0b3a4e 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    0 10px 30px -12px rgba(0, 146, 212, 0.55);
+.btn-solid {
+  background: var(--ink);
+  color: #050507;
+  border: 1px solid var(--ink);
 }
 
-.btn-dark:hover {
-  transform: translateY(-2px) scale(1.015);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 18px 44px -14px rgba(0, 146, 212, 0.75);
+.btn-solid:hover {
+  transform: translateY(-1px);
+  background: rgba(244, 244, 246, 0.96);
+  border-color: rgba(244, 244, 246, 0.96);
 }
 
-.btn-light {
-  color: var(--color-ink);
-  background: linear-gradient(180deg, #ffffff 0%, #def4ff 100%);
-  border: 1px solid var(--color-tint-1);
-  box-shadow: 0 8px 24px -14px rgba(0, 146, 212, 0.45);
+.btn-line {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
 }
 
-.btn-light:hover {
-  transform: translateY(-2px) scale(1.015);
-  border-color: var(--color-brand-bright);
-  filter: brightness(1.03);
+.btn-line:hover {
+  transform: translateY(-1px);
+  border-color: var(--ink-2);
+}
+
+.btn-dash {
+  background: transparent;
+  color: var(--ink);
+  border: 1px dashed var(--line);
+}
+
+.btn-dash:hover {
+  transform: translateY(-1px);
+  border-color: var(--ink-2);
 }
 
 .btn-sm {
+  height: 40px;
+  padding-inline: 18px;
+  font-size: 13.5px;
+}
+
+/* Kreisrunder Pfeil-Knopf als Listen- und Kartenabschluss */
+.circle-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
   height: 44px;
-  padding-inline: 22px;
-  font-size: 15px;
+  flex: 0 0 44px;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  transition:
+    border-color 0.35s var(--ease-out-expo),
+    transform 0.35s var(--ease-out-expo),
+    background-color 0.35s var(--ease-out-expo);
 }
 
-/* ---------- Utility ---------- */
-
-.mask-fade-x {
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent 0,
-    #000 8%,
-    #000 92%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+.circle-link:hover .circle-arrow,
+.circle-arrow:hover {
+  border-color: var(--ink-2);
+  background: rgba(244, 244, 246, 0.04);
+  transform: translate(2px, -2px);
 }
 
-/* Karten der Leistungsübersicht: Text + Mockup, abwechselnd seitenverkehrt */
-.overview-grid {
+/* --------------------------------------------------------- Haarlinien */
+
+.card {
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+
+.pill-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding-inline: 13px;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* Gestrichelte Eckwinkel (Antimetal-Muster). Nur die Ecken werden
+   gezeichnet, je 18px Schenkel. Die Kinder .corner-l steuern die
+   Zeichen-Animation ueber scaleX / scaleY. */
+.corner-box {
+  position: relative;
+}
+
+.corner-box .corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.corner-box .corner::before,
+.corner-box .corner::after {
+  content: "";
+  position: absolute;
+  background-repeat: repeat;
+}
+
+.corner-box .corner::before {
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 1px;
+  background-image: linear-gradient(90deg, var(--ink-3) 0 3px, transparent 3px 6px);
+  background-size: 6px 1px;
+}
+
+.corner-box .corner::after {
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 18px;
+  background-image: linear-gradient(180deg, var(--ink-3) 0 3px, transparent 3px 6px);
+  background-size: 1px 6px;
+}
+
+.corner-tl {
+  left: 0;
+  top: 0;
+}
+.corner-tr {
+  right: 0;
+  top: 0;
+  transform: scaleX(-1);
+}
+.corner-bl {
+  left: 0;
+  bottom: 0;
+  transform: scaleY(-1);
+}
+.corner-br {
+  right: 0;
+  bottom: 0;
+  transform: scale(-1, -1);
+}
+
+/* Zeichnen der Winkel. Ohne data-draw stehen sie vollstaendig. */
+.corner-box[data-draw] .corner::before {
+  transform-origin: left center;
+  transform: scaleX(var(--draw, 1));
+}
+
+.corner-box[data-draw] .corner::after {
+  transform-origin: top center;
+  transform: scaleY(var(--draw, 1));
+}
+
+/* --------------------------------------------------------- Manifest */
+
+.manifesto-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 28px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 64px;
+  align-items: start;
 }
 
-@media (min-width: 900px) {
-  .overview-grid {
-    grid-template-columns: 1.05fr 1fr;
+/* Die Bühne steht mittig zur Textspalte, damit die Sektion ausbalanciert
+   wirkt statt oben zu kleben. */
+.manifesto-chart {
+  align-self: center;
+  padding-right: 8px;
+}
+
+.manifesto-paragraphs {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-top: 28px;
+}
+
+@media (max-width: 1023px) {
+  .manifesto-grid {
+    grid-template-columns: minmax(0, 1fr);
     gap: 44px;
-    align-items: center;
   }
-  .overview-mock.is-left {
-    order: -1;
+
+  .manifesto-chart {
+    order: 2;
+    align-self: start;
+    padding-right: 0;
   }
 }
 
-.grid-dots {
-  background-image: radial-gradient(circle at center, rgba(0, 146, 212, 0.18) 1px, transparent 1px);
-  background-size: 22px 22px;
+/* ----------------------------------------------------------- Ablauf */
+
+.process-title {
+  max-width: 18ch;
+  margin-bottom: 64px;
 }
+
+.process-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+}
+
+.process-step-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 40px 34px 44px;
+}
+
+.process-step-head {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-bottom: 26px;
+}
+
+.process-step-body {
+  margin-top: auto;
+}
+
+@media (max-width: 1023px) {
+  .process-list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .process-step-inner {
+    padding: 32px 28px 34px;
+  }
+
+  .process-step-head {
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+}
+
+/* ------------------------------------------------------------ Nebel */
+
+.veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.veil-a,
+.veil-b {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(140px);
+}
+
+/* Schleier oben mittig, sein Kern liegt hinter der Überschrift. */
+.veil-a {
+  width: min(1180px, 124vw);
+  height: 780px;
+  left: 50%;
+  top: -110px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    var(--acc-violet) 0%,
+    var(--acc-blue) 46%,
+    transparent 74%
+  );
+  opacity: 0.16;
+}
+
+/* Zweiter Schleier zieht zur linken unteren Ecke. */
+.veil-b {
+  width: min(1000px, 112vw);
+  height: 720px;
+  left: -230px;
+  bottom: -230px;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    var(--acc-lav) 0%,
+    var(--acc-violet) 44%,
+    transparent 72%
+  );
+  opacity: 0.1;
+}
+
+/* Rausch-Kachel, wird von components/system/Noise.tsx gesetzt */
+.noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: screen;
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}
+
+/* ------------------------------------------------------- Navigation */
+
+/* Die Leiste bestand aus drei frei schwebenden Pillen, und der
+   Auftraggeber hat sie als durcheinander beschrieben. Sie ist jetzt ein
+   einziger Riegel, dessen Kanten genau auf den Kanten der Schale sitzen.
+   Links steht die Wortmarke, in der Mitte stehen die Bereiche, rechts
+   stehen Kontakt und der Abschluss. Weil der Riegel dieselbe Hoechstbreite
+   traegt wie der Inhalt darunter, liest man beide als eine Ordnung. */
+.site-nav {
+  position: fixed;
+  top: 18px;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  padding-inline: var(--gutter);
+  pointer-events: none;
+}
+
+.nav-bar {
+  pointer-events: auto;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  height: 66px;
+  padding-inline: 10px;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  /* Die Deckkraft stand einmal auf 0,55 und steht seither bei 0,86. Der
+     Grund ist eine Messung streng innerhalb der Pille, also im Kasten ohne
+     die runden Kappen, mit unsichtbar geschalteter Schrift. Der Grund
+     hinter dem Verweis auf Kontakt erreichte dort ueber fuenf Scrollstellen
+     Hoechstwerte von 55 bis 75 bei einer Streuung von 6,3 bis 11,8, und in
+     der Dreifachvergroeszerung waren die einzelnen Punkte des Gewebes
+     innerhalb der Pille zu erkennen. Sie las dadurch nicht mehr als
+     geschlossenes Bedienelement, sondern als durchscheinende Folie.
+     Gemessen liegt der Hoechstwert jetzt bei 18 bis 20 und die Streuung bei
+     1,8 bis 2,8. Der Umbau zum durchgehenden Riegel aendert an dieser
+     Messung nichts, weil Grund und Unschaerfe unveraendert bleiben.
+
+     DIE UNSCHAERFE IST HIER KEIN HEBEL, und das ist gemessen. Sie ist
+     versuchsweise von 16 auf 28 und im gescrollten Zustand von 22 auf 40
+     Bildpunkte gegangen, und ueber alle fuenf Scrollstellen hat sich weder
+     Mittelwert noch Streuung noch Hoechstwert um mehr als eine Zehntelstufe
+     geaendert. Sie steht deshalb wieder auf ihren alten Werten. Wer das
+     Gewebe aus dem Riegel nehmen will, hat allein die Deckkraft. */
+  background: rgba(5, 5, 7, 0.86);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition:
+    height 0.4s var(--ease-out-expo),
+    background-color 0.4s var(--ease-out-expo),
+    border-color 0.4s var(--ease-out-expo);
+}
+
+/* Im gescrollten Zustand verdichtet sich der Riegel. Er wird um sechs
+   Bildpunkte flacher und sein Grund geht von 0,86 auf 0,94, aus demselben
+   Grund wie oben. Ueber der Struktur der Marketing-Sektion steht die
+   Leiste praktisch immer in diesem Zustand, an ihm haengt die Messung. */
+.nav-scrolled .nav-bar {
+  height: 60px;
+  background: rgba(5, 5, 7, 0.94);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.nav-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 44px;
+  padding-inline: 14px;
+  border-radius: 9999px;
+  color: var(--ink);
+}
+
+.nav-mark-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--grad);
+}
+
+.nav-mark-text {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.nav-mark-sub {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+/* Die Bereiche stehen in der Mitte des Riegels und bleiben dort, gleich
+   wie breit Wortmarke und Abschluss werden. */
+.nav-center-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.nav-item {
+  position: relative;
+}
+
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 44px;
+  padding-inline: 16px;
+  border-radius: 9999px;
+  font-size: 14.5px;
+  font-weight: 400;
+  color: var(--ink-2);
+  transition:
+    color 0.3s var(--ease-out-expo),
+    background-color 0.3s var(--ease-out-expo);
+}
+
+.nav-link:hover {
+  color: var(--ink);
+  background: rgba(244, 244, 246, 0.04);
+}
+
+.nav-link[data-active="true"] {
+  color: var(--ink);
+}
+
+.nav-link[data-active="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  transform: translateX(-50%);
+  background: var(--grad);
+}
+
+/* Der Winkel zeigt an, dass hinter dem Eintrag noch etwas liegt. Er dreht
+   sich beim Oeffnen und ist die einzige Bewegung am Ausloeser selbst. */
+.nav-caret {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  color: var(--ink-3);
+  transition:
+    transform 0.4s var(--ease-out-expo),
+    color 0.3s var(--ease-out-expo);
+}
+
+.nav-link:hover .nav-caret,
+.nav-link[aria-expanded="true"] .nav-caret {
+  color: var(--ink-2);
+}
+
+.nav-link[aria-expanded="true"] .nav-caret {
+  transform: rotate(180deg);
+}
+
+/* Das Aufklappmenue. Die feste Breite von 340 Bildpunkten erlaubt die
+   Zentrierung ueber einen halben negativen Rand, sodass framer-motion die
+   Verschiebung allein steuert und nicht gegen eine eigene Verschiebung im
+   Blatt arbeitet. */
+.nav-panel {
+  position: absolute;
+  top: calc(100% + 16px);
+  left: 50%;
+  width: 340px;
+  margin-left: -170px;
+  padding: 8px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(9, 9, 13, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55);
+}
+
+/* Die Bruecke ueber den Abstand zwischen Ausloeser und Menue. Ohne sie
+   verlaesst der Zeiger auf dem Weg nach unten kurz beide Flaechen. */
+.nav-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -18px;
+  height: 18px;
+}
+
+.nav-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-panel-link {
+  display: block;
+  position: relative;
+  padding: 11px 14px 12px 26px;
+  border-radius: 14px;
+  transition: background-color 0.3s var(--ease-out-expo);
+}
+
+/* Der Punkt im Akzent markiert den Eintrag unter dem Zeiger. Er ersetzt
+   eine Farbaenderung an der Schrift, die den Kontrast senken wuerde. */
+.nav-panel-link::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 19px;
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: var(--grad);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out-expo);
+}
+
+.nav-panel-link:hover,
+.nav-panel-link:focus-visible {
+  background: rgba(244, 244, 246, 0.05);
+}
+
+.nav-panel-link:hover::before,
+.nav-panel-link:focus-visible::before,
+.nav-panel-link[data-active="true"]::before {
+  opacity: 1;
+}
+
+.nav-panel-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.nav-panel-note {
+  display: block;
+  margin-top: 3px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+.nav-panel-foot {
+  margin: 6px 4px 2px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line-2);
+}
+
+.nav-panel-overview {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px 8px;
+  font-size: 13px;
+  color: var(--ink-2);
+  transition: color 0.3s var(--ease-out-expo);
+}
+
+.nav-panel-overview:hover {
+  color: var(--ink);
+}
+
+/* Rechts stehen Kontakt und der Abschluss in einer Gruppe, damit die
+   Handlung am Ende der Leseregel steht. Der Umschalter fuer das Telefon
+   sitzt in derselben Spalte, damit das Raster der Leiste in jeder Breite
+   aus genau drei Feldern besteht. */
+.nav-end {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: end;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-burger {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 46px;
+  height: 44px;
+  flex: 0 0 46px;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+}
+
+.burger-bar {
+  display: block;
+  width: 17px;
+  height: 1px;
+  background: var(--ink);
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.burger-bar[data-open="true"]:first-child {
+  transform: translateY(3px) rotate(45deg);
+}
+
+.burger-bar[data-open="true"]:last-child {
+  transform: translateY(-3px) rotate(-45deg);
+}
+
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  padding: 108px var(--gutter) 48px;
+  background: var(--bg);
+  /* Die aufgeklappte Gruppe kann das Overlay laenger machen als den
+     Schirm, deshalb darf es senkrecht laufen. Waagerecht bleibt es
+     geschlossen, denn der Schimmer darunter ist 620 Bildpunkte breit und
+     ragt auf einem Telefon von 390 Bildpunkten links und rechts hinaus.
+     Ohne diese Zeile erschien dort eine waagerechte Laufleiste. */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Leiser Verlaufsschimmer, damit das Overlay nicht flach wirkt. */
+.nav-overlay::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -240px;
+  width: 620px;
+  height: 420px;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: var(--grad);
+  opacity: 0.1;
+  filter: blur(110px);
+  pointer-events: none;
+}
+
+.nav-overlay > * {
+  position: relative;
+}
+
+.nav-overlay-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-overlay-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-bottom: 1px solid var(--line-2);
+}
+
+.nav-overlay-link {
+  display: block;
+  flex: 1 1 auto;
+  padding-block: 12px;
+  color: var(--ink);
+}
+
+/* Der Umschalter der Gruppe steht neben dem Verweis, damit der Eintrag
+   Marketing auch auf dem Telefon weiterhin auf die Uebersicht fuehrt. */
+.nav-overlay-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+}
+
+.nav-overlay-toggle svg {
+  transition: transform 0.45s var(--ease-out-expo);
+}
+
+.nav-overlay-toggle[aria-expanded="true"] svg {
+  transform: rotate(45deg);
+}
+
+.nav-overlay-sub {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0 16px 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.nav-overlay-sub-link {
+  display: block;
+  padding-block: 10px;
+  color: var(--ink-2);
+  font-size: 17px;
+}
+
+.nav-overlay-sub-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+@media (max-width: 1023px) {
+  .nav-center-list,
+  .nav-actions {
+    display: none;
+  }
+
+  .nav-burger {
+    display: flex;
+  }
+
+  .nav-bar {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    height: 60px;
+  }
+
+  .nav-scrolled .nav-bar {
+    height: 56px;
+  }
+}
+
+@media (max-width: 420px) {
+  .nav-mark-sub {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------------------- Hero */
+
+.hero {
+  position: relative;
+  /* Der Textblock beginnt optisch leicht über der Mitte, wie bei Antimetal.
+     Darüber bleibt nur so viel Luft, dass die Leiste frei steht. */
+  padding-top: clamp(132px, 19vh, 212px);
+  padding-bottom: 0;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 40px;
+  padding-bottom: 76px;
+}
+
+/* Die Textspalte stand fest auf 620 Bildpunkten. In der breiteren Schale
+   waere daneben eine Luecke von rund 490 Bildpunkten entstanden, der Text
+   haette also mitten in der Spalte geklebt. Mit 860 als Obergrenze fuellt
+   die Spalte den ihr zugewiesenen Platz bis 2560 aus, und die Ueberschrift
+   behaelt bei ihrer Hoechstgroesze von 104 Bildpunkten ihre drei Zeilen. */
+.hero-copy {
+  max-width: min(100%, 860px);
+}
+
+/* `balance` verteilt die drei Zeilen gleichmäßig und vermeidet die sehr
+   kurze Mittelzeile, die ein reiner Umbruch nach Spaltenbreite erzeugt. */
+.hero-title {
+  margin-top: 22px;
+  text-wrap: balance;
+}
+
+.hero-lead {
+  max-width: 46ch;
+  margin-top: 30px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 42px;
+}
+
+.hero-visual {
+  position: relative;
+  justify-self: stretch;
+}
+
+.hero-field {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 520px;
+  height: clamp(520px, 56vh, 620px);
+}
+
+/* Ruhiger Schimmer, liegt vor und nach dem Aufbau des Canvas an derselben
+   Stelle. Dadurch springt beim Nachladen nichts. */
+.hero-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 76%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(124, 106, 255, 0.17),
+    rgba(91, 140, 255, 0.06) 48%,
+    transparent 72%
+  );
+  filter: blur(76px);
+  pointer-events: none;
+}
+
+.hero-rule {
+  margin-inline: 0;
+}
+
+@media (max-width: 1023px) {
+  .hero {
+    padding-top: 138px;
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+    padding-bottom: 56px;
+  }
+
+  /* Die Konstellation steht unter dem Text. So liest man auf schmalen
+     Geräten zuerst die Aussage und danach das Bild. */
+  .hero-field {
+    min-height: 320px;
+    height: 340px;
+  }
+
+  .hero-title {
+    margin-top: 18px;
+  }
+}
+
+/* ------------------------------------------------------- Unterseiten */
+
+.subpage-head {
+  padding-top: clamp(148px, 22vh, 232px);
+  padding-bottom: var(--section-y);
+}
+
+.subpage-title {
+  max-width: 17ch;
+  margin-top: 22px;
+}
+
+/* Der Einleitungsabsatz der Unterseiten stand auf 60ch und lief damit mit
+   rund 76 gezaehlten Zeichen je Zeile. Er nimmt jetzt dasselbe Zeichenmasz
+   wie jeder andere Fliesztext, gemessen rund 68 Zeichen. */
+.subpage-lead {
+  max-width: var(--measure);
+  margin-top: 30px;
+}
+
+/* -------------------------------------------------------- Abschluss */
+
+.final-cta {
+  position: relative;
+  overflow: hidden;
+  /* Angehobene Fläche, damit das Band auch in den Ecken nicht in reines
+     Schwarz kippt. Die Schleier liegen darüber. */
+  background: var(--bg-raise);
+  border-top: 1px solid var(--line-2);
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: clamp(120px, 15vw, 200px);
+  text-align: center;
+}
+
+.final-cta-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.final-cta-title {
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+.final-cta-lead {
+  max-width: 42ch;
+  margin-top: 28px;
+  text-wrap: balance;
+}
+
+.final-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 44px;
+}
+
+/* ------------------------------------------------------------ Footer */
+
+.site-footer {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Nebelschleier im Grund des Seitenfußes. Dichte nach der Valo-Stimmung
+   angehoben, damit die Fläche unter der Wortmarke atmet statt zu verschwinden. */
+.footer-veil {
+  position: absolute;
+  left: 50%;
+  bottom: -250px;
+  width: min(1320px, 142vw);
+  height: 560px;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: var(--grad);
+  opacity: 0.13;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+.footer-inner {
+  position: relative;
+  padding-block: 72px 28px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 40px 32px;
+}
+
+.footer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.footer-link {
+  color: var(--ink-2);
+  transition: color 0.3s var(--ease-out-expo);
+}
+
+.footer-link:hover {
+  color: var(--ink);
+}
+
+/* Die Obergrenze lag bei 146 Bildpunkten. Bei 1440 spannte die Wortmarke
+   damit ueber fast die ganze Schale, bei 2560 dagegen nur noch ueber 1153
+   von 2240 Bildpunkten und sah dort wie ein Rest aus. 271 Bildpunkte sind
+   der groeszte Wert, der noch sicher passt: die Zeile waechst linear mit
+   der Schriftgroesze, aus 1153 bei 146 werden also 2140 bei 271, und die
+   Schale ist ab dieser Bildbreite 2240 breit. Unterhalb von 2416
+   Bildpunkten greift ohnehin weiterhin der Anteil von 11,2 Prozent der
+   Bildbreite, dort aendert sich nichts. */
+.footer-watermark {
+  font-family: var(--font-display);
+  font-size: min(11.2vw, 271px);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--line-2);
+  margin: 88px 0 26px;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 22px;
+}
+
+.footer-legal-links {
+  display: flex;
+  gap: 22px;
+}
+
+.footer-legal-links a {
+  font-size: 12px;
+  color: var(--ink-3);
+  transition: color 0.24s ease;
+}
+
+.footer-legal-links a:hover {
+  color: var(--ink);
+}
+
+@media (max-width: 860px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footer-watermark {
+    margin-top: 56px;
+  }
+}
+
+/* --------------------------------------------------------- Akkordeon */
+
+.acc-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.55s var(--ease-out-expo);
+}
+
+.acc-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.acc-panel > div {
+  overflow: hidden;
+}
+
+.acc-plus {
+  transition: transform 0.45s var(--ease-out-expo);
+}
+
+.acc-plus[data-open="true"] {
+  transform: rotate(45deg);
+}
+
+.faq-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 40px 64px;
+  align-items: start;
+  margin-bottom: 66px;
+}
+
+.faq-title {
+  max-width: 15ch;
+}
+
+.faq-intro {
+  max-width: 42ch;
+  padding-top: 8px;
+}
+
+.faq-list {
+  border-top: 1px solid var(--line);
+}
+
+.faq-row {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  width: 100%;
+  padding: 28px 4px;
+  text-align: left;
+}
+
+.faq-question-text {
+  transition: color 0.3s var(--ease-out-expo);
+}
+
+.faq-question:hover .faq-question-text {
+  color: var(--acc-lav);
+}
+
+.faq-plus {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--ink-3);
+}
+
+.faq-question:hover .faq-plus {
+  color: var(--ink);
+}
+
+/* Die Antwort stand auf 74ch und lief damit mit gezaehlten 91 Zeichen je
+   Zeile, dem breitesten Fliesztext der ganzen Seite. Sie nimmt jetzt
+   dasselbe Zeichenmasz wie jeder andere Absatz. */
+.faq-answer {
+  max-width: var(--measure);
+  padding: 0 4px 30px;
+}
+
+@media (max-width: 860px) {
+  .faq-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    margin-bottom: 44px;
+  }
+
+  .faq-question {
+    gap: 20px;
+    padding-block: 22px;
+  }
+
+  .faq-question-text {
+    font-size: 19px;
+  }
+}
+
+/* ------------------------------------------- Formulare (Unterseiten) */
+
+.field {
+  width: 100%;
+  background: var(--bg-raise);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  padding: 13px 15px;
+  transition:
+    border-color 0.3s var(--ease-out-expo),
+    box-shadow 0.3s var(--ease-out-expo);
+}
+
+.field::placeholder {
+  color: var(--ink-3);
+}
+
+.field:focus {
+  outline: none;
+  border-color: var(--acc-violet);
+  box-shadow: 0 0 0 3px rgba(124, 106, 255, 0.18);
+}
+
+/* ----------------------------------------------------- reduced motion */
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

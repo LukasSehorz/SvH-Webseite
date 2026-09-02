@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { company } from "../content";
-import LegalPage from "../components/LegalPage";
+import DarkLegalPage from "../components/pages/DarkLegalPage";
 
 export const metadata: Metadata = {
-  title: `Impressum – ${company.name}`,
+  title: "Impressum",
   description: `Angaben gemäß § 5 DDG für ${company.name} (${company.legalName}), ${company.zipCity}.`,
 };
 
 export default function ImpressumPage() {
   return (
-    <LegalPage title="Impressum">
+    <DarkLegalPage title="Impressum">
       <h2>Angaben gemäß § 5 DDG</h2>
       <p>
         <strong>{company.name}</strong>
@@ -24,22 +24,28 @@ export default function ImpressumPage() {
       </p>
 
       <h2>Vertreten durch</h2>
-      <p>
-        Vertretungsberechtigte Gesellschafter: {company.partners.join(" und ")}.
-      </p>
+      <p>Vertretungsberechtigte Gesellschafter sind {company.partners.join(" und ")}.</p>
 
       <h2>Kontakt</h2>
-      <p>
-        Telefon: <a href={`tel:${company.phoneHref}`}>{company.phone}</a>
-        <br />
-        E-Mail: <a href={`mailto:${company.email}`}>{company.email}</a>
-        <br />
-        Erreichbarkeit: {company.hours}
-      </p>
+      <dl className="legal-dl">
+        <dt>Telefon</dt>
+        <dd>
+          <a href={`tel:${company.phoneHref}`}>{company.phone}</a>
+        </dd>
+
+        <dt>E-Mail</dt>
+        <dd>
+          <a href={`mailto:${company.email}`}>{company.email}</a>
+        </dd>
+
+        <dt>Erreichbarkeit</dt>
+        <dd>{company.hours}</dd>
+      </dl>
 
       <h2>Umsatzsteuer-Identifikationsnummer</h2>
       <p>
-        Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz: auf Anfrage.
+        Die Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz teilen wir auf
+        Anfrage mit.
       </p>
 
       <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
@@ -100,16 +106,17 @@ export default function ImpressumPage() {
 
       <h2>Hinweis zur EU-Streitschlichtung</h2>
       <p>
-        Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{" "}
+        Die Europäische Kommission stellt unter{" "}
         <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">
           https://ec.europa.eu/consumers/odr/
-        </a>
-        . Unsere E-Mail-Adresse finden Sie oben in diesem Impressum.
+        </a>{" "}
+        eine Plattform zur Online-Streitbeilegung bereit. Unsere E-Mail-Adresse finden Sie oben in
+        diesem Impressum.
       </p>
       <p>
         Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer
         Verbraucherschlichtungsstelle teilzunehmen.
       </p>
-    </LegalPage>
+    </DarkLegalPage>
   );
 }

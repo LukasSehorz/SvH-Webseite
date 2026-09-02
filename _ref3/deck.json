@@ -1,0 +1,24 @@
+{
+  "url": "https://deck.co/",
+  "ziel": "_ref3/webseiten/deck",
+  "ausschnitte": [
+    { "name": "01-hero", "y": 0 },
+    { "name": "02-hero-schirm", "y": 420 },
+    { "name": "03-logoband-raster", "y": 1500 },
+    { "name": "04-anmeldung", "y": 2250 },
+    { "name": "05-tabellen", "y": 3700 },
+    { "name": "06-telefon", "y": 4600 },
+    { "name": "07-konsole", "y": 5620 },
+    { "name": "08-einbetten", "y": 6450 },
+    { "name": "09-abschluss", "y": 7050 },
+    { "name": "10-fusz-wortmarke", "y": 7900 }
+  ],
+  "hover": [
+    { "name": "11-raster", "y": 1700, "wahl": "a, [class*='card']" }
+  ],
+  "bewegung": [
+    { "name": "20-anmeldung", "y": 2250 },
+    { "name": "21-telefon", "y": 4600 },
+    { "name": "22-konsole", "y": 5620 }
+  ]
+}

@@ -1,42 +1,42 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Newsreader } from "next/font/google";
+import { Inter, Inter_Tight } from "next/font/google";
+import { meta } from "./copy";
+import SmoothScroll from "./components/system/SmoothScroll";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  weight: ["300", "400", "600"],
   display: "swap",
 });
 
-const newsreader = Newsreader({
+const interTight = Inter_Tight({
   subsets: ["latin"],
-  variable: "--font-newsreader",
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter-tight",
+  weight: ["300", "400"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://svh-consulting.de"),
   title: {
-    default: "SVH Consulting | Automatisieren, Optimieren & Skalieren – mit KI",
+    default: meta.home.title,
     template: "%s — SVH Consulting",
   },
-  description:
-    "SVH Consulting baut KI-Automatisierungen und Agenten, übernimmt Social-Media-Marketing inklusive digitaler Werbe-Displays für lokale Betriebe und entwickelt Webseiten, die Anfragen bringen.",
+  description: meta.home.description,
   openGraph: {
     type: "website",
     locale: "de_DE",
     siteName: "SVH Consulting",
-    title: "SVH Consulting | Automatisieren, Optimieren & Skalieren – mit KI",
-    description:
-      "KI-Automatisierung & Agenten, Marketing und Webseiten – aus einer Hand.",
-    images: ["/img/og.png"],
+    title: meta.home.title,
+    description: meta.home.description,
   },
   robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#050507",
   width: "device-width",
   initialScale: 1,
 };
@@ -45,8 +45,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="de" className={`${inter.variable} ${newsreader.variable}`}>
-      <body>{children}</body>
+    <html lang="de" className={`${inter.variable} ${interTight.variable}`}>
+      <body>
+        <SmoothScroll>{children}</SmoothScroll>
+      </body>
     </html>
   );
 }

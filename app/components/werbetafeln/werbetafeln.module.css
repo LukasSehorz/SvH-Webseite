@@ -1,0 +1,1161 @@
+/* =====================================================================
+   /marketing/werbetafeln · Welt "Die Tafel im Dunkeln"
+
+   Eine einzige Figur traegt diese Seite, und sie heiszt Tafel. Eine Tafel
+   ist eine schmale Stele in Personengroesze mit einem Gehaeuse aus zwei
+   dunklen Grautoenen, einem feinen hellen Saum an der Oberkante und einem
+   Schirm im Hochformat. Der Schirm ist die einzige wirklich helle Flaeche
+   der ganzen Seite, und unter der Tafel liegt ein Lichtteppich, der den
+   Standort andeutet, ohne einen Raum zu behaupten.
+
+   Die Tafel ist bewusst flach in CSS gebaut und nicht in three.js. Die
+   Landingpage traegt bereits eine WebGL-Struktur, eine zweite Szene kostet
+   Bildrate, und die leichte Drehung nach dem Scrollstand laeuft ueber
+   transform mit perspective genauso ueberzeugend.
+
+   Die Palette ist die der ganzen Website. Neu ist allein die Regel, dass
+   Weisz auf dieser Seite dem Schirm gehoert. Jede andere helle Flaeche
+   bleibt messbar dunkler als er, damit der Blick ohne Anleitung zur Tafel
+   geht.
+   ===================================================================== */
+
+.page {
+  --tone-blue: #5b8cff;
+  --tone-mid: #6a7cff;
+  --tone-violet: #7c6aff;
+  --tone-lav: #b9a5ff;
+  /* Zweite dunkle Ebene fuer den Wechsel zwischen den Sektionen. */
+  --deep: #0b0b12;
+  /* Die hellen Flaechen der Seite. Beide liegen messbar unter dem Schirm,
+     damit er der hellste Punkt bleibt. */
+  --light-card: #cfcfdd;
+  --light-pill: #c6c6d6;
+  --light-ink: #0d0d16;
+}
+
+/* Ueberschriften, die nur die Gliederung tragen und nicht das Bild. Die
+   eigene Klasse macht die Seite unabhaengig davon, ob Tailwind seine
+   Hilfsklasse in diesen Ordner hinein erzeugt. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------- Verweis */
+
+/* M16. Im Lauf der Seite gibt es nur diesen leisen Verweis. Der einzige
+   gefuellte Knopf steht im Abschluss. */
+.quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 15.5px;
+  border-bottom: 1px solid rgba(244, 244, 246, 0.34);
+  padding-bottom: 4px;
+  transition:
+    color 0.35s var(--ease-out-expo),
+    border-color 0.35s var(--ease-out-expo);
+}
+
+.quiet svg {
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.quiet:hover {
+  color: var(--tone-lav);
+  border-bottom-color: var(--tone-lav);
+}
+
+.quiet:hover svg {
+  transform: translateX(5px);
+}
+
+/* --------------------------------------------------------------- Spot */
+
+/* Der gezeichnete Spot ist das, was SVH herstellt. Er laeuft auf dem
+   Schirm und besteht aus einem hellen Grund, einem Balken im Akzent,
+   einem groszen Wort und einer Fusszeile. Die Schriftgroeszen haengen an
+   der Behaelterflaeche, damit derselbe Spot im Hero grosz und in einer
+   Bandkachel klein sauber steht. */
+.spot {
+  position: absolute;
+  inset: 0;
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(178deg, #fdfcff 0%, #f3f0fe 58%, #e9e3fb 100%);
+  color: var(--light-ink);
+  overflow: hidden;
+}
+
+.spotBar {
+  flex: 0 0 auto;
+  height: 7%;
+  background: var(--tone);
+}
+
+.spotMid {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3.4cqmin;
+  padding: 5cqmin 7cqmin;
+  min-height: 0;
+}
+
+.spotWord {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 15cqmin;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: #120c26;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+.spotRule {
+  width: 36%;
+  height: 1cqmin;
+  min-height: 1px;
+  background: var(--tone);
+}
+
+.spotLine {
+  font-family: var(--font-sans);
+  font-size: 6.4cqmin;
+  line-height: 1.25;
+  font-weight: 500;
+  color: #3b3358;
+}
+
+.spotFoot {
+  flex: 0 0 auto;
+  height: 19%;
+  display: flex;
+  align-items: center;
+  padding-inline: 7cqmin;
+  background: var(--tone);
+  color: #0d0820;
+  font-family: var(--font-sans);
+  font-size: 6.6cqmin;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* -------------------------------------------------------------- Tafel */
+
+.stele {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  perspective: 1600px;
+  perspective-origin: 50% 40%;
+  width: 100%;
+}
+
+/* M2. Der Lichtteppich laeuft nach unten aus und ist nach rund
+   vierhundert Bildpunkten vollstaendig im Grund verschwunden. */
+.carpet {
+  position: absolute;
+  left: 50%;
+  bottom: -46px;
+  width: min(300%, 900px);
+  height: 420px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse 46% 52% at 50% 4%,
+    rgba(91, 140, 255, 0.5) 0%,
+    rgba(101, 128, 255, 0.17) 34%,
+    rgba(124, 106, 255, 0) 70%
+  );
+  filter: blur(24px);
+  pointer-events: none;
+  z-index: 0;
+  animation: carpetOn 0.8s var(--ease-out-expo) both;
+}
+
+@keyframes carpetOn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.steleBody {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--ry, 0deg)) rotateX(var(--rx, 0deg));
+}
+
+/* Das Gehaeuse. Der helle Saum liegt als Innenschatten an der Oberkante
+   und schwaecher an den Flanken, wie das Licht einer Leuchte ueber der
+   Tafel. */
+.case {
+  position: relative;
+  width: 100%;
+  padding: 13px 13px 30px;
+  border-radius: 22px;
+  border: 1px solid rgba(244, 244, 246, 0.09);
+  background: linear-gradient(158deg, #1b1b26 0%, #0a0a11 46%, #15151f 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(244, 244, 246, 0.32),
+    inset 1px 0 0 rgba(244, 244, 246, 0.09),
+    inset -1px 0 0 rgba(244, 244, 246, 0.05),
+    0 46px 92px -34px rgba(0, 0, 0, 0.92);
+}
+
+.screen {
+  position: relative;
+  aspect-ratio: 9 / 15.5;
+  border-radius: 11px;
+  overflow: hidden;
+  background: #08080e;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.55),
+    0 0 var(--bloom, 62px) rgba(124, 106, 255, 0.38);
+}
+
+/* Die kleine Marke unter dem Schirm sitzt auf dem Gehaeuserand und gibt
+   der Tafel Masz, ohne einen Betrieb zu nennen. */
+.caseMark {
+  position: absolute;
+  left: 50%;
+  bottom: 11px;
+  width: 34px;
+  height: 3px;
+  border-radius: 3px;
+  transform: translateX(-50%);
+  background: rgba(244, 244, 246, 0.16);
+}
+
+.stem {
+  width: 20%;
+  height: 26px;
+  border-radius: 0 0 5px 5px;
+  background: linear-gradient(180deg, #16161f 0%, #0a0a10 100%);
+  box-shadow: inset 1px 0 0 rgba(244, 244, 246, 0.07);
+}
+
+.base {
+  width: 44%;
+  height: 10px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #1c1c28 0%, #07070c 100%);
+  box-shadow: inset 0 1px 0 rgba(244, 244, 246, 0.15);
+}
+
+/* ---------------------------------------------------------------- Hero */
+
+.hero {
+  position: relative;
+  padding-top: clamp(128px, 18vh, 206px);
+  padding-bottom: clamp(64px, 8vh, 112px);
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+  gap: clamp(40px, 5vw, 80px);
+  align-items: center;
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 4.9vw, 78px);
+  font-weight: 300;
+  line-height: 1.035;
+  letter-spacing: -0.028em;
+  margin: 0;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.heroLead {
+  margin-top: 28px;
+  max-width: 46ch;
+}
+
+.heroAction {
+  margin-top: 40px;
+}
+
+.heroStage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 46px;
+}
+
+.heroStele {
+  width: clamp(190px, 19vw, 268px);
+}
+
+/* --------------------------------------------------- S2 Warum das wirkt */
+
+/* M15. Der Grund wechselt auf die zweite dunkle Ebene. Keine Karten und
+   keine Rahmen, nur drei Zeilen und je ein ruhiges Zeichen. */
+.gruende {
+  background: var(--deep);
+  border-top: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--line-2);
+  padding-block: clamp(88px, 11vw, 164px);
+}
+
+.gruendeList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(38px, 4.6vw, 74px);
+}
+
+.gruendeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(24px, 4vw, 64px);
+}
+
+.gruendeText {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 60px);
+  font-weight: 300;
+  line-height: 1.07;
+  letter-spacing: -0.026em;
+  color: var(--ink);
+  margin: 0;
+  max-width: 22ch;
+}
+
+.gruendeMark {
+  flex: 0 0 auto;
+  width: clamp(56px, 6.4vw, 96px);
+  height: clamp(56px, 6.4vw, 96px);
+  color: var(--tone-lav);
+  opacity: 0.62;
+}
+
+.gruendeMark svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------------------- S3 Wo die Tafeln stehen */
+
+.orte {
+  padding-block: clamp(96px, 12vw, 176px);
+}
+
+.sectionHead {
+  margin-bottom: clamp(44px, 5vw, 78px);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 3.8vw, 58px);
+  font-weight: 300;
+  line-height: 1.06;
+  letter-spacing: -0.024em;
+  margin: 0;
+  color: var(--ink);
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+.sectionLead {
+  margin-top: 22px;
+}
+
+.orteGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 1.8vw, 28px);
+}
+
+.ortCard {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--deep);
+  border: 1px solid var(--line-2);
+}
+
+.ortMedia {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.ortMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+  transform-origin: 50% 45%;
+  transition: transform 0.8s var(--ease-out-expo);
+}
+
+/* Die vierte Karte traegt kein Foto, sondern eine Flaeche in reinem
+   Akzent, stark abgedunkelt. So wiederholt sich kein Motiv. */
+.ortFlaeche {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 90% at 24% 18%, rgba(124, 106, 255, 0.42), transparent 62%),
+    radial-gradient(ellipse 80% 70% at 82% 88%, rgba(91, 140, 255, 0.3), transparent 66%),
+    linear-gradient(146deg, #171634 0%, #0f1030 52%, #0a0a1a 100%);
+  transform: scale(1);
+  transition: transform 0.8s var(--ease-out-expo);
+}
+
+/* Beim Zeigen hebt sich das Bild um zwei Prozent. */
+.ortCard:hover .ortMedia img,
+.ortCard:hover .ortFlaeche {
+  transform: scale(1.02);
+}
+
+/* Die kleine Tafelflaeche auf der Karte. Sie geht beim Zeigen von
+   gedaempft auf leuchtend, damit sichtbar wird, dass genau dort ein
+   Bildschirm haengt. */
+.ortBoard {
+  position: absolute;
+  right: 8.5%;
+  top: 15%;
+  width: 15%;
+  aspect-ratio: 9 / 14;
+  border-radius: 5px;
+  background: linear-gradient(168deg, rgba(185, 165, 255, 0.34), rgba(91, 140, 255, 0.16));
+  box-shadow: 0 0 0 1px rgba(244, 244, 246, 0.16);
+  opacity: 0.55;
+  transition:
+    opacity 0.6s var(--ease-out-expo),
+    background 0.6s var(--ease-out-expo),
+    box-shadow 0.6s var(--ease-out-expo);
+}
+
+.ortCard:hover .ortBoard {
+  opacity: 1;
+  background: linear-gradient(168deg, #ded4ff 0%, #a996ff 100%);
+  box-shadow:
+    0 0 0 1px rgba(244, 244, 246, 0.38),
+    0 0 26px rgba(124, 106, 255, 0.55);
+}
+
+.ortShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(5, 5, 7, 0.32) 0%, rgba(5, 5, 7, 0.72) 100%);
+  pointer-events: none;
+}
+
+.ortBody {
+  padding: 26px 26px 30px;
+}
+
+.ortWord {
+  font-family: var(--font-display);
+  font-size: clamp(23px, 2.3vw, 33px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--ink);
+}
+
+.ortText {
+  margin-top: 10px;
+  max-width: 36ch;
+}
+
+.orteFoot {
+  margin-top: clamp(36px, 4vw, 58px);
+}
+
+/* ----------------------------------------------------------------- Band */
+
+/* M14. Waagerechtes Band aus Beispielen, ziehbar mit Maus und Finger und
+   mit der Tastatur erreichbar. */
+.band {
+  padding-block: clamp(52px, 6.5vw, 92px);
+  background: var(--deep);
+  border-top: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--line-2);
+}
+
+.bandHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  padding-inline: var(--gutter);
+  margin-bottom: 26px;
+}
+
+.bandTrack {
+  display: flex;
+  gap: clamp(14px, 1.4vw, 22px);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding-inline: var(--gutter);
+  padding-block: 8px;
+  scroll-snap-type: x proximity;
+  cursor: grab;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 106, 255, 0.5) rgba(244, 244, 246, 0.06);
+}
+
+.bandTrack::-webkit-scrollbar {
+  height: 8px;
+}
+
+.bandTrack::-webkit-scrollbar-track {
+  background: rgba(244, 244, 246, 0.06);
+  border-radius: 8px;
+}
+
+.bandTrack::-webkit-scrollbar-thumb {
+  background: rgba(124, 106, 255, 0.5);
+  border-radius: 8px;
+}
+
+.bandTrack::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 106, 255, 0.75);
+}
+
+.bandTrack[data-drag="true"] {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+.bandItem {
+  flex: 0 0 clamp(232px, 25vw, 328px);
+  scroll-snap-align: start;
+}
+
+.bandMedia {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #07070c;
+  border: 1px solid var(--line-2);
+}
+
+.bandMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Die gezeichneten Kacheln zeigen den Spot auf einer angedeuteten Tafel
+   im Raum, damit sie neben den Fotos nicht als Grafik herausfallen. */
+.bandSpotWrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse 60% 46% at 50% 96%, rgba(91, 140, 255, 0.24), transparent 70%),
+    linear-gradient(168deg, #121223 0%, #08080f 100%);
+}
+
+.bandSpotScreen {
+  position: relative;
+  width: 34%;
+  aspect-ratio: 9 / 15.5;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 3px #14141f,
+    0 0 34px rgba(124, 106, 255, 0.42);
+}
+
+.bandText {
+  margin-top: 16px;
+  max-width: 32ch;
+}
+
+.bandOrt {
+  margin-top: 8px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tone-lav);
+}
+
+/* --------------------------------------------- S4 Was auf der Tafel laeuft */
+
+.inhalte {
+  padding-block: clamp(96px, 12vw, 176px);
+}
+
+/* M7. Der Faecher oeffnet sich am Scrollstand. Jede Karte traegt eine
+   eigene Abstufung des Akzents. */
+.fanWrap {
+  position: relative;
+  height: clamp(230px, 26vw, 340px);
+  margin-top: clamp(40px, 5vw, 72px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.fanCard {
+  position: absolute;
+  bottom: 0;
+  width: clamp(112px, 12vw, 158px);
+  aspect-ratio: 3 / 4.1;
+  border-radius: 16px;
+  transform-origin: 50% 158%;
+  transform: rotate(calc(var(--fan, 0) * var(--a) * 1deg));
+  background: var(--tone);
+  color: #0d0820;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 15px 18px;
+  box-shadow: 0 26px 50px -22px rgba(0, 0, 0, 0.85);
+}
+
+.fanIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.fanWord {
+  font-family: var(--font-display);
+  font-size: clamp(15px, 1.4vw, 19px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.fanNote {
+  margin-top: clamp(26px, 3vw, 40px);
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 14px;
+}
+
+.inhalteStage {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+  align-items: center;
+  margin-top: clamp(64px, 8vw, 118px);
+}
+
+/* M12. Die helle Textkarte ueberlappt die dunkle Medienkarte um wenige
+   Bildpunkte. Sie ist das einzige helle Band der ganzen Seite und bleibt
+   dabei messbar dunkler als der Schirm. */
+.lichtKarte {
+  position: relative;
+  z-index: 2;
+  margin-right: -18px;
+  background: var(--light-card);
+  color: var(--light-ink);
+  border-radius: 24px;
+  padding: clamp(28px, 3vw, 42px) clamp(26px, 2.8vw, 40px);
+  box-shadow: 0 34px 70px -30px rgba(0, 0, 0, 0.9);
+}
+
+.lichtTitle {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.3vw, 33px);
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: #0b0b12;
+}
+
+.lichtBody {
+  margin: 16px 0 0;
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: #2c2c40;
+  max-width: 40ch;
+}
+
+.wandKarte {
+  position: relative;
+  z-index: 1;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #07070c;
+  border: 1px solid var(--line-2);
+  aspect-ratio: 16 / 12;
+}
+
+/* M8. Die unscharfe Wand aus vielen kleinen Ausschnitten ist das
+   Rohmaterial, der scharfe Schirm davor ist das Ergebnis. Die Unschaerfe
+   sitzt auf dem innersten Element, damit die beiden Verschiebungen
+   darueber als fertige Ebene zusammengesetzt werden koennen. */
+.wandDrift {
+  position: absolute;
+  inset: -16%;
+  animation: wandDrift 54s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes wandDrift {
+  from {
+    transform: translate3d(-16px, 0, 0);
+  }
+  to {
+    transform: translate3d(16px, 0, 0);
+  }
+}
+
+.wandShift {
+  position: absolute;
+  inset: 0;
+  transform: translate3d(0, var(--wy, 0px), 0);
+}
+
+.wandGrid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 12px;
+  filter: blur(13px);
+  opacity: 0.6;
+}
+
+.wandTile {
+  border-radius: 8px;
+}
+
+.wandStele {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 27%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+/* ------------------------------------------------------ S5 So laeuft es ab */
+
+.ablauf {
+  background: var(--deep);
+  border-top: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--line-2);
+  padding-block: clamp(96px, 12vw, 172px);
+}
+
+.ablaufGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(48px, 6vw, 96px);
+  align-items: center;
+  margin-top: clamp(44px, 5vw, 72px);
+}
+
+.stepsWrap {
+  position: relative;
+}
+
+.steps {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(38px, 4vw, 62px);
+}
+
+.stepsRail {
+  position: absolute;
+  left: 21px;
+  top: 14px;
+  bottom: 14px;
+  width: 2px;
+  border-radius: 2px;
+  background: rgba(124, 106, 255, 0.16);
+  overflow: hidden;
+}
+
+.stepsFill {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--tone-blue) 0%, var(--tone-violet) 100%);
+  transform: scaleY(var(--fill, 0));
+  transform-origin: top center;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: clamp(18px, 2vw, 32px);
+  align-items: start;
+}
+
+.stepDot {
+  position: relative;
+  z-index: 1;
+  justify-self: center;
+  margin-top: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background: var(--deep);
+  box-shadow: 0 0 0 2px rgba(124, 106, 255, 0.3);
+  transition:
+    box-shadow 0.55s var(--ease-out-expo),
+    background 0.55s var(--ease-out-expo);
+}
+
+.step[data-on="true"] .stepDot {
+  background: var(--tone-violet);
+  box-shadow:
+    0 0 0 2px rgba(185, 165, 255, 0.7),
+    0 0 20px rgba(124, 106, 255, 0.85);
+}
+
+.stepNum {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 2.8vw, 44px);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 14px;
+  opacity: 0.3;
+  transition: opacity 0.55s var(--ease-out-expo);
+}
+
+.step[data-on="true"] .stepNum {
+  opacity: 1;
+}
+
+.stepHead {
+  font-family: var(--font-display);
+  font-size: clamp(21px, 2vw, 29px);
+  font-weight: 300;
+  line-height: 1.14;
+  letter-spacing: -0.018em;
+  margin: 0;
+  color: var(--ink-2);
+  transition: color 0.55s var(--ease-out-expo);
+}
+
+.step[data-on="true"] .stepHead {
+  color: var(--ink);
+}
+
+.stepBody {
+  margin-top: 10px;
+  max-width: 42ch;
+}
+
+/* Die Ziffer sitzt links auszerhalb der Textspalte, deshalb bekommt der
+   Schritt links Platz und die Ziffer eine eigene Spur. */
+.stepMarks {
+  position: relative;
+  width: 44px;
+}
+
+.ablaufStage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding-block: 30px;
+}
+
+.ablaufStele {
+  width: clamp(160px, 15vw, 214px);
+}
+
+/* M6. Die Beschriftungsfahnen sagen in Alltagsworten, was die Tafel ist.
+   Sie bleiben messbar dunkler als der Schirm. */
+.flags {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.flag {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding-inline: 14px;
+  border-radius: 9999px;
+  background: var(--light-pill);
+  color: var(--light-ink);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.9);
+}
+
+.flag svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+}
+
+.flag0 {
+  left: 0;
+  top: 22%;
+}
+
+.flag1 {
+  right: 0;
+  top: 46%;
+}
+
+.flag2 {
+  left: 4%;
+  top: 70%;
+}
+
+/* ------------------------------------------------------------ S6 Abschluss */
+
+.abschluss {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  padding-top: clamp(92px, 11vw, 158px);
+  text-align: center;
+}
+
+/* M9 mit atmendem Schein. Acht Sekunden je Zyklus, acht Prozent
+   Unterschied in der Helligkeit, sonst nichts. */
+.abschlussGlow {
+  position: absolute;
+  left: 50%;
+  bottom: -220px;
+  width: min(1180px, 128vw);
+  height: 780px;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    rgba(124, 106, 255, 0.34) 0%,
+    rgba(91, 140, 255, 0.11) 46%,
+    transparent 72%
+  );
+  filter: blur(72px);
+  pointer-events: none;
+  animation: atmen 8s ease-in-out infinite alternate;
+}
+
+@keyframes atmen {
+  from {
+    opacity: 0.92;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.abschlussInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.abschlussTitle {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 62px);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.026em;
+  margin: 0;
+  color: var(--ink);
+  max-width: 17ch;
+  text-wrap: balance;
+}
+
+.abschlussLead {
+  margin-top: 24px;
+  text-wrap: balance;
+}
+
+/* Der einzige gefuellte Knopf der ganzen Seite. Die Schrift steht in fast
+   Schwarz, denn Weisz erreicht auf diesem Verlauf nur 3,3 zu eins. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 38px;
+  height: 56px;
+  padding-inline: 32px;
+  border-radius: 9999px;
+  background: linear-gradient(92deg, var(--tone-blue) 0%, var(--tone-violet) 100%);
+  color: #050507;
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  box-shadow: 0 20px 44px -20px rgba(91, 140, 255, 0.7);
+  transition:
+    transform 0.35s var(--ease-out-expo),
+    box-shadow 0.35s var(--ease-out-expo);
+}
+
+.cta:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 24px 54px -20px rgba(185, 165, 255, 0.85),
+    0 0 36px rgba(185, 165, 255, 0.42);
+}
+
+.abschlussNote {
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+
+/* Die Naheinstellung. Die Tafel steht grosz und wird an der Unterkante
+   angeschnitten, damit die Groeszenordnung im Gedaechtnis bleibt. */
+.nah {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(56px, 7vw, 104px);
+  height: clamp(210px, 26vw, 340px);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.nahStele {
+  width: clamp(230px, 24vw, 330px);
+  flex: 0 0 auto;
+}
+
+/* ----------------------------------------------------------- Schmale Fenster */
+
+@media (max-width: 1023px) {
+  .heroGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 42px;
+  }
+
+  .heroStage {
+    padding-bottom: 30px;
+  }
+
+  .heroStele {
+    width: clamp(178px, 46vw, 240px);
+  }
+
+  .orteGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gruendeRow {
+    gap: 22px;
+  }
+
+  .inhalteStage {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .lichtKarte {
+    margin-right: 0;
+    margin-bottom: -18px;
+    order: 2;
+  }
+
+  .wandKarte {
+    order: 1;
+    aspect-ratio: 4 / 3;
+  }
+
+  .ablaufGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 56px;
+  }
+
+  .ablaufStage {
+    order: 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .gruendeMark {
+    width: 44px;
+    height: 44px;
+  }
+
+  .step {
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .stepsRail {
+    left: 16px;
+  }
+
+  .stepNum {
+    font-size: 26px;
+    top: -2px;
+  }
+
+  .ortBody {
+    padding: 22px 20px 26px;
+  }
+
+  .flag {
+    height: 30px;
+    padding-inline: 11px;
+    font-size: 11.5px;
+  }
+}
+
+/* ------------------------------------------------------- Ruhige Bewegung */
+
+/* Die drei Schleifen bleiben auf ihrem ersten Bild stehen, und die
+   Eintritte werden in den Bausteinen selbst zu reinen Aufblendungen. */
+@media (prefers-reduced-motion: reduce) {
+  .carpet,
+  .wandDrift,
+  .abschlussGlow {
+    animation: none !important;
+    opacity: 1;
+  }
+
+  .wandDrift {
+    transform: translate3d(-16px, 0, 0);
+  }
+
+  .abschlussGlow {
+    opacity: 0.96;
+  }
+}

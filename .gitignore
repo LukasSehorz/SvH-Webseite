@@ -22,9 +22,34 @@ yarn-error.log*
 .env.*
 !.env.example
 
-# Prüf-Screenshots (lokal, mehrere hundert MB)
-/_ref/shots/
+# Prüf-Screenshots und Sicherungen (lokal, mehrere hundert MB).
+# Die Referenzverzeichnisse tragen Skripte und Aufträge, die es wert sind,
+# versioniert zu werden, daneben aber Tausende Bilder und Dutzende
+# Sicherungskopien. Ignoriert wird deshalb der ganze Inhalt, und nur die
+# Skripte und Texte auf oberster Ebene werden wieder aufgenommen. Eine
+# Ausnahme für Dateien in Unterordnern ist in git nicht möglich, sobald
+# der Unterordner selbst ausgeschlossen ist; die Werkzeuge liegen deshalb
+# bewusst auf oberster Ebene.
+/_ref/*
+!/_ref/*.mjs
+!/_ref/*.md
+/_ref2/*
+!/_ref2/*.mjs
+!/_ref2/*.md
+/_ref3/*
+!/_ref3/*.mjs
+!/_ref3/*.md
+!/_ref3/*.json
+
+# Design-Skill: Prüfbilder und Entwürfe lokal, die Konfiguration versioniert
+/.impeccable/review/
+/.impeccable/mocks/
 
 # Betriebssystem
 .DS_Store
 Thumbs.db
+
+# Ausgabeverzeichnisse der Probebauten, siehe NEXT_DIST_DIR in next.config.ts.
+# Jeder Bauagent baut in ein eigenes Verzeichnis, damit der laufende
+# Server eines anderen nicht mitten im Bau seine Teile verliert.
+/.next-*/

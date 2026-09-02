@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
 import { company } from "../content";
-import LegalPage from "../components/LegalPage";
+import DarkLegalPage from "../components/pages/DarkLegalPage";
 
 export const metadata: Metadata = {
-  title: `Datenschutzerklärung – ${company.name}`,
+  title: "Datenschutzerklärung",
   description:
     "Informationen zur Verarbeitung personenbezogener Daten auf dieser Website nach der Datenschutz-Grundverordnung (DSGVO).",
 };
 
 export default function DatenschutzPage() {
   return (
-    <LegalPage title="Datenschutzerklärung">
+    <DarkLegalPage title="Datenschutzerklärung">
       <h2>1. Verantwortlicher</h2>
       <p>
         Verantwortlich für die Datenverarbeitung auf dieser Website im Sinne der
-        Datenschutz-Grundverordnung (DSGVO) ist:
+        Datenschutz-Grundverordnung (DSGVO) ist die folgende Stelle.
       </p>
       <p>
         <strong>{company.name}</strong>
@@ -26,11 +26,18 @@ export default function DatenschutzPage() {
         {company.zipCity}
         <br />
         {company.country}
-        <br />
-        Telefon: <a href={`tel:${company.phoneHref}`}>{company.phone}</a>
-        <br />
-        E-Mail: <a href={`mailto:${company.email}`}>{company.email}</a>
       </p>
+      <dl className="legal-dl">
+        <dt>Telefon</dt>
+        <dd>
+          <a href={`tel:${company.phoneHref}`}>{company.phone}</a>
+        </dd>
+
+        <dt>E-Mail</dt>
+        <dd>
+          <a href={`mailto:${company.email}`}>{company.email}</a>
+        </dd>
+      </dl>
 
       <h2>2. Allgemeines zur Datenverarbeitung</h2>
       <p>
@@ -59,7 +66,7 @@ export default function DatenschutzPage() {
       <h2>4. Server-Logfiles</h2>
       <p>
         Beim Aufruf dieser Website werden automatisch Informationen in sogenannten Server-Logfiles
-        erfasst, die Ihr Browser übermittelt. Dies sind insbesondere:
+        erfasst, die Ihr Browser übermittelt. Dazu gehören insbesondere die folgenden Angaben.
       </p>
       <ul>
         <li>Browsertyp und Browserversion</li>
@@ -101,7 +108,7 @@ export default function DatenschutzPage() {
       <p>
         Unsere Website verwendet Cookies, soweit sie für den Betrieb technisch erforderlich sind.
         Rechtsgrundlage hierfür ist § 25 Abs. 2 TDDDG in Verbindung mit Art. 6 Abs. 1 lit. f DSGVO.
-        Nicht notwendige Cookies – etwa für Statistik oder Marketing – setzen wir nur mit Ihrer
+        Nicht notwendige Cookies, etwa für Statistik oder Marketing, setzen wir nur mit Ihrer
         vorherigen Einwilligung ein, die Sie jederzeit für die Zukunft widerrufen können. Sie können
         Ihren Browser so einstellen, dass Sie über das Setzen von Cookies informiert werden und Cookies
         nur im Einzelfall erlauben oder generell ausschließen.
@@ -116,7 +123,10 @@ export default function DatenschutzPage() {
       </p>
 
       <h2>9. Rechte der betroffenen Personen</h2>
-      <p>Ihnen stehen gegenüber uns folgende Rechte hinsichtlich Ihrer personenbezogenen Daten zu:</p>
+      <p>
+        Hinsichtlich Ihrer personenbezogenen Daten stehen Ihnen uns gegenüber die folgenden Rechte
+        zu.
+      </p>
       <ul>
         <li>Recht auf Auskunft (Art. 15 DSGVO)</li>
         <li>Recht auf Berichtigung (Art. 16 DSGVO)</li>
@@ -153,6 +163,6 @@ export default function DatenschutzPage() {
         rechtlichen Anforderungen entspricht oder um Änderungen unserer Leistungen umzusetzen. Für
         Ihren erneuten Besuch gilt dann die jeweils aktuelle Fassung.
       </p>
-    </LegalPage>
+    </DarkLegalPage>
   );
 }

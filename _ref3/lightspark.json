@@ -1,0 +1,25 @@
+{
+  "url": "https://www.lightspark.com/",
+  "ziel": "_ref3/webseiten/lightspark",
+  "ausschnitte": [
+    { "name": "01-hero", "y": 0 },
+    { "name": "02-logoband", "y": 850 },
+    { "name": "03-satz", "y": 1120 },
+    { "name": "04-zahlenband", "y": 1500 },
+    { "name": "05-wastunwir-kopf", "y": 1900 },
+    { "name": "06-reihe-eins", "y": 2250 },
+    { "name": "07-reihe-zwei", "y": 2720 },
+    { "name": "08-reihe-drei", "y": 3180 },
+    { "name": "09-vertrauen", "y": 3980 },
+    { "name": "10-loslegen", "y": 4780 },
+    { "name": "11-fusz-wortmarke", "y": 6100 }
+  ],
+  "hover": [
+    { "name": "12-reihe", "y": 2250, "wahl": "a:has-text('Learn more')" }
+  ],
+  "bewegung": [
+    { "name": "20-zahlenband", "y": 1500 },
+    { "name": "21-reihe-eins", "y": 2250 },
+    { "name": "22-loslegen", "y": 4780 }
+  ]
+}

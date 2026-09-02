@@ -1,0 +1,14 @@
+import { chromium } from 'playwright';
+const PORT = process.argv[2] || '3100';
+const browser = await chromium.launch({ headless: false });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
+const msgs = [];
+page.on('console', (m) => msgs.push(m.type().toUpperCase() + ': ' + m.text().slice(0, 3000)));
+page.on('pageerror', (e) => msgs.push('PAGEERROR: ' + String(e).slice(0, 2000)));
+await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded', timeout: 120000 });
+await page.waitForTimeout(3000);
+const top = await page.evaluate(() => Math.round(document.getElementById('marketing').getBoundingClientRect().top + document.scrollingElement.scrollTop));
+await page.evaluate((v) => { document.scrollingElement.scrollTop = v; }, top);
+await page.waitForTimeout(3000);
+console.log(msgs.join('\n----\n') || 'keine Meldungen');
+await browser.close();
