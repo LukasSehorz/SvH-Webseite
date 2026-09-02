@@ -20,8 +20,14 @@ import { motion } from "framer-motion";
 
 /** Exponentiell ausklingend. Der Grundton aller Uebergaenge. */
 export const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
-/** Kurzes Ueberschwingen fuer Haken, Stempel und einrastende Teile. */
-export const POP: [number, number, number, number] = [0.34, 1.5, 0.5, 1];
+/**
+ * Einrasten fuer Haken, Stempel und Bausteine.
+ *
+ * Der Wert schwingt bewusst nur wenig ueber. Ein kraeftiger Rueckprall
+ * wirkt nach Spielzeug, ein knappes Anhalten dagegen nach Mechanik, die
+ * sitzt. Alles andere klingt exponentiell aus.
+ */
+export const POP: [number, number, number, number] = [0.3, 1.26, 0.48, 1];
 /** Traeges Anheben fuer wachsende Balken. */
 export const LIFT: [number, number, number, number] = [0.16, 0.86, 0.26, 1];
 
@@ -66,10 +72,11 @@ export const P_DEEP = "#171334";
 export function useScene(
   steps: readonly number[],
   playKey: number,
-  reduced: boolean
+  reduced: boolean,
+  idleAtRest: boolean
 ): number {
   const last = steps.length;
-  const [stage, setStage] = useState(0);
+  const [stage, setStage] = useState(idleAtRest ? steps.length : 0);
 
   useEffect(() => {
     if (reduced) {
@@ -77,7 +84,7 @@ export function useScene(
       return;
     }
     if (playKey === 0) {
-      setStage(0);
+      setStage(idleAtRest ? last : 0);
       return;
     }
 
@@ -95,7 +102,7 @@ export function useScene(
     return () => {
       if (timer !== undefined) clearTimeout(timer);
     };
-  }, [steps, playKey, reduced, last]);
+  }, [steps, playKey, reduced, last, idleAtRest]);
 
   return stage;
 }
@@ -134,9 +141,20 @@ export type Tween = Readonly<{
 /**
  * Uebergang einer Szene. Waehrend des Ruecksprungs gilt fuer alles die
  * gleiche kurze Dauer ohne Verzoegerung, sonst der eigene Wert.
+ *
+ * `idleAtRest` entscheidet, was vor dem ersten Anlauf zu sehen ist. Eine
+ * Kachel startet leer, weil ihre Szene beim Eintritt sofort anlaeuft.
+ * Ein Schritt des Ablaufs steht dagegen im Endbild, denn er wartet
+ * moeglicherweise lange darauf, wach zu werden, und ein leerer Rahmen
+ * saehe in dieser Zeit kaputt aus.
  */
-export function useBeat(steps: readonly number[], playKey: number, reduced: boolean) {
-  const stage = useScene(steps, playKey, reduced);
+export function useBeat(
+  steps: readonly number[],
+  playKey: number,
+  reduced: boolean,
+  idleAtRest = false
+) {
+  const stage = useScene(steps, playKey, reduced, idleAtRest);
   const back = stage === 0;
 
   const t = (
@@ -159,16 +177,43 @@ export function useSceneId(): string {
   return useMemo(() => `s${raw.replace(/[^a-zA-Z0-9_-]/g, "")}`, [raw]);
 }
 
-/** Rampe waagerecht, Rampe aufwaerts und der weiche Farbnebel. */
-export function Defs({ id }: Readonly<{ id: string }>) {
+/**
+ * Rampe waagerecht, Rampe aufwaerts und der weiche Farbnebel.
+ *
+ * Die beiden Rampen spannen sich ueber das ganze Feld statt ueber jedes
+ * einzelne Teil. Das hat zwei Gruende. Ein waagerechter Strich hat keine
+ * Hoehe, und ein Verlauf, der sich nach dem Teil richtet, faellt dort in
+ * sich zusammen und wird grau. Und ueber das Feld gespannt wirkt die
+ * Rampe wie ein Licht, das von links nach rechts durch die ganze Szene
+ * faellt, statt wie ein Muster, das jedes Teil fuer sich wiederholt.
+ */
+export function Defs({
+  id,
+  w,
+  h,
+}: Readonly<{ id: string; w: number; h: number }>) {
   return (
     <defs>
-      <linearGradient id={id} x1="0" y1="0" x2="1" y2="0">
+      <linearGradient
+        id={id}
+        gradientUnits="userSpaceOnUse"
+        x1={0}
+        y1={0}
+        x2={w}
+        y2={0}
+      >
         <stop offset="0%" stopColor="#5B8CFF" />
         <stop offset="48%" stopColor="#7C6AFF" />
         <stop offset="100%" stopColor="#B9A5FF" />
       </linearGradient>
-      <linearGradient id={`${id}-up`} x1="0" y1="1" x2="0" y2="0">
+      <linearGradient
+        id={`${id}-up`}
+        gradientUnits="userSpaceOnUse"
+        x1={0}
+        y1={h}
+        x2={0}
+        y2={0}
+      >
         <stop offset="0%" stopColor="#5B8CFF" />
         <stop offset="55%" stopColor="#7C6AFF" />
         <stop offset="100%" stopColor="#B9A5FF" />

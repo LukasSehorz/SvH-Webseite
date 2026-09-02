@@ -125,6 +125,44 @@ export function IconHand({ strich }: IconProps) {
   );
 }
 
+/* Die Zeichen auf den gezeichneten Spots. Sie sitzen klein in der Ecke
+   und sagen ohne ein Wort, um welche Art von Betrieb es geht. */
+export function IconHantel({ strich }: IconProps) {
+  return (
+    <Rahmen strich={strich}>
+      <path d="M3 9.4v5.2M6.2 7.2v9.6M17.8 7.2v9.6M21 9.4v5.2M6.2 12h11.6" />
+    </Rahmen>
+  );
+}
+
+export function IconBesteck({ strich }: IconProps) {
+  return (
+    <Rahmen strich={strich}>
+      <path d="M7 3.4v6.2a2.2 2.2 0 0 0 4.4 0V3.4M9.2 9.8V20.6" />
+      <path d="M17.4 3.4c-1.5 1.2-2.2 3-2.2 5.2 0 1.6.8 2.6 2.2 2.8V20.6" />
+    </Rahmen>
+  );
+}
+
+export function IconNote({ strich }: IconProps) {
+  return (
+    <Rahmen strich={strich}>
+      <path d="M9.4 17.6V5.2l9.2-1.8v12" />
+      <circle cx="6.8" cy="17.8" r="2.6" />
+      <circle cx="16" cy="15.8" r="2.6" />
+    </Rahmen>
+  );
+}
+
+export function IconFahne({ strich }: IconProps) {
+  return (
+    <Rahmen strich={strich}>
+      <path d="M5.6 20.6V3.8" />
+      <path d="M5.6 4.6h11.8l-2.4 4 2.4 4H5.6z" />
+    </Rahmen>
+  );
+}
+
 /* Pfeil hinter den leisen Verweisen. */
 export function IconPfeil() {
   return (
@@ -158,6 +196,10 @@ const KARTE: Record<string, (props: IconProps) => ReactElement> = {
   masz: IconMasz,
   ort: IconOrt,
   hand: IconHand,
+  hantel: IconHantel,
+  besteck: IconBesteck,
+  note: IconNote,
+  fahne: IconFahne,
 };
 
 /** Waehlt ein Zeichen ueber seinen Namen aus copy.ts. */

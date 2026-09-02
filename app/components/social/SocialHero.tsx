@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import type { OrbLayout } from "../marketing/OrbsCanvas";
 import { PALETTE_FULL } from "../marketing/OrbsCanvas";
-import { Reveal, SplitHeadline, useSafeReducedMotion } from "../system/ui";
+import { GradientWord, Reveal, useSafeReducedMotion } from "../system/ui";
 import { socialPage } from "../../copy";
 import styles from "./social.module.css";
 
@@ -138,13 +138,18 @@ export default function SocialHero() {
 
         <div className={styles.heroText}>
           <Reveal>
-            <SplitHeadline
-              as="h1"
-              className={`t-h1 ${styles.heroTitle}`}
-              before={socialPage.hero.titleBefore}
-              word={socialPage.hero.gradientWord}
-              after={socialPage.hero.titleAfter}
-            />
+            {/* Zwei Zeilen als eigene Bloecke. So faellt der Umbruch auf
+                jeder Bildbreite an derselben Stelle, statt sich mit der
+                Spaltenbreite zu verschieben. */}
+            <h1 className={`t-h1 ${styles.heroTitle}`}>
+              <span className={styles.heroLine}>
+                {socialPage.hero.titleLine1}
+              </span>
+              <span className={styles.heroLine}>
+                {socialPage.hero.titleLine2}{" "}
+                <GradientWord>{socialPage.hero.gradientWord}</GradientWord>
+              </span>
+            </h1>
           </Reveal>
 
           <Reveal delay={0.1}>

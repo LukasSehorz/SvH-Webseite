@@ -76,15 +76,19 @@ export default function WorkRows({
           {kompakt.map((r, k) => {
             const i = vollAnzahl + k;
             return (
+              /* Kopf und Satz stehen ueber dem Fenster, nicht darunter.
+                 Die drei gezeichneten Oberflaechen sind verschieden hoch,
+                 und mit dem Fenster oben standen die drei Ueberschriften
+                 auf drei verschiedenen Hoehen. */
               <Fade className={s.trioCell} key={r.head} versatz={k * -0.02}>
                 <Nummer i={i} />
-                <Window mist={NEBEL[i][0]} mist2={NEBEL[i][1]} width={360}>
-                  <Art name={r.art} />
-                </Window>
                 <div>
                   <h3 className={s.rowHead}>{r.head}</h3>
                   <p className={s.rowBody}>{r.body}</p>
                 </div>
+                <Window mist={NEBEL[i][0]} mist2={NEBEL[i][1]} width={360}>
+                  <Art name={r.art} />
+                </Window>
                 <ul className={s.trioList}>
                   {r.points.map((p) => (
                     <li key={p}>{p}</li>

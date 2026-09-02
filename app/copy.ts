@@ -19,8 +19,12 @@ export const meta = {
   },
   ki: {
     title: "KI-Automatisierung und Agenten",
+    /* Die alte Beschreibung versprach ein Corporate LLM, Voice Agents und
+       ein Operating System, und davon steht seit dem Umbau der KI-Seite
+       nichts mehr auf ihr. Eine Suchmaschinenbeschreibung darf nur
+       tragen, was die Seite auch zeigt. */
     description:
-      "Vom Corporate LLM als Fundament bis zu Automatisierungen, Voice Agents und einem Operating System für Ihren Betrieb. Umgesetzt in Wochen statt Quartalen.",
+      "Wir automatisieren die Arbeit, die sich in Ihrem Betrieb jeden Tag wiederholt. In drei Schritten, beginnend mit einer kostenlosen Potenzialanalyse.",
   },
   marketing: {
     title: "Marketing mit Social Media, Werbetafeln und Webdesign",
@@ -29,8 +33,11 @@ export const meta = {
   },
   about: {
     title: "Über uns",
+    /* Die alte Beschreibung nannte SVH eine kleine Agentur, und das
+       widerspricht der Positionierung als Partner fuer den ganzen
+       digitalen Auftritt, die die Seite seit dem 02.09.2026 traegt. */
     description:
-      "SVH Consulting ist eine kleine Agentur aus Zangberg. Sie sprechen direkt mit den Leuten, die Ihre Systeme bauen und Ihre Kanäle betreuen.",
+      "SVH Consulting ist Ihr Partner für alles Digitale. Webseite, Social Media und KI aus einer Hand, damit Ihr Betrieb mehr Anfragen bekommt und weniger Arbeit hat. Aus Zangberg, für Betriebe in der Region.",
   },
   contact: {
     title: "Kontakt",
@@ -99,9 +106,11 @@ export const footer = {
       title: "Leistungen",
       links: [
         { label: "KI-Automatisierung und Agenten", href: "/ki" },
-        { label: "Social Media Marketing", href: "/marketing" },
-        { label: "Digitale Werbetafeln", href: "/marketing" },
-        { label: "Webdesign", href: "/marketing" },
+        /* Seit dem 02.09.2026 hat Marketing drei Unterseiten, und die
+           Fusszeile fuehrt direkt dorthin statt auf die Uebersicht. */
+        { label: "Social Media Marketing", href: "/marketing/social-media" },
+        { label: "Digitale Werbetafeln", href: "/marketing/werbetafeln" },
+        { label: "Webdesign", href: "/marketing/webseiten" },
       ],
     },
     {
@@ -109,7 +118,10 @@ export const footer = {
       links: [
         { label: "Über uns", href: "/ueber-uns" },
         { label: "Kontakt", href: "/kontakt" },
-        { label: "Referenzen", href: "/marketing#referenzen" },
+        /* Der Anker lag auf /marketing, wo die Referenzen seit dem Umbau
+           zur Uebersicht nicht mehr stehen. Die vier Projekte tragen auf
+           der Webseiten-Unterseite den Abschnitt mit dieser Kennung. */
+        { label: "Referenzen", href: "/marketing/webseiten#referenzen" },
       ],
     },
     {
@@ -163,74 +175,11 @@ export const manifesto = {
 /*  Landing · S2 KI-Stack (Ada-Muster)                                 */
 /* ------------------------------------------------------------------ */
 
-export const kiStack = {
-  label: "02 · KI",
-  title: "Eine Plattform für Ihren Betrieb.",
-  intro:
-    "Im Fundament liegt Ihr Firmenwissen, darüber arbeiten die Werkzeuge. Jeder Baustein lässt sich einzeln einführen und wächst mit Ihnen mit.",
-  modules: [
-    {
-      id: "automation",
-      title: "Automatisierungen",
-      tags: ["CRM und Datenpflege", "Angebote und Rechnungen", "E-Mail-Strecken", "Übergaben im Team"],
-    },
-    {
-      id: "agents",
-      title: "Voice und Chat Agenten",
-      tags: ["Telefon", "WhatsApp", "Webchat", "Terminbuchung"],
-    },
-    {
-      id: "os",
-      title: "Operating System",
-      tags: ["Dashboards", "Wissensdatenbank", "Prozesse", "Reporting"],
-    },
-  ],
-  foundation: {
-    title: "Corporate LLM",
-    subtitle: "KI-Wissensmanagement als Fundament",
-    tags: [
-      "Firmenwissen gebündelt",
-      "Antworten mit Quelle",
-      "Rechte und Rollen",
-      "DSGVO-konform",
-      "Anbindung an Ihre Systeme",
-    ],
-  },
-  closing:
-    "Wir beginnen mit dem Baustein, der Ihnen sofort Zeit zurückgibt, und erweitern von dort.",
-  link: { label: "KI im Detail", href: "/ki" },
-};
 
 /* ------------------------------------------------------------------ */
 /*  Landing · S3 Marketing (DNA-Stimmung)                              */
 /* ------------------------------------------------------------------ */
 
-export const marketingOrbs = {
-  label: "03 · Marketing",
-  titleBefore: "Sichtbar, wo Ihre Kunden",
-  gradientWord: "wirklich",
-  titleAfter: "sind.",
-  intro:
-    "Drei Wege, die zusammen wirken. Online über Ihre Kanäle, vor Ort über Werbetafeln und auf Ihrer eigenen Webseite, auf der aus Aufmerksamkeit eine Anfrage wird.",
-  orbs: [
-    {
-      id: "social",
-      title: "Social Media Marketing",
-      body: "Strategie, Inhalte und Anzeigen aus einer Hand. Ihre Kanäle laufen regelmäßig weiter, auch wenn bei Ihnen Hochbetrieb herrscht.",
-    },
-    {
-      id: "dooh",
-      title: "Werbetafeln",
-      body: "Digitale Flächen an frequenzstarken Standorten in Ihrer Region. Inhalte ändern wir aus der Ferne am selben Tag.",
-    },
-    {
-      id: "web",
-      title: "Webdesign",
-      body: "Individuell entwickelte Seiten statt Baukasten. Schnell, für Google aufbereitet und direkt mit Ihren Abläufen verbunden.",
-    },
-  ],
-  link: { label: "Marketing im Detail", href: "/marketing" },
-};
 
 /* ------------------------------------------------------------------ */
 /*  Landing · S4 Showcase (Webdesign-Referenzen)                       */
@@ -515,9 +464,12 @@ export const socialPage = {
       "SVH Consulting baut Ihre Marke auf Instagram und TikTok auf. Redaktionsplan, Dreh im Betrieb, Schnitt, Kampagnen und ein Bericht jeden Monat.",
   },
   hero: {
-    titleBefore: "Auf Instagram und TikTok werden Sie",
+    /* Die Ueberschrift steht in zwei festen Zeilen. Der Umbruch nach dem
+       Wort TikTok ist gesetzt und nicht der Spaltenbreite ueberlassen,
+       damit die Zeile auf jedem Schirm gleich faellt. */
+    titleLine1: "Auf Instagram und TikTok",
+    titleLine2: "werden Sie",
     gradientWord: "gesehen.",
-    titleAfter: "",
     lead: "Wir bauen Ihre Marke auf, sorgen für viele Aufrufe und machen Ihren Betrieb für die Menschen in Ihrer Region sichtbar.",
     cta: { label: "Kostenloses Strategiegespräch", href: "/kontakt" },
   },
@@ -1003,7 +955,11 @@ export const marketingDna = {
         { icon: "remote", text: "Aus der Ferne bespielt", lang: "Inhalte werden aus der Ferne bespielt" },
         { icon: "clock", text: "Kurzfristig änderbar", lang: "Aktionen, Öffnungszeiten und offene Stellen kurzfristig anpassbar" },
         { icon: "link", text: "Verzahnt mit online", lang: "Abstimmung mit Ihren Kampagnen im Netz" },
-        { icon: "todo", text: "❗TODO Standorte und Preise", lang: "❗TODO Verfügbare Standorte, Buchungszeiträume und Preisrahmen ergänzen" },
+        /* ❗TODO Verfügbare Standorte, Buchungszeiträume und Preisrahmen
+           ergänzen, sobald der Auftraggeber sie liefert. Die Marke stand
+           bis zum 02.09.2026 sichtbar in der Liste; für den Livegang hat
+           der Auftraggeber entschieden, dass keine Platzhalter auf der
+           Seite erscheinen. Die Lücke bleibt hier vermerkt. */
       ],
       stepsTitle: "So läuft es ab",
       steps: [
@@ -1041,10 +997,6 @@ export const marketingDna = {
 /*  /marketing v2 · Kugel-Bühne im Stil der DNA-Unterseite             */
 /* ------------------------------------------------------------------ */
 
-export const marketingSphere = {
-  title: "Unsere DNA ist Sichtbarkeit.",
-  body: "Aus Webseite, Social Media und Werbetafeln entsteht ein Auftritt, der zusammenpasst und zusammen wirkt. Jede Leistung funktioniert einzeln und entfaltet im Verbund die größte Kraft.",
-};
 
 /* ------------------------------------------------------------------ */
 /*  /marketing/webseiten · Welt "Fenster im Dunkeln"                    */
@@ -1289,37 +1241,48 @@ export const werbetafelnPage = {
       "SVH Consulting stellt kleine digitale Werbetafeln an gut besuchten Orten auf und macht die Inhalte gleich mit, damit Ihr Betrieb dort läuft, wo jeden Tag Leute vorbeikommen.",
   },
 
-  /* Die vier gezeichneten Spots. Sie laufen auf dem Schirm der Tafel und
-     zeigen, was SVH herstellt. Kein Wort davon nennt einen echten Betrieb,
-     einen Preis oder einen Zeitraum. */
+  /* Die vier Spots. Sie laufen auf dem Schirm der Tafel und zeigen, was
+     SVH herstellt. Der Grund ist ein erzeugtes Motiv aus public/tafeln,
+     die Worte darüber sind gesetzt. Kein Wort davon nennt einen echten
+     Betrieb, einen Preis oder einen Zeitraum. Wo eine Videodatei neben
+     dem Bild liegt, läuft im Hero das Video und das Bild ist sein
+     Standbild. */
   spots: [
     {
       id: "gym",
       word: "Probetraining",
       line: "Neu im Kursplan",
       foot: "Komm vorbei",
-      alt: "Gezeichneter Spot für ein Gym mit dem Wort Probetraining",
+      bild: "/tafeln/spot-gym.webp",
+      video: "/tafeln/spot-gym.mp4",
+      alt: "Spot für ein Gym mit dem Wort Probetraining über einer Kettlebell im blauen Licht",
     },
     {
       id: "restaurant",
       word: "Tageskarte",
       line: "Frisch gekocht",
       foot: "Guten Appetit",
-      alt: "Gezeichneter Spot für ein Restaurant mit dem Wort Tageskarte",
+      bild: "/tafeln/spot-restaurant.webp",
+      video: "/tafeln/spot-restaurant.mp4",
+      alt: "Spot für ein Restaurant mit dem Wort Tageskarte über einem angerichteten Teller",
     },
     {
       id: "event",
       word: "Straßenfest",
       line: "Für die ganze Familie",
       foot: "Alle sind da",
-      alt: "Gezeichneter Spot für ein Fest mit dem Wort Straßenfest",
+      bild: "/tafeln/spot-event.webp",
+      video: "/tafeln/spot-event.mp4",
+      alt: "Spot für ein Fest mit dem Wort Straßenfest über einer Lichterkette",
     },
     {
       id: "club",
       word: "Livemusik",
       line: "Bei uns auf der Bühne",
       foot: "Bühne frei",
-      alt: "Gezeichneter Spot für einen Club mit dem Wort Livemusik",
+      bild: "/tafeln/spot-club.webp",
+      video: "/tafeln/spot-club.mp4",
+      alt: "Spot für einen Club mit dem Wort Livemusik über einem Lichtkegel",
     },
   ],
 
@@ -1345,7 +1308,10 @@ export const werbetafelnPage = {
     ],
   },
 
-  /* S3 Wo die Tafeln stehen. Ortsarten statt Adressen. */
+  /* S3 Wo die Tafeln stehen. Ortsarten statt Adressen. Die vier Bilder
+     unter public/tafeln zeigen je eine Stele in Personengröße an einem
+     Ort dieser Art. Sie sind erzeugt, zeigen keinen echten Betrieb und
+     lösen die Wiederholung der drei Stockfotos auf. */
   orte: {
     titleBefore: "Dort stehen die",
     titleWord: "Tafeln",
@@ -1355,53 +1321,54 @@ export const werbetafelnPage = {
         id: "gym",
         wort: "Gym",
         text: "Zwischen zwei Sätzen schaut jeder kurz auf, und genau dann läuft Ihr Spot.",
-        bild: "/stock/dooh-1.webp",
-        alt: "Leuchtender Werbebildschirm in einer Einkaufspassage bei Nacht",
+        bild: "/tafeln/ort-gym.webp",
+        alt: "Schlanke digitale Werbetafel in einem dunklen Trainingsraum, ihr Bildschirm leuchtet blauviolett",
       },
       {
         id: "restaurant",
         wort: "Restaurant",
         text: "Beim Warten auf das Essen bleibt der Blick an der Tafel hängen.",
-        bild: "/stock/dooh-2.webp",
-        alt: "Digitale Menütafeln über der Theke eines Cafés",
+        bild: "/tafeln/ort-restaurant.webp",
+        alt: "Schlanke digitale Werbetafel am Eingang eines Restaurants am Abend",
       },
       {
         id: "club",
         wort: "Club",
         text: "Am Eingang und an der Bar stehen die Leute dicht beieinander und haben Zeit.",
-        bild: "/stock/dooh-3.webp",
-        alt: "Zwei digitale Werbebildschirme im Eingang eines Imbiss, von der Straße aus gesehen",
+        bild: "/tafeln/ort-club.webp",
+        alt: "Schlanke digitale Werbetafel in einer dunklen Lounge neben der Bar",
       },
       {
         id: "event",
         wort: "Event",
         text: "Wo viele zusammenkommen, sieht Ihre Tafel jeder, der vorbeigeht.",
-        bild: null,
-        alt: null,
+        bild: "/tafeln/ort-event.webp",
+        alt: "Schlanke digitale Werbetafel im Foyer einer Abendveranstaltung",
       },
     ],
     link: { label: "Sagen Sie uns, welcher Ort zu Ihnen passt", href: "/kontakt" },
   },
 
   /* Das ziehbare Band zwischen S3 und S4. Die Ortsworte sind Kategorien
-     und keine Adressen. Kein Betriebsname steht auf einer Kachel. */
+     und keine Adressen. Kein Betriebsname steht auf einer Kachel. Vier
+     Kacheln zeigen den Ort, zwei zeigen den Spot aus der Nähe. */
   band: {
     srTitle: "Beispiele für Tafeln an verschiedenen Orten",
     hinweis: "Ziehen Sie das Band zur Seite.",
     items: [
       {
-        spot: "gym",
-        bild: null,
-        alt: null,
+        spot: null,
+        bild: "/tafeln/ort-gym.webp",
+        alt: "Schlanke digitale Werbetafel in einem dunklen Trainingsraum",
         ort: "Gym",
         text: "Der Kursplan steht neben dem Eingang.",
       },
       {
         spot: null,
-        bild: "/stock/dooh-2.webp",
-        alt: "Digitale Menütafeln über der Theke eines Cafés",
+        bild: "/tafeln/ort-restaurant.webp",
+        alt: "Schlanke digitale Werbetafel am Eingang eines Restaurants",
         ort: "Restaurant",
-        text: "Die Karte des Tages läuft über der Theke.",
+        text: "Die Karte des Tages läuft neben der Theke.",
       },
       {
         spot: "club",
@@ -1412,24 +1379,24 @@ export const werbetafelnPage = {
       },
       {
         spot: null,
-        bild: "/stock/dooh-1.webp",
-        alt: "Leuchtender Werbebildschirm in einer Einkaufspassage bei Nacht",
+        bild: "/tafeln/ort-event.webp",
+        alt: "Schlanke digitale Werbetafel im Foyer einer Abendveranstaltung",
         ort: "Event",
         text: "Am Eingang leuchtet, worum es hier geht.",
       },
       {
         spot: null,
-        bild: "/stock/dooh-3.webp",
-        alt: "Zwei digitale Werbebildschirme im Eingang eines Imbiss, von der Straße aus gesehen",
-        ort: "Restaurant",
-        text: "Von der Straße aus sieht man schon die Karte.",
+        bild: "/tafeln/ort-club.webp",
+        alt: "Schlanke digitale Werbetafel in einer dunklen Lounge",
+        ort: "Club",
+        text: "In der Lounge läuft Ihr Spot zwischen den Sets.",
       },
       {
-        spot: "event",
+        spot: "restaurant",
         bild: null,
         alt: null,
-        ort: "Event",
-        text: "Vor dem Zelt läuft, was gleich beginnt.",
+        ort: "Restaurant",
+        text: "Neben der Ausgabe steht, was frisch gekocht wird.",
       },
     ],
   },

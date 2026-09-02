@@ -54,14 +54,14 @@ const FLOWS = [
 
 function ScanScene({ playKey, reduced }: SceneProps) {
   const id = useSceneId();
-  const { stage, t } = useBeat(SCAN_STEPS, playKey, reduced);
+  const { stage, t } = useBeat(SCAN_STEPS, playKey, reduced, true);
   const listed = stage >= 1;
   const measuring = stage >= 2;
   const found = stage >= 3;
 
   return (
     <Stage viewBox={BOX}>
-      <Defs id={id} />
+      <Defs id={id} w={300} h={110} />
 
       {FLOWS.map((flow, i) => (
         <motion.rect
@@ -79,10 +79,15 @@ function ScanScene({ playKey, reduced }: SceneProps) {
         />
       ))}
 
-      {/* Die Messlinie faehrt einmal von links nach rechts durch. */}
+      {/* Die Messlinie faehrt einmal von links nach rechts durch und geht
+          wieder aus, sobald sie den Hebel gefunden hat. Sonst bliebe sie
+          als Farbfleck am rechten Rand stehen. */}
       <motion.g
         initial={false}
-        animate={{ x: measuring ? 232 : 0, opacity: measuring ? 1 : 0 }}
+        animate={{
+          x: measuring ? 232 : 0,
+          opacity: measuring && !found ? 1 : 0,
+        }}
         transition={t(0.9)}
       >
         <rect x={16} y={4} width={22} height={102} fill={`url(#${id}-fog)`} />
@@ -140,14 +145,14 @@ const BLOCKS = [
 
 function BuildScene({ playKey, reduced }: SceneProps) {
   const id = useSceneId();
-  const { stage, t } = useBeat(BUILD_STEPS, playKey, reduced);
+  const { stage, t } = useBeat(BUILD_STEPS, playKey, reduced, true);
   const carried = stage >= 1;
   const wired = stage >= 3;
   const live = stage >= 4;
 
   return (
     <Stage viewBox={BOX}>
-      <Defs id={id} />
+      <Defs id={id} w={300} h={110} />
 
       {/* Derselbe Hebel aus Schritt eins, jetzt als Vorgabe ganz oben. */}
       <motion.g
@@ -250,7 +255,7 @@ const HAND_STEPS = [240, 500, 660, 480, 540] as const;
 
 function HandoverScene({ playKey, reduced }: SceneProps) {
   const id = useSceneId();
-  const { stage, t } = useBeat(HAND_STEPS, playKey, reduced);
+  const { stage, t } = useBeat(HAND_STEPS, playKey, reduced, true);
   const built = stage >= 1;
   const moved = stage >= 2;
   const taken = stage >= 3;
@@ -258,7 +263,7 @@ function HandoverScene({ playKey, reduced }: SceneProps) {
 
   return (
     <Stage viewBox={BOX}>
-      <Defs id={id} />
+      <Defs id={id} w={300} h={110} />
 
       {/* Die offene Hand, die das Fertige aufnimmt. */}
       <path
@@ -268,10 +273,28 @@ function HandoverScene({ playKey, reduced }: SceneProps) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path
-        d="M124 44H144"
+      {/* Der Platz, an dem das Modul gebaut wurde. Er bleibt leer stehen,
+          damit die linke Haelfte nach der Uebergabe etwas traegt und der
+          Weg von hier nach drueben ablesbar bleibt. */}
+      <motion.rect
+        x={20}
+        y={14}
+        width={104}
+        height={60}
+        rx={10}
+        stroke={P_HAIR_SOFT}
+        strokeDasharray="5 6"
+        initial={false}
+        animate={{ opacity: built ? 1 : 0 }}
+        transition={t(0.5)}
+      />
+      <motion.path
+        d="M132 44H146"
         stroke={P_HAIR_SOFT}
         strokeDasharray="3 5"
+        initial={false}
+        animate={{ opacity: built && !moved ? 1 : 0 }}
+        transition={t(0.4)}
       />
 
       {/* Das fertige Modul, gebaut aus dem Hebel und den Bausteinen. */}

@@ -161,7 +161,7 @@ export default function RefWindow({
         </div>
       </div>
 
-      {laeuft ? <p className={s.frameNote}>{note}</p> : null}
+      {laeuft && note ? <p className={s.frameNote}>{note}</p> : null}
     </div>
   );
 }

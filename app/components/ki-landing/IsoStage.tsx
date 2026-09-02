@@ -499,8 +499,10 @@ export default function IsoStage() {
           background: #b9a5ff;
           opacity: 1;
           transform: translate(-50%, -50%);
+          /* Exponentielles Ausklingen statt Nachfedern. Die Punkte kommen
+             schnell heraus und legen sich ruhig hin. */
           transition:
-            scale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+            scale 0.46s cubic-bezier(0.22, 1, 0.36, 1),
             opacity 0.3s ease;
         }
 

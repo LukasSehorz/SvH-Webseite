@@ -51,7 +51,7 @@ export default function Band({ spots }: Readonly<{ spots: readonly SpotDaten[] }
         <h2 id="werbetafeln-band" className={styles.srOnly}>
           {t.band.srTitle}
         </h2>
-        <p className="t-label">{t.band.hinweis}</p>
+        <p className={`t-label ${styles.bandHinweis}`}>{t.band.hinweis}</p>
       </div>
 
       <div
@@ -73,20 +73,23 @@ export default function Band({ spots }: Readonly<{ spots: readonly SpotDaten[] }
             <Rise key={`${item.ort}-${index}`} delay={Math.min(index, 3) * 0.06} className={styles.bandItem}>
               <div className={styles.bandMedia}>
                 {item.bild ? (
-                  <Image
-                    src={item.bild}
-                    alt={item.alt ?? ""}
-                    width={1400}
-                    height={788}
-                    sizes="(max-width: 1023px) 70vw, 26vw"
-                    draggable={false}
-                  />
+                  <>
+                    <Image
+                      src={item.bild}
+                      alt={item.alt ?? ""}
+                      width={1400}
+                      height={788}
+                      sizes="(max-width: 1023px) 70vw, 26vw"
+                      draggable={false}
+                    />
+                    <span className={styles.bandShade} aria-hidden="true" />
+                  </>
                 ) : null}
 
                 {spot ? (
                   <span className={styles.bandSpotWrap}>
                     <span className={styles.bandSpotScreen}>
-                      <Spot spot={spot} />
+                      <Spot spot={spot} groesze="128px" />
                     </span>
                   </span>
                 ) : null}

@@ -15,9 +15,9 @@ const EASE = [0.22, 1, 0.36, 1] as const;
  * Feld Farbe traegt, ohne dass eine Kachel wie ein Fremdkoerper wirkt.
  */
 const MIST = [
-  "rgba(91,140,255,.34)",
-  "rgba(124,106,255,.34)",
-  "rgba(185,165,255,.28)",
+  "rgba(91,140,255,.5)",
+  "rgba(124,106,255,.52)",
+  "rgba(185,165,255,.4)",
 ] as const;
 
 const TILES = kiPage.services.items;
@@ -197,22 +197,24 @@ export default function KiHero() {
         }
 
         /* Der Farbnebel liegt hinter der Szene und atmet unter dem Zeiger
-           auf. Bewegt werden nur Deckkraft und Groesze. */
+           auf. Bewegt werden nur Deckkraft und Groesze.
+
+           Der helle Kern des Verlaufs sitzt bei 46 Prozent der Hoehe und
+           damit innerhalb der Kachel. Stand er am unteren Rand, schnitt
+           ihn das Beschneiden der Kachel vollstaendig weg und es war
+           ueberhaupt keine Farbe zu sehen. */
         .ki-tile-mist {
           position: absolute;
-          left: -12%;
-          right: -12%;
-          bottom: -34%;
-          height: 84%;
+          inset: -22% -16% -26%;
           border-radius: 9999px;
           background: radial-gradient(
-            58% 62% at 50% 100%,
+            50% 44% at 50% 46%,
             var(--mist),
             transparent 72%
           );
-          filter: blur(24px);
-          opacity: 0.45;
-          transform: translateY(6%);
+          filter: blur(26px);
+          opacity: 0.62;
+          transform: scale(0.96);
           transition:
             opacity 0.7s var(--ease-out-expo),
             transform 0.7s var(--ease-out-expo);
@@ -221,7 +223,7 @@ export default function KiHero() {
 
         .ki-tile:hover .ki-tile-mist {
           opacity: 1;
-          transform: translateY(0) scale(1.06);
+          transform: scale(1.08);
         }
 
         .ki-tile-stage {

@@ -26,8 +26,11 @@ import styles from "./social.module.css";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-/** Dauer des Hochzaehlens. */
-const COUNT_TIME = 2.4;
+/** Dauer des Hochzaehlens. Sie ist laenger als der Abschnitt, in dem die
+    Ziffern scharf stehen. Dadurch bricht das Zaehlwerk mitten in der
+    Bewegung ab, statt kurz auf einem festen Wert zu ruhen, den jemand
+    als zugesagte Zahl lesen koennte. */
+const COUNT_TIME = 3.2;
 
 /** Ab hier loesen sich die Ziffern auf. */
 const FADE_AT = 2.5;
@@ -41,22 +44,21 @@ const COUNT_TO = 1840;
 
    Die Bahnen liegen bewusst nur an den beiden Raendern der Buehne. In der
    Mitte steht der Beitrag, und ein Zeichen, das darueber haengt, wuerde
-   ihn im Ruhezustand verdecken. `rest` ist die Hoehe, in der das Zeichen
-   steht, solange die Szene nicht laeuft; `drift` die Hoehe, auf die es
-   waehrend des Laufs steigt. */
+   ihn verdecken. `drift` ist die Hoehe, auf die das Zeichen steigt; dort
+   bleibt es danach auch liegen. Ein Zeichen, das am Ende verschwindet,
+   liesze die Buehne nach dem Lauf leerer zurueck als davor. */
 const MARKS: readonly {
   left: string;
-  rest: number;
   drift: number;
   delay: number;
   kind: "heart" | "comment";
 }[] = [
-  { left: "5%", rest: -34, drift: -150, delay: 0.7, kind: "heart" },
-  { left: "79%", rest: -58, drift: -196, delay: 1.05, kind: "heart" },
-  { left: "14%", rest: -128, drift: -120, delay: 1.4, kind: "comment" },
-  { left: "88%", rest: -142, drift: -140, delay: 1.85, kind: "heart" },
-  { left: "8%", rest: -212, drift: -178, delay: 2.25, kind: "comment" },
-  { left: "82%", rest: -232, drift: -132, delay: 2.7, kind: "heart" },
+  { left: "4%", drift: -100, delay: 0.7, kind: "heart" },
+  { left: "80%", drift: -130, delay: 1.05, kind: "heart" },
+  { left: "14%", drift: -160, delay: 1.4, kind: "comment" },
+  { left: "88%", drift: -190, delay: 1.85, kind: "heart" },
+  { left: "6%", drift: -220, delay: 2.25, kind: "comment" },
+  { left: "82%", drift: -230, delay: 2.7, kind: "heart" },
 ];
 
 /** Zaehlwerk mit deutschen Tausenderpunkten. */
@@ -68,7 +70,9 @@ function Counter({ playing }: Readonly<{ playing: boolean }>) {
     if (!playing) return;
     const controls = animate(value, COUNT_TO, {
       duration: COUNT_TIME,
-      ease: [0.16, 1, 0.3, 1],
+      // Eine flache Kurve. Die Ziffern laufen bis zuletzt sichtbar
+      // weiter, statt sich fruehzeitig an einen Wert anzulegen.
+      ease: [0.16, 0.6, 0.4, 1],
       onUpdate: (current) => setShown(Math.round(current)),
     });
     return () => controls.stop();
@@ -90,9 +94,14 @@ function Counter({ playing }: Readonly<{ playing: boolean }>) {
           y: [10, 0, 0, -22],
           filter: ["blur(6px)", "blur(0px)", "blur(0px)", "blur(10px)"],
         }}
+        /* Je Abschnitt eine eigene Kurve. Eine einzige Kurve ueber alle
+           Abschnitte verzerrt die Zeitpunkte, weil sie zuerst auf den
+           Gesamtfortschritt wirkt; gemessen war die Zahl dadurch schon
+           nach 0,9 Sekunden am Verblassen, statt zwei Sekunden lang
+           ruhig zu laufen. */
         transition={{
           duration: FADE_AT + 0.8,
-          ease: EASE,
+          ease: [EASE, "linear", EASE],
           times: [0, 0.16, 0.78, 1],
         }}
       >
@@ -206,19 +215,17 @@ export default function GrowthScene() {
                   key={index}
                   className={styles.mark}
                   style={{ left: mark.left }}
-                  initial={playing ? { opacity: 0, y: 30, scale: 0.6 } : false}
+                  initial={playing ? { opacity: 0, y: 26, scale: 0.6 } : false}
                   animate={{
-                    opacity: playing ? [0, 1, 1, 0] : 0.9,
-                    y: playing
-                      ? [30, 0, mark.drift * 0.7, mark.drift]
-                      : mark.rest,
-                    scale: playing ? [0.6, 1, 1, 0.86] : 1,
+                    opacity: playing ? [0, 1, 1] : 1,
+                    y: playing ? [26, 0, mark.drift] : mark.drift,
+                    scale: playing ? [0.6, 1, 1] : 1,
                   }}
                   transition={{
-                    duration: 2.6,
+                    duration: 2.4,
                     delay: mark.delay,
-                    ease: EASE,
-                    times: [0, 0.18, 0.72, 1],
+                    ease: [EASE, EASE],
+                    times: [0, 0.2, 1],
                   }}
                 >
                   {mark.kind === "heart" ? <IconHeart /> : <IconComment />}

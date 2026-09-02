@@ -30,12 +30,15 @@ import styles from "./werbetafeln.module.css";
 import { werbetafelnPage as t } from "../../copy";
 
 /* Der Winkel jeder Faecherkarte im geoeffneten Zustand. */
-const WINKEL = [-27, -9, 9, 27];
+const WINKEL = [-40, -13.5, 13.5, 40];
+/* Der Ruhewinkel. Geschlossen liegen die Karten als Stapel und nicht
+   deckungsgleich uebereinander. */
+const WINKEL_RUHE = [-7, -2.4, 2.4, 7];
 const TOENE = ["#5b8cff", "#6a7cff", "#7c6aff", "#b9a5ff"];
 
 /* Die Ausschnitte der Wand. Die Werte sind aus dem Zaehlindex gerechnet
    und nicht gewuerfelt, damit Server und Browser dasselbe Bild bauen. */
-const KACHELN = 45;
+const KACHELN = 112;
 
 function streu(n: number): number {
   const wert = Math.sin(n * 127.1) * 43758.5453;
@@ -110,6 +113,7 @@ export default function Inhalte({ spots }: Readonly<{ spots: readonly SpotDaten[
               style={
                 {
                   "--a": WINKEL[index],
+                  "--a0": WINKEL_RUHE[index],
                   "--tone": TOENE[index],
                   zIndex: index,
                 } as CSSProperties
@@ -155,6 +159,8 @@ export default function Inhalte({ spots }: Readonly<{ spots: readonly SpotDaten[
                 </div>
               </motion.div>
             </div>
+
+            <span className={styles.wandVignette} aria-hidden="true" />
 
             <Stele
               spot={spots[zweiter ? 1 : 0]}

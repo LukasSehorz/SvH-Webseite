@@ -49,7 +49,7 @@ export default function Refs({
         {items.map((p, i) => {
           const [kern] = NEBEL[p.id] ?? ["#5b8cff", "#7c6aff"];
           return (
-            <Fade key={p.id} versatz={i * -0.015}>
+            <Fade key={p.id} className={s.refCell} versatz={i * -0.015}>
               <a
                 className={s.refCard}
                 href={`#projekt-${p.id}`}
@@ -104,7 +104,11 @@ export default function Refs({
                 fullAlt={p.fullAlt}
                 mist={kern}
                 mist2={rand}
-                note={runNote}
+                /* Der Hinweis steht nur am ersten Fenster. Viermal
+                   derselbe Satz erklaert nichts mehr, und der Auftrag
+                   sagt zu M4 ausdruecklich, dass der Durchlauf ohne
+                   Erklaerung auskommt. */
+                note={i === 0 ? runNote : ""}
               />
             </div>
 

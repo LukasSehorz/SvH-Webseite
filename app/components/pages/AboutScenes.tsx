@@ -297,7 +297,10 @@ function drawTime(ctx: CanvasRenderingContext2D, w: number, h: number, p: number
   ctx.fill();
 
   /* Die eigentliche Arbeit, der Teil der waechst */
-  fog(ctx, (cut + x1) / 2, y, span * 0.34, 0.08 + 0.16 * ease(p));
+  /* Der Nebel bleibt kleiner als die halbe Buehnenhoehe. Groeszer
+     gerechnet schnitten ihn die Kanten der Flaeche oben und unten ab und
+     er las sich als heller Kasten statt als Schimmer. */
+  fog(ctx, (cut + x1) / 2, y, Math.min(span * 0.22, h * 0.44), 0.08 + 0.16 * ease(p));
 
   ctx.fillStyle = ramp(ctx, cut, x1, 0.9);
   ctx.beginPath();
@@ -491,10 +494,13 @@ export default function AboutScenes() {
           padding-top: 26px;
         }
 
+        /* Die Hoehe waechst mit der Bildbreite mit. Auf einem Schirm von
+           2560 ist eine Szene sonst 740 breit und 220 hoch und wirkt
+           auseinandergezogen. */
         .about-scenes .scene-stage {
           position: relative;
           width: 100%;
-          height: clamp(180px, 15vw, 220px);
+          height: clamp(180px, 11vw, 290px);
         }
 
         .about-scenes .scene-canvas {

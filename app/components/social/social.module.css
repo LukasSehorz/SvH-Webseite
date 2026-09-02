@@ -43,10 +43,15 @@
 
 /* Diese Flaeche wird gemessen. Aus ihrer Mitte und Breite berechnet der
    Seitenkopf, wo die Kugel steht, damit Kugel und Text auf jeder
-   Bildbreite zueinander stehen. */
+   Bildbreite zueinander stehen.
+
+   Der Abstand links rueckt die Kugel von der Bildkante weg. Ohne ihn
+   stand die kleine Begleiterin oben links halb ausserhalb des Bildes,
+   und ein angeschnittener Kreis an der Kante sieht nach Versehen aus. */
 .heroZone {
   position: relative;
   height: 520px;
+  margin-inline-start: clamp(0px, 4vw, 80px);
 }
 
 /* Ruhiger Hof an der Stelle der Kugel. Er steht schon vor dem Aufbau der
@@ -70,9 +75,19 @@
   z-index: 1;
 }
 
-/* Zwei Zeilen. Die Marke haelt den Umbruch nach dem Wort TikTok. */
-.heroTitle {
-  max-width: 26ch;
+/* Die Ueberschrift steht in zwei gesetzten Zeilen. Damit die erste Zeile
+   in der Textspalte auch bei 1440 Bildpunkten in einer Zeile bleibt,
+   traegt sie ein eigenes, etwas kleineres Masz als die uebrigen
+   Unterseiten. Der Elementname vor der Klasse hebt die Spezifitaet
+   ueber die von .t-h1, damit die Reihenfolge der Blaetter keine Rolle
+   spielt. */
+h1.heroTitle {
+  font-size: clamp(36px, 3.8vw, 56px);
+  max-width: 24ch;
+}
+
+.heroLine {
+  display: block;
 }
 
 .heroLead {
@@ -108,8 +123,11 @@
   z-index: 1;
 }
 
+/* Der Ausgleich verteilt die Woerter gleichmaeszig auf die Zeilen. Ohne
+   ihn stand in der ersten Zeile fast alles und in der zweiten ein Rest. */
 .headTitle {
   max-width: 18ch;
+  text-wrap: balance;
 }
 
 .headLead {
@@ -175,11 +193,32 @@
   margin-top: 16px;
 }
 
+/* Ab dieser Breite stehen Entwurf und Text nebeneinander. Untereinander
+   blieben rechts und links des Entwurfs grosze leere Flaechen stehen,
+   und der Auftraggeber hat genau solche Leere beanstandet. */
+@media (min-width: 1200px) {
+  .platform {
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(28px, 3vw, 60px);
+  }
+
+  .platformStage {
+    flex: 0 0 auto;
+    width: clamp(230px, 32%, 320px);
+    min-height: 340px;
+  }
+
+  .platformText {
+    flex: 1 1 auto;
+  }
+}
+
 /* ---------------------------------------- Gezeichneter Beitrag, hochkant */
 
 .post {
   position: relative;
-  width: 232px;
+  width: 214px;
   border: 1px solid var(--line);
   border-radius: 18px;
   background: var(--bg-raise);
@@ -271,7 +310,7 @@
 
 .reel {
   position: relative;
-  width: 210px;
+  width: 196px;
   aspect-ratio: 9 / 16;
   border: 1px solid var(--line);
   border-radius: 22px;
@@ -572,6 +611,19 @@
 
 /* ------------------------------------------------------------- Ablauf */
 
+/* Ueberschrift links, Kette rechts. Untereinander blieb die rechte
+   Haelfte der Sektion leer, und auf breiten Schirmen fiel das auf. */
+.stepsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 100px);
+  align-items: start;
+}
+
+.stepsHead {
+  padding-top: 2px;
+}
+
 .chain {
   position: relative;
   display: grid;
@@ -596,13 +648,29 @@
   transform-origin: top center;
 }
 
+/* Der ruhende Schritt ist zurueckgenommen, aber nicht ausgeblendet. Bei
+   0,34 fiel der Fliesztext auf einen Kontrast von unter drei zu eins und
+   war nicht mehr zu lesen, bei 0,72 auf gemessene 4,42. Mit 0,78 liegt
+   er bei 5,06 und damit sicher ueber der Marke von 4,5. Den Unterschied
+   zwischen ruhend und aktiv traegt deshalb nicht die Deckkraft allein,
+   sondern der Knoten, der beim aktiven Schritt in der Akzentfarbe
+   aufleuchtet, und die Ueberschrift, die dort auf Weiss wechselt. */
 .step {
   position: relative;
-  opacity: 0.34;
-  filter: saturate(0.4);
+  opacity: 0.78;
+  filter: saturate(0.45);
   transition:
     opacity 0.7s var(--ease-out-expo),
     filter 0.7s var(--ease-out-expo);
+}
+
+.step .stepTitle {
+  color: var(--ink-2);
+  transition: color 0.7s var(--ease-out-expo);
+}
+
+.step[data-active="true"] .stepTitle {
+  color: var(--ink);
 }
 
 .step[data-active="true"] {
@@ -675,12 +743,14 @@
   background-color: rgba(244, 244, 246, 0.02);
 }
 
-/* Das bewegte Sinnbild der jeweiligen Welt. */
+/* Das bewegte Sinnbild der jeweiligen Welt. Die Hoehe ist so gewaehlt,
+   dass der hochkante Beitrag vollstaendig hineinpasst; er ist von den
+   drei Zeichnungen die hoechste. */
 .sigil {
   position: relative;
   display: grid;
   place-items: center;
-  height: clamp(190px, 17vw, 250px);
+  height: clamp(252px, 19vw, 290px);
   margin-bottom: clamp(28px, 3vw, 44px);
   overflow: hidden;
 }
@@ -704,13 +774,16 @@
 
 .fieldBody {
   margin-top: 16px;
+  margin-bottom: 30px;
 }
 
+/* Der Abschluss wird nach unten gedrueckt, damit die drei Verweise auf
+   einer Linie stehen, auch wenn ein Satz eine Zeile mehr braucht. */
 .fieldGo {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  margin-top: 30px;
+  margin-top: auto;
   padding-top: 22px;
   border-top: 1px solid var(--line-2);
   font-size: 14.5px;
@@ -730,9 +803,13 @@
 
 /* --------------------------------------------- Sinnbild Webseiten */
 
+/* Feste Breite statt eines Anteils. Das Sinnbild haengt in einem
+   Zwischenelement, das sich nach seinem Inhalt richtet; ein Prozentwert
+   haette sich auf diesen Inhalt bezogen und das Fenster auf seine
+   kleinstmoegliche Breite zusammenfallen lassen. */
 .sigWeb {
   position: relative;
-  width: min(100%, 260px);
+  width: 236px;
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--bg-raise);
@@ -838,7 +915,7 @@
 
 .sigPost {
   position: relative;
-  width: 158px;
+  width: 146px;
   border: 1px solid var(--line);
   border-radius: 16px;
   background: var(--bg-raise);
@@ -869,12 +946,17 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .sigil {
-    height: 220px;
-  }
-
   .scopeList {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stepsGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .stepsHead {
+    margin-bottom: clamp(40px, 6vh, 72px);
   }
 }
 
@@ -894,9 +976,10 @@
 
   .heroZone {
     height: 300px;
+    margin-inline-start: 0;
   }
 
-  .heroTitle {
+  h1.heroTitle {
     max-width: 20ch;
   }
 

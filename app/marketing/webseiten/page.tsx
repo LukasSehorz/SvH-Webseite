@@ -48,9 +48,16 @@ export const metadata: Metadata = {
 };
 
 /* Wie viele der sechs Leistungen als volle Reihe stehen. Der Rest steht
-   als kompakte Dreierreihe. Der Wert wird an der gemessenen Seitenlaenge
-   festgemacht und nicht geschaetzt. */
-const VOLLE_REIHEN = 6;
+   als kompakte Dreierreihe.
+
+   Der Wert ist gemessen und nicht geschaetzt. Mit sechs vollen Reihen
+   stand die Sektion bei 1440 mal 900 auf 3444 Bildpunkten und die ganze
+   Seite auf 14,71 Bildhoehen, deutlich ueber der Marke von rund elf.
+   Abschnitt 7 des Auftrags sieht fuer genau diesen Fall vor, die letzten
+   drei Punkte zu einer kompakten Dreierreihe zusammenzuziehen und die
+   drei staerksten vorn stehen zu lassen. Das sind modernes Design, mobil
+   optimiert und schnelle Ladezeiten. */
+const VOLLE_REIHEN = 3;
 
 export default function WebseitenPage() {
   return (

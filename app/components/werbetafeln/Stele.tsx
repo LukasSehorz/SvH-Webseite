@@ -21,6 +21,8 @@ export default function Stele({
   neigung = 6,
   mitTeppich = true,
   mitFusz = true,
+  bewegt = false,
+  groesze = "300px",
   label,
 }: Readonly<{
   spot: SpotDaten;
@@ -29,6 +31,8 @@ export default function Stele({
   neigung?: number;
   mitTeppich?: boolean;
   mitFusz?: boolean;
+  bewegt?: boolean;
+  groesze?: string;
   label?: string;
 }>) {
   const ref = useRef<HTMLDivElement>(null);
@@ -63,7 +67,7 @@ export default function Stele({
       >
         <div className={styles.case}>
           <div className={styles.screen}>
-            <Spot spot={spot} />
+            <Spot spot={spot} bewegt={bewegt} groesze={groesze} />
           </div>
           <span className={styles.caseMark} aria-hidden="true" />
         </div>

@@ -45,7 +45,15 @@
     ".next-landa/types/**/*.ts",
     ".next-landa/dev/types/**/*.ts",
     ".next-webseiten/types/**/*.ts",
-    ".next-webseiten/dev/types/**/*.ts"
+    ".next-webseiten/dev/types/**/*.ts",
+    ".next-tafeln/types/**/*.ts",
+    ".next-tafeln/dev/types/**/*.ts",
+    ".next-ki/types/**/*.ts",
+    ".next-ki/dev/types/**/*.ts",
+    ".next-landc/types/**/*.ts",
+    ".next-landc/dev/types/**/*.ts",
+    ".next-landb/types/**/*.ts",
+    ".next-landb/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

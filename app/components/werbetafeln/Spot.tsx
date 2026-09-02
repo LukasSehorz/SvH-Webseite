@@ -1,9 +1,24 @@
-/* Der gezeichnete Spot. Er ist das, was SVH herstellt, und laeuft auf dem
-   Schirm der Tafel. Es gibt keine echten Aufnahmen von SVH-Tafeln, und
-   ein Foto auf dem Schirm wuerde nur eines der drei Stockbilder ein
-   viertes Mal zeigen. Der gezeichnete Spot zeigt stattdessen Arbeit, und
-   er nennt weder einen Betrieb noch einen Preis noch einen Zeitraum. */
+"use client";
+
+/* Der Spot. Er ist das, was SVH herstellt, und laeuft auf dem Schirm der
+   Tafel. Der Grund ist ein erzeugtes Motiv aus public/tafeln, dessen
+   unteres Drittel frei bleibt, und darueber setzt diese Seite Wort,
+   Linie und Fusz. Kein Betrieb, kein Preis und kein Zeitraum steht
+   darauf.
+
+   Wo eine Videodatei vorliegt, laeuft im Hero das Video statt des
+   Bildes. Das Bild ist dann sein Standbild, damit vor dem ersten
+   Bildaufbau nichts Schwarzes steht. Bei ruhiger Bewegung bleibt es beim
+   Bild.
+
+   Die untere Flaeche steht in fast Weisz. Sie traegt die Worte und
+   sorgt zugleich dafuer, dass der Schirm der hellste Punkt der Seite
+   bleibt, denn das Motiv darueber ist dunkel gehalten. */
+
+import Image from "next/image";
 import type { CSSProperties } from "react";
+import { useSafeReducedMotion } from "../system/ui";
+import { Icon } from "./Icons";
 import styles from "./werbetafeln.module.css";
 
 export type SpotDaten = Readonly<{
@@ -11,6 +26,8 @@ export type SpotDaten = Readonly<{
   word: string;
   line: string;
   foot: string;
+  bild: string;
+  video: string;
   alt: string;
 }>;
 
@@ -23,7 +40,21 @@ const TOENE: Record<string, string> = {
   club: "#b9a5ff",
 };
 
-export default function Spot({ spot }: Readonly<{ spot: SpotDaten }>) {
+const ZEICHEN: Record<string, string> = {
+  gym: "hantel",
+  restaurant: "besteck",
+  club: "note",
+  event: "fahne",
+};
+
+export default function Spot({
+  spot,
+  bewegt = false,
+  groesze = "300px",
+}: Readonly<{ spot: SpotDaten; bewegt?: boolean; groesze?: string }>) {
+  const reduced = useSafeReducedMotion();
+  const zeigtVideo = bewegt && !reduced;
+
   return (
     <div
       className={styles.spot}
@@ -31,12 +62,35 @@ export default function Spot({ spot }: Readonly<{ spot: SpotDaten }>) {
       role="img"
       aria-label={spot.alt}
     >
+      <span className={styles.spotGrund} aria-hidden="true">
+        {zeigtVideo ? (
+          <video
+            className={styles.spotVideo}
+            src={spot.video}
+            poster={spot.bild}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+          />
+        ) : (
+          <Image src={spot.bild} alt="" fill sizes={groesze} />
+        )}
+      </span>
+
       <span className={styles.spotBar} aria-hidden="true" />
-      <span className={styles.spotMid}>
+
+      <span className={styles.spotZeichen} aria-hidden="true">
+        <Icon name={ZEICHEN[spot.id] ?? "fahne"} />
+      </span>
+
+      <span className={styles.spotUnten}>
         <span className={styles.spotWord}>{spot.word}</span>
         <span className={styles.spotRule} aria-hidden="true" />
         <span className={styles.spotLine}>{spot.line}</span>
       </span>
+
       <span className={styles.spotFoot}>{spot.foot}</span>
     </div>
   );

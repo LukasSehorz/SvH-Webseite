@@ -92,7 +92,7 @@ function EmailScene({ playKey, reduced }: SceneProps) {
 
   return (
     <Stage viewBox={BOX}>
-      <Defs id={id} />
+      <Defs id={id} w={480} h={200} />
       <Fog id={id} cx={232} cy={100} rx={196} ry={124} on={passed} t={t} />
 
       {/* Die Bahnen laufen bis ueber beide Raender hinaus. */}
@@ -130,6 +130,24 @@ function EmailScene({ playKey, reduced }: SceneProps) {
           strokeWidth={1.1}
         />
       </motion.g>
+
+      {/* Die Faecher, aus denen die Nachrichten kommen. Sie bleiben leer
+          stehen, damit die linke Haelfte auch am Ende etwas traegt. */}
+      {MAIL_LANES.map((lane, i) => (
+        <motion.rect
+          key={`fach-${lane}`}
+          x={MAIL_IN}
+          y={lane}
+          width={MAIL_W}
+          height={MAIL_H}
+          rx={10}
+          stroke={HAIR_SOFT}
+          strokeDasharray="5 6"
+          initial={false}
+          animate={{ opacity: shown ? 1 : 0 }}
+          transition={t(0.5, EASE, i * 0.09)}
+        />
+      ))}
 
       {MAIL_LANES.map((lane, i) => (
         <motion.g
@@ -214,7 +232,7 @@ function ChatScene({ playKey, reduced }: SceneProps) {
 
   return (
     <Stage viewBox={BOX}>
-      <Defs id={id} />
+      <Defs id={id} w={480} h={200} />
       <Fog id={id} cx={306} cy={104} rx={190} ry={120} on={answered} t={t} />
 
       {/* Frage */}
@@ -232,12 +250,9 @@ function ChatScene({ playKey, reduced }: SceneProps) {
           fill={PLATE}
           stroke={HAIR_SOFT}
         />
-        <path
-          d="M64 71.5l-12 12 22-1"
-          fill={PLATE}
-          stroke={HAIR_SOFT}
-          strokeLinejoin="round"
-        />
+        {/* Die Spitze haengt buendig an der Unterkante der Blase, damit
+            sie nicht als eigenes Dreieck danebensteht. */}
+        <path d="M62 72h24l-38 12z" fill={PLATE} />
         <rect x={64} y={36} width={116} height={6} rx={3} fill={BAR} />
         <rect x={64} y={50} width={80} height={6} rx={3} fill={BAR_SOFT} />
       </motion.g>
@@ -358,7 +373,7 @@ function InvoiceScene({ playKey, reduced }: SceneProps) {
 
   return (
     <Stage viewBox={BOX}>
-      <Defs id={id} />
+      <Defs id={id} w={480} h={200} />
       <Fog id={id} cx={240} cy={100} rx={214} ry={118} on={stage >= 4} t={t} />
 
       <path d="M0 99H480" stroke={HAIR_SOFT} strokeDasharray="2 9" />
@@ -474,7 +489,7 @@ function CalendarScene({ playKey, reduced }: SceneProps) {
 
   return (
     <Stage viewBox={BOX}>
-      <Defs id={id} />
+      <Defs id={id} w={480} h={200} />
       <Fog id={id} cx={244} cy={104} rx={206} ry={116} on={stage >= 3} t={t} />
 
       {[58, 100, 142, 176].map((y) => (
@@ -594,10 +609,11 @@ function LeadsScene({ playKey, reduced }: SceneProps) {
 
   return (
     <Stage viewBox={BOX}>
-      <Defs id={id} />
+      <Defs id={id} w={480} h={200} />
       <Fog id={id} cx={150} cy={104} rx={190} ry={120} on={stage >= 2} t={t} />
 
-      {/* Die Wege, auf denen die Anfragen hereinkommen. */}
+      {/* Die Wege, auf denen die Anfragen hereinkommen, und die Stellen,
+          von denen sie kommen. Formular, Anruf, Nachricht. */}
       {LEAD_ROWS.map((y) => (
         <path
           key={y}
@@ -605,6 +621,27 @@ function LeadsScene({ playKey, reduced }: SceneProps) {
           stroke={HAIR_SOFT}
           strokeDasharray="2 9"
         />
+      ))}
+
+      {LEAD_ROWS.map((y, i) => (
+        <motion.g
+          key={`quelle-${y}`}
+          initial={false}
+          animate={{ opacity: list ? 1 : 0 }}
+          transition={t(0.45, EASE, i * 0.07)}
+        >
+          <rect
+            x={54}
+            y={y - 1}
+            width={38}
+            height={26}
+            rx={7}
+            fill={PLATE_DIM}
+            stroke={HAIR_SOFT}
+          />
+          <rect x={63} y={y + 6} width={20} height={4} rx={2} fill={BAR_SOFT} />
+          <rect x={63} y={y + 14} width={13} height={4} rx={2} fill={BAR_SOFT} />
+        </motion.g>
       ))}
 
       <motion.g
@@ -760,7 +797,7 @@ function ReportScene({ playKey, reduced }: SceneProps) {
 
   return (
     <Stage viewBox={BOX}>
-      <Defs id={id} />
+      <Defs id={id} w={480} h={200} />
       <Fog id={id} cx={330} cy={110} rx={196} ry={122} on={trend} t={t} />
 
       {[76, 120].map((y) => (

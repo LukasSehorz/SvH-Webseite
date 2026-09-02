@@ -141,7 +141,7 @@ export default function Platforms() {
                   </div>
                 </div>
 
-                <div>
+                <div className={styles.platformText}>
                   <h3 className={`t-h3 ${styles.platformName}`}>{item.name}</h3>
                   <p className={`t-body ${styles.platformBody}`}>{item.body}</p>
                 </div>

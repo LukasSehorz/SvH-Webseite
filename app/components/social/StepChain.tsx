@@ -85,8 +85,8 @@ export default function StepChain() {
 
   return (
     <section className="section" data-shot="ablauf">
-      <div className="shell">
-        <div className={styles.secHead}>
+      <div className={`shell ${styles.stepsGrid}`}>
+        <div className={styles.stepsHead}>
           <WordReveal as="h2" className="t-h2" text={socialPage.steps.title} />
         </div>
 

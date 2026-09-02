@@ -19,11 +19,16 @@ import type { SpotDaten } from "./Spot";
 import styles from "./werbetafeln.module.css";
 import { werbetafelnPage as t } from "../../copy";
 
-/* Vier Sekunden je Spot. Kuerzer wirkt hektisch, laenger liest sich wie
-   ein Standbild. */
-const TAKT = 4000;
+/* Sechs Sekunden je Spot. Der Auftrag nennt vier, die Videoschleifen auf
+   dem Schirm sind aber sechs Sekunden lang, und ein Schnitt nach vier
+   haette jede Bewegung mitten im Lauf abgeschnitten. Der harte Schnitt
+   selbst bleibt, wie ihn eine echte Tafel macht. */
+const TAKT = 6000;
 
-export default function Hero({ spots }: Readonly<{ spots: readonly SpotDaten[] }>) {
+export default function Hero({
+  spots,
+  bewegt,
+}: Readonly<{ spots: readonly SpotDaten[]; bewegt: boolean }>) {
   const reduced = useSafeReducedMotion();
   const [i, setI] = useState(0);
 
@@ -64,10 +69,13 @@ export default function Hero({ spots }: Readonly<{ spots: readonly SpotDaten[] }
 
           <div className={styles.heroStage}>
             <Stele
+              key={spots[i].id}
               spot={spots[i]}
               className={styles.heroStele}
               bloom={88}
               neigung={7}
+              bewegt={bewegt}
+              groesze="(max-width: 1023px) 46vw, 268px"
               label={t.hero.steleLabel}
             />
           </div>

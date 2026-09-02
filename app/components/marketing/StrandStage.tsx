@@ -20,8 +20,9 @@ import { useSafeReducedMotion } from "../system/ui";
 /*  02 Social     Ein Beitrag im Hochformat, davor ein Zaehler, der von */
 /*                null hochlaeuft, aufsteigende Herzen und eine         */
 /*                wachsende Reichweitenkurve.                           */
-/*  03 Werbetafel Die drei Fotos laufen in einer gezeichneten Stele,    */
-/*                deren Lichtschein sich beim Bildwechsel mitfaerbt.    */
+/*  03 Werbetafel Vier Spots laufen im Schirm einer gezeichneten Stele  */
+/*                im Hochformat, deren Lichtschein sich beim Wechsel    */
+/*                mitfaerbt.                                            */
 /*                                                                     */
 /*  ALLE BEWEGUNG LIEGT IM BLATT und wird nur ueber ein data-Merkmal    */
 /*  umgeschaltet. Der Grund ist die Bildrate: die Sektion teilt sich    */
@@ -106,16 +107,20 @@ function usePhase(
    haelt die Seite mitten in der Bewegung an. */
 const WEB_TAKT = [1500, 2600, 700, 950, 340, 2500] as const;
 
-/** Eine Zeile im gezeichneten Seiteninhalt. */
+/** Eine Zeile im gezeichneten Seiteninhalt. Die Hoehe kommt aus dem
+ *  Blatt und nicht mehr als Bildpunktwert von hier, denn sie waechst mit
+ *  der Breite des Rahmens. Uebrig bleibt die Breite in Prozent, und die
+ *  gehoert zum Inhalt und nicht zur Gestaltung. */
 function Zeile({
   breite,
   stark,
-  hoch,
-}: Readonly<{ breite: string; stark?: boolean; hoch?: number }>) {
+  gross,
+}: Readonly<{ breite: string; stark?: boolean; gross?: boolean }>) {
   return (
     <span
       className={stark ? styles.wbZeile : styles.wbZeileLeise}
-      style={{ width: breite, ...(hoch ? { height: hoch } : null) }}
+      data-gross={gross ? "" : undefined}
+      style={{ width: breite }}
     />
   );
 }
@@ -160,15 +165,15 @@ function WebStage({ worte }: Readonly<{ worte: Worte }>) {
               <div className={styles.wbNav}>
                 <span className={styles.wbMarke} />
                 <span className={styles.wbNavLuft} />
-                <Zeile breite="26px" />
-                <Zeile breite="26px" />
-                <Zeile breite="26px" />
+                <Zeile breite="max(26px, 3.16cqw)" />
+                <Zeile breite="max(26px, 3.16cqw)" />
+                <Zeile breite="max(26px, 3.16cqw)" />
                 <span className={styles.wbNavKnopf} />
               </div>
               <div className={styles.wbHero}>
                 <div className={styles.wbHeroText}>
-                  <Zeile breite="82%" stark hoch={13} />
-                  <Zeile breite="58%" stark hoch={13} />
+                  <Zeile breite="82%" stark gross />
+                  <Zeile breite="58%" stark gross />
                   <Zeile breite="70%" />
                   <Zeile breite="48%" />
                   <span className={styles.wbHeroKnopf} />
@@ -179,7 +184,7 @@ function WebStage({ worte }: Readonly<{ worte: Worte }>) {
 
             {/* Bildschirm 2. Drei Leistungen als Karten. */}
             <div className={styles.wbSchirm}>
-              <Zeile breite="34%" stark hoch={11} />
+              <Zeile breite="34%" stark gross />
               <div className={styles.wbKarten}>
                 {[0, 1, 2].map((i) => (
                   <span className={styles.wbKarte} key={i}>
@@ -192,28 +197,47 @@ function WebStage({ worte }: Readonly<{ worte: Worte }>) {
               </div>
             </div>
 
-            {/* Bildschirm 3. Das Kontaktformular, an dem die Fahrt endet. */}
-            <div className={styles.wbSchirm}>
-              <Zeile breite="46%" stark hoch={11} />
-              <div className={styles.wbForm}>
-                <span className={styles.wbFeld} />
-                <span className={styles.wbFeld} />
-                <span className={styles.wbFeld} data-gross="" />
-                <span className={styles.wbKnopf}>
-                  {worte.knopf}
-                  <span className={styles.wbWelle} aria-hidden="true" />
-                </span>
-                <span className={styles.wbZeiger} aria-hidden="true">
-                  <svg viewBox="0 0 16 18" fill="none">
-                    <path
-                      d="M1.6 1.4 14 9.1l-5.3 1.1-2 5z"
-                      fill="currentColor"
-                      stroke="currentColor"
-                      strokeWidth={1.4}
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
+            {/* Bildschirm 3. Der Kontaktbereich, an dem die Fahrt endet.
+                Er steht zweispaltig wie ein gebauter Kontaktabschnitt:
+                links die Anrede und drei Wege zum Betrieb, rechts das
+                Formular. Eine einzelne Formularsaeule ueber die ganze
+                Breite hat als graue Flaeche gelesen. */}
+            <div className={styles.wbSchirm} data-mitte="">
+              <Zeile breite="40%" stark gross />
+              <div className={styles.wbKontakt}>
+                <div className={styles.wbKontaktText}>
+                  <Zeile breite="88%" />
+                  <Zeile breite="66%" />
+                  <span className={styles.wbWege}>
+                    {["72%", "58%", "64%"].map((w) => (
+                      <span className={styles.wbWeg} key={w}>
+                        <span className={styles.wbWegZeichen} />
+                        <Zeile breite={w} />
+                      </span>
+                    ))}
+                  </span>
+                </div>
+
+                <div className={styles.wbForm}>
+                  <span className={styles.wbFeld} />
+                  <span className={styles.wbFeld} />
+                  <span className={styles.wbFeld} data-gross="" />
+                  <span className={styles.wbKnopf}>
+                    {worte.knopf}
+                    <span className={styles.wbWelle} aria-hidden="true" />
+                  </span>
+                  <span className={styles.wbZeiger} aria-hidden="true">
+                    <svg viewBox="0 0 16 18" fill="none">
+                      <path
+                        d="M1.6 1.4 14 9.1l-5.3 1.1-2 5z"
+                        fill="currentColor"
+                        stroke="currentColor"
+                        strokeWidth={1.4}
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -254,29 +278,42 @@ const RUECK = 900;
  *  Millisekunden und nicht ueber requestAnimationFrame, denn der
  *  Hauptfaden gehoert in dieser Sektion der Struktur. Zehn Schritte in
  *  der Sekunde reichen fuer eine Zahl, die ohnehin gerundet steht. */
-function useZaehler(laeuft: boolean, neu: number, ruhig: boolean): number {
-  const [wert, setWert] = useState(0);
+function useZaehler(
+  laeuft: boolean,
+  neu: number,
+  ruhig: boolean,
+): Readonly<{ wert: number; pause: boolean }> {
+  const [stand, setStand] = useState({ wert: 0, pause: false });
 
   useEffect(() => {
     if (ruhig) {
-      setWert(1840);
+      setStand({ wert: 1840, pause: false });
       return;
     }
     if (!laeuft) return;
 
     const start = performance.now();
-    setWert(0);
+    setStand({ wert: 0, pause: false });
     const takt = window.setInterval(() => {
       const t = (performance.now() - start) % (LAUF + RUECK);
-      if (t > LAUF) return;
+      // Die Pause am Ende jeder Runde blendet die Ziffern aus. Ohne sie
+      // sprang die Zahl vom Hoechststand sichtbar auf null zurueck, und
+      // dieser Sprung las sich als Fehler statt als neue Runde.
+      if (t > LAUF) {
+        setStand((s) => (s.pause ? s : { ...s, pause: true }));
+        return;
+      }
       const q = t / LAUF;
-      setWert(Math.round(2640 * (1 - Math.pow(1 - q, 2.2))));
+      setStand({
+        wert: Math.round(2640 * (1 - Math.pow(1 - q, 2.2))),
+        pause: false,
+      });
     }, 100);
 
     return () => window.clearInterval(takt);
   }, [laeuft, neu, ruhig]);
 
-  return wert;
+  return stand;
 }
 
 /** Die Zeichen, die aus dem Beitrag aufsteigen. Gezeichnet und nicht aus
@@ -305,13 +342,14 @@ function SocialStage({ worte }: Readonly<{ worte: Worte }>) {
   const ruhig = useSafeReducedMotion();
   const drin = useImBild(feld);
   const [neu, setNeu] = useState(0);
-  const wert = useZaehler(drin, neu, ruhig);
+  const zaehler = useZaehler(drin, neu, ruhig);
 
   return (
     <div
       className={styles.soWrap}
       ref={feld}
       data-lauf={drin && !ruhig ? "" : undefined}
+      data-pause={zaehler.pause ? "" : undefined}
       aria-hidden="true"
       onPointerEnter={() => setNeu((n) => n + 1)}
     >
@@ -398,7 +436,7 @@ function SocialStage({ worte }: Readonly<{ worte: Worte }>) {
             die Buehne schmal genug fuer die Spalte, in der sie steht. */}
         <div className={styles.soZaehler}>
           <span className={styles.soZaehlerWert}>
-            {wert.toLocaleString("de-DE")}
+            {zaehler.wert.toLocaleString("de-DE")}
           </span>
           <span className={styles.soZaehlerMarke}>
             <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -448,40 +486,64 @@ function SocialStage({ worte }: Readonly<{ worte: Worte }>) {
 /* Die Werbetafel traegt als einzige Fotos, und der Grund dafuer ist eine
    Ansage des Auftraggebers: man soll bildlich sehen, worum es geht. Ein
    Geruest aus Haarlinien kann einen Browser und einen Beitrag
-   ueberzeugend andeuten, eine leuchtende Flaeche im Straszenraum aber
-   nicht, denn deren ganze Wirkung liegt in der Umgebung.
+   ueberzeugend andeuten, eine leuchtende Flaeche im Raum aber nicht,
+   denn deren ganze Wirkung liegt im Licht, das sie abgibt.
 
-   ES SIND MEHRERE BILDER IM RUNDLAUF UND NICHT MEHR EINES. Die erste
-   Fassung zeigte eine riesige LED-Fassade an einem Gebaeude. Der
-   Auftraggeber hat sie zurueckgewiesen, weil sie sein Angebot falsch
-   darstellt: er stellt kleine Displays auf, wie sie in einem Restaurant,
-   einem Ladenlokal oder einer Fuszgaengerzone stehen.
+   DIE STELE STEHT IM HOCHFORMAT UND ZEIGT VIER SPOTS. Bis zuletzt lief
+   hier ein Querformat mit drei Stockfotos, die ihrerseits Displays in
+   Ladenlokalen zeigten, also ein Bild von einem Bildschirm. Der
+   Auftraggeber hat dafuer eigene Spots erzeugen lassen, die genau das
+   zeigen, was auf einer Tafel LAEUFT: Gym, Restaurant, Club und
+   Veranstaltung. Sie sind 9 zu 16 und passen damit in den Schirm einer
+   Stele, wie sie tatsaechlich aufgestellt wird.
 
-   NEU IST DIE STELE. Die Fotos hingen bisher in einem Rahmen, der im
-   Nichts stand, und der Auftraggeber wollte die Tafel glaubhafter
-   sehen. Sie steht jetzt auf einem gezeichneten Hals mit Fusz, wirft
-   Licht auf den Boden davor und laesst darauf einen Schein liegen, der
-   die Farbe des laufenden Bildes annimmt. Die drei Toene sind an den
-   hellsten Feldern der drei Aufnahmen abgenommen und liegen dadurch
-   im Blau bis Lavendel der Marke.
+   DAS UNTERE DRITTEL DER SPOTS IST FREI, und das ist Absicht. Dort legt
+   die Seite ihre eigene Endkarte darueber, also eine Marke und zwei
+   Zeilen als Formen. Sie behauptet keinen Betrieb und keinen Preis,
+   zeigt aber, dass auf der Flaeche eine Anzeige laeuft.
+
+   DIE VIDEOS BLEIBEN AUSSEN VOR. Zu drei der vier Spots liegt inzwischen
+   eine mp4 daneben, zusammen rund sieben Megabyte. Der vierte fehlt noch,
+   ein gemischter Rundlauf aus drei laufenden und einem stehenden Bild
+   liest sich als Fehler, und die Sektion teilt sich den Schirm mit der
+   WebGL-Struktur, deren Bildrate unter zwanzig Millisekunden bleiben
+   muss. Auf der Unterseite Werbetafeln, wo nichts daneben rechnet,
+   gehoeren die Videos hin.
+
+   GEZEIGT WIRD DIE KLEINE FASSUNG MIT 560 BILDPUNKTEN BREITE. Die
+   Vorlagen liegen mit 900 vor, der Schirm ist hier 240 bis 300 breit,
+   und bei doppelter Punktdichte reichen 560. Mit der vollen Datei
+   kostete jeder Bildwechsel gemessen ein Bild von 50 Millisekunden,
+   weil der Setzer das Foto erst im Moment des Einblendens auspackte.
+   Ein Verkleinern durch next/image half nicht, denn die Seite steht auf
+   images.unoptimized. Die kleinen Fassungen liegen als eigene Dateien
+   daneben und sind in public/tafeln/HERKUNFT.md vermerkt.
+
+   Die vier Toene sind an den hellsten Feldern der vier Spots abgenommen
+   und in das Blau bis Lavendel der Marke gezogen.
 
    Faellt ein Bild aus, bleibt die Stele mit ihrem Schimmer stehen und
    die Aussage geht nicht verloren. */
 const TAFELN: readonly { src: string; alt: string; ton: string }[] = [
   {
-    src: "/stock/dooh-1.webp",
-    alt: "Ein leuchtender Werbebildschirm mit dem Wort Sale im Schaufenster eines Ladens.",
-    ton: "138, 99, 255",
+    src: "/tafeln/spot-gym-560.webp",
+    alt: "Eine Hand über einer Kettlebell, Kreidestaub im blauen Licht.",
+    ton: "108, 122, 255",
   },
   {
-    src: "/stock/dooh-2.webp",
-    alt: "Digitale Menuetafeln ueber der Theke eines Cafes.",
-    ton: "111, 155, 255",
+    src: "/tafeln/spot-restaurant-560.webp",
+    alt: "Ein angerichteter Teller auf dunklem Grund, darüber aufsteigender Dampf.",
+    ton: "170, 152, 255",
   },
   {
-    src: "/stock/dooh-3.webp",
-    alt: "Zwei digitale Speisekarten im Fenster eines Imbisses, von der Strasse aus gesehen.",
-    ton: "185, 165, 255",
+    src: "/tafeln/spot-club-560.webp",
+    alt: "Lichtkegel über einer Menge mit erhobenen Händen.",
+    ton: "104, 140, 255",
+  },
+  {
+    src: "/tafeln/spot-event-560.webp",
+    alt: "Eine Lichterkette über einer Bühne am Abend.",
+    ton: "124, 104, 255",
   },
 ];
 
@@ -493,7 +555,7 @@ function BoardStage() {
   const drin = useImBild(feld);
   const [i, setI] = useState(0);
   // Ein Griff des Besuchers haelt den Rundlauf an. Wer selbst blaettert,
-  // will nicht drei Sekunden spaeter weitergeschoben werden.
+  // will nicht vier Sekunden spaeter weitergeschoben werden.
   const [haende, setHaende] = useState(false);
 
   useEffect(() => {
@@ -508,28 +570,39 @@ function BoardStage() {
   return (
     <div className={styles.bdWrap} ref={feld}>
       <div className={styles.bdStele}>
-        <div className={styles.bdScreen}>
-          {TAFELN.map((t, n) => (
-            <img
-              key={t.src}
-              className={styles.bdBild}
-              data-an={n === i ? "" : undefined}
-              src={t.src}
-              alt={t.alt}
-              width={1400}
-              height={788}
-              loading={n === 0 ? "eager" : "lazy"}
-              decoding="async"
-            />
-          ))}
-          <span className={styles.bdRaster} />
-          <span className={styles.bdGlanz} />
-          <span className={styles.bdSaum} />
+        <div className={styles.bdKorpus}>
+          <div className={styles.bdScreen}>
+            {TAFELN.map((tafel, n) => (
+              <img
+                key={tafel.src}
+                className={styles.bdBild}
+                data-an={n === i ? "" : undefined}
+                src={tafel.src}
+                alt={tafel.alt}
+                width={560}
+                height={996}
+                loading={n === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            ))}
+
+            {/* Die Endkarte im freien unteren Drittel. Eine Marke und
+                zwei Zeilen als Formen, keine Worte, denn welcher Betrieb
+                dort steht und was er anbietet, wissen wir nicht. */}
+            <span className={styles.bdKarte} aria-hidden="true">
+              <span className={styles.bdKarteMarke} />
+              <span className={styles.bdKarteZeile} />
+              <span className={styles.bdKarteZeile} data-kurz="" />
+            </span>
+
+            <span className={styles.bdRaster} />
+            <span className={styles.bdGlanz} />
+            <span className={styles.bdSaum} />
+          </div>
         </div>
 
-        {/* Hals, Fusz und der Schatten darunter. Erst sie machen aus der
+        {/* Der Fusz und der Schatten darunter. Erst sie machen aus der
             Flaeche ein Geraet, das irgendwo steht. */}
-        <span className={styles.bdHals} />
         <span className={styles.bdFuss} />
       </div>
 

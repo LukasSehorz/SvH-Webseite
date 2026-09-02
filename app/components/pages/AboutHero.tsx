@@ -22,14 +22,24 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 export default function AboutHero() {
   const reduced = useSafeReducedMotion();
 
-  const rise = (delay: number) =>
-    reduced
-      ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
-      : {
-          initial: { opacity: 0, y: 26, filter: "blur(10px)" },
-          animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-          transition: { duration: 0.95, delay, ease: EASE },
-        };
+  /*
+   * Das Ziel der Bewegung ist immer dasselbe, nur die Dauer faellt bei
+   * reduzierter Bewegung auf null. Das ist wichtig, weil die Einstellung
+   * erst nach dem ersten Anstrich bekannt ist: eine Fassung, die dann
+   * ploetzlich nur noch die Deckkraft anspricht, liesze Versatz und
+   * Unschaerfe der angefangenen Bewegung fuer immer stehen. Gemessen an
+   * einem Browser mit reduzierter Bewegung blieb die zweite Zeile so
+   * dauerhaft unscharf.
+   */
+  const rise = (delay: number) => ({
+    initial: reduced
+      ? { opacity: 1, y: 0, filter: "blur(0px)" }
+      : { opacity: 0, y: 26, filter: "blur(10px)" },
+    animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+    transition: reduced
+      ? { duration: 0 }
+      : { duration: 0.95, delay, ease: EASE },
+  });
 
   return (
     <section className="subpage-head about-hero">

@@ -323,6 +323,22 @@ function EmailScene({ active, reduced, offset, replay }: SceneProps) {
         <rect x={10} y={8} width={182} height={94} />
       </clipPath>
 
+      {/* Das leere Postfach steht dauerhaft. Ohne dieses Geruest waere die
+          Kachel waehrend des Ruecksprungs vollstaendig leer, und acht
+          Kacheln nebeneinander wirken dann wie acht Fehler. */}
+      {[16, 60].map((top) => (
+        <rect
+          key={top}
+          x={14}
+          y={top}
+          width={172}
+          height={32}
+          rx={9}
+          stroke={HAIR_SOFT}
+          strokeDasharray="4 5"
+        />
+      ))}
+
       <motion.g
         clipPath={`url(#${uid}-clip)`}
         initial={false}
@@ -370,22 +386,34 @@ function ChatScene({ active, reduced, offset, replay }: SceneProps) {
     <Canvas viewBox={BOX}>
       <Ramp id={uid} />
 
+      {/* Das Fenster des Chats steht dauerhaft, damit die Kachel zwischen
+          zwei Durchgaengen nicht leer ist. */}
+      <rect
+        x={6}
+        y={4}
+        width={188}
+        height={100}
+        rx={15}
+        fill={PLATE_DIM}
+        stroke={HAIR_SOFT}
+      />
+
       <motion.g
         initial={false}
         animate={{ opacity: asked ? 1 : 0, scale: asked ? 1 : 0.94 }}
         transition={step(resetting, 0.55)}
       >
         <rect
-          x={12}
-          y={12}
-          width={106}
+          x={16}
+          y={14}
+          width={102}
           height={34}
           rx={12}
           fill={PLATE}
           stroke={HAIR_SOFT}
         />
-        <rect x={26} y={22} width={62} height={5} rx={2.5} fill={BAR} />
-        <rect x={26} y={33} width={42} height={5} rx={2.5} fill={BAR_SOFT} />
+        <rect x={30} y={24} width={60} height={5} rx={2.5} fill={BAR} />
+        <rect x={30} y={35} width={40} height={5} rx={2.5} fill={BAR_SOFT} />
       </motion.g>
 
       <motion.g
@@ -670,6 +698,18 @@ function OfferScene({ active, reduced, offset, replay }: SceneProps) {
     <Canvas viewBox={BOX}>
       <Ramp id={uid} />
 
+      {/* Der leere Platz des Blattes bleibt stehen, damit die Kachel nie
+          ohne Inhalt dasteht. */}
+      <rect
+        x={54}
+        y={10}
+        width={92}
+        height={88}
+        rx={9}
+        stroke={HAIR_SOFT}
+        strokeDasharray="4 5"
+      />
+
       <motion.g
         initial={false}
         animate={{
@@ -785,7 +825,8 @@ function DocumentScene({ active, reduced, offset, replay }: SceneProps) {
         <rect x={16} y={10} width={72} height={88} rx={8} />
       </clipPath>
 
-      {/* Ablage rechts. Sie steht die ganze Zeit und nimmt am Ende auf. */}
+      {/* Ablage rechts und der Platz des Blattes links. Beide stehen die
+          ganze Zeit, damit die Kachel nie ohne Inhalt dasteht. */}
       <rect
         x={122}
         y={26}
@@ -795,6 +836,15 @@ function DocumentScene({ active, reduced, offset, replay }: SceneProps) {
         fill={PLATE_DIM}
         stroke={HAIR_SOFT}
         strokeDasharray="4 4"
+      />
+      <rect
+        x={16}
+        y={10}
+        width={72}
+        height={88}
+        rx={8}
+        stroke={HAIR_SOFT}
+        strokeDasharray="4 5"
       />
 
       <motion.g
@@ -928,14 +978,26 @@ function CrmScene({ active, reduced, offset, replay }: SceneProps) {
     <Canvas viewBox={BOX}>
       <Ramp id={uid} />
 
+      {/* Die leere Liste steht dauerhaft. */}
+      {[10, 44, 78].map((y) => (
+        <rect
+          key={y}
+          x={16}
+          y={y}
+          width={168}
+          height={26}
+          rx={8}
+          stroke={HAIR_SOFT}
+          strokeDasharray="4 5"
+        />
+      ))}
+
       <motion.g
         initial={false}
         animate={{ opacity: listed ? 1 : 0 }}
         transition={step(resetting, 0.5)}
       >
-        <g>
-          <CrmRow y={10} width={72} strong />
-        </g>
+        <CrmRow y={10} width={72} strong />
 
         {/* Der doppelte Eintrag. Er wird markiert und wandert dann in den
             Eintrag darueber, die Liste schliesst die Luecke. */}
@@ -1025,6 +1087,22 @@ function ReportScene({ active, reduced, offset, replay }: SceneProps) {
     <Canvas viewBox={BOX}>
       <Ramp id={uid} />
 
+      {/* Grundlinie und die leeren Saeulenplaetze bleiben stehen, damit
+          die Kachel zwischen zwei Durchgaengen nicht leer ist. */}
+      <path d="M18 98h164" stroke={HAIR} />
+      {REPORT_BARS.map((bar) => (
+        <rect
+          key={`platz-${bar.x}`}
+          x={bar.x + 0.6}
+          y={98.6 - bar.height}
+          width={26.8}
+          height={bar.height - 1.2}
+          rx={3.4}
+          stroke={HAIR_SOFT}
+          strokeDasharray="4 5"
+        />
+      ))}
+
       <motion.g
         initial={false}
         animate={{ opacity: resetting || out ? 0 : 1 }}
@@ -1054,8 +1132,6 @@ function ReportScene({ active, reduced, offset, replay }: SceneProps) {
               : { duration: 0.35, ease: EASE, delay: trend ? 0.5 : 0 }
           }
         />
-
-        <path d="M18 98h164" stroke={HAIR} />
 
         {REPORT_BARS.map((bar, i) => {
           const grown = stage >= 1 + i;

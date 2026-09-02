@@ -5,13 +5,13 @@
 
    Es steht keine Stadt, keine Adresse und kein Betriebsname auf dieser
    Seite. Die vier Ortsarten sind Kategorien und tragen die Sektion
-   vollstaendig. Drei Karten tragen die vorhandenen Stockbilder, die
-   vierte eine Flaeche in reinem Akzent, stark abgedunkelt, damit sich
-   kein Motiv wiederholt.
+   vollstaendig. Jede Karte traegt ein eigenes erzeugtes Motiv aus
+   public/tafeln, auf dem eine Stele in Personengroesze an einem Ort
+   dieser Art steht. Damit wiederholt sich kein Bild mehr.
 
-   Beim Zeigen hebt sich das Bild um zwei Prozent und die kleine
-   Tafelflaeche auf der Karte geht von gedaempft auf leuchtend, sodass
-   sichtbar wird, dass genau dort ein Bildschirm haengt. Sonst steht die
+   Beim Zeigen hebt sich das Bild um zwei Prozent und wird heller. Weil
+   der Schirm der Stele das einzige helle Ding im Bild ist, geht damit
+   genau die Tafelflaeche von gedaempft auf leuchtend. Sonst steht die
    Sektion still. */
 
 import Image from "next/image";
@@ -42,19 +42,14 @@ export default function Orte() {
             <Rise key={card.id} delay={(index % 2) * 0.1}>
               <article className={styles.ortCard}>
                 <div className={styles.ortMedia}>
-                  {card.bild ? (
-                    <Image
-                      src={card.bild}
-                      alt={card.alt ?? ""}
-                      width={1400}
-                      height={788}
-                      sizes="(max-width: 1023px) 92vw, 46vw"
-                    />
-                  ) : (
-                    <span className={styles.ortFlaeche} aria-hidden="true" />
-                  )}
+                  <Image
+                    src={card.bild}
+                    alt={card.alt}
+                    width={1600}
+                    height={900}
+                    sizes="(max-width: 1023px) 92vw, 46vw"
+                  />
                   <span className={styles.ortShade} aria-hidden="true" />
-                  <span className={styles.ortBoard} aria-hidden="true" />
                 </div>
 
                 <div className={styles.ortBody}>

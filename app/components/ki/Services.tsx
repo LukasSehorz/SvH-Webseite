@@ -51,7 +51,8 @@ export default function KiServices() {
         }
 
         .ki-services .ki-svc-title {
-          max-width: 14ch;
+          max-width: 15ch;
+          text-wrap: balance;
         }
 
         .ki-services .ki-svc-intro {

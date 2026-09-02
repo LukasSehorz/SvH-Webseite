@@ -42,7 +42,7 @@ function BoxLabel({
   tint,
 }: Readonly<{ y: number; text: string; tint: string }>) {
   return (
-    <>
+    <g className="manifesto-boxes">
       <line x1="444" y1={y} x2="462" y2={y} stroke="var(--line)" strokeWidth="1" />
       <rect
         x="462"
@@ -68,7 +68,7 @@ function BoxLabel({
           </tspan>
         ))}
       </text>
-    </>
+    </g>
   );
 }
 
@@ -105,11 +105,15 @@ export default function Manifesto() {
       // Grafik stuende danach schon fertig da.
       const START = { immediateRender: true } as const;
 
+      // Ausloeser ist die Grafik selbst, nicht die Sektion. An der Sektion
+      // gemessen waere das Zeichnen schon vorbei, bevor die Grafik ueberhaupt
+      // im Bild steht, denn zwischen Sektionsbeginn und Grafik liegen der
+      // Innenabstand und die Nummernzeile.
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: root,
-          start: "top 84%",
-          end: "center 52%",
+          trigger: root.querySelector(".manifesto-chart") ?? root,
+          start: "top 88%",
+          end: "top 26%",
           scrub: 0.7,
           invalidateOnRefresh: true,
         },
@@ -167,10 +171,10 @@ export default function Manifesto() {
         <div className="manifesto-grid" ref={scope}>
           <div className="manifesto-chart">
             <svg
+              className="manifesto-svg"
               viewBox="0 0 632 470"
               role="img"
               aria-label={`Diagramm mit den Achsen ${manifesto.chart.axisX} und ${manifesto.chart.axisY}. Die Kurve für ein Team, das mit KI arbeitet, steigt steil an, die Kurve ohne KI bleibt flach. Dazwischen liegt der Unterschied.`}
-              style={{ width: "100%", height: "auto", overflow: "visible" }}
             >
               <defs>
                 <linearGradient id="curve-hot" x1="0" y1="1" x2="1" y2="0">
@@ -184,7 +188,7 @@ export default function Manifesto() {
                 <linearGradient id="gap-fill" x1="0" y1="1" x2="0" y2="0">
                   <stop offset="0%" stopColor="#5b8cff" stopOpacity="0.03" />
                   <stop offset="55%" stopColor="#7c6aff" stopOpacity="0.14" />
-                  <stop offset="100%" stopColor="#b9a5ff" stopOpacity="0.26" />
+                  <stop offset="100%" stopColor="#b9a5ff" stopOpacity="0.3" />
                 </linearGradient>
 
                 <clipPath id="gap-clip" clipPathUnits="userSpaceOnUse">
@@ -275,6 +279,7 @@ export default function Manifesto() {
 
               {/* Achsenbeschriftung. Zahlen stehen bewusst nirgends. */}
               <text
+                className="manifesto-axis"
                 x="256"
                 y="444"
                 textAnchor="middle"
@@ -286,6 +291,7 @@ export default function Manifesto() {
                 {manifesto.chart.axisX.toUpperCase()}
               </text>
               <text
+                className="manifesto-axis"
                 x="-222"
                 y="40"
                 transform="rotate(-90)"
@@ -298,6 +304,24 @@ export default function Manifesto() {
                 {manifesto.chart.axisY.toUpperCase()}
               </text>
             </svg>
+
+            {/* Auf schmalen Geräten schrumpfen die Kastenlabels unter die
+                Lesbarkeit. Dort tritt diese Legende an ihre Stelle. Die
+                Grafik selbst traegt ihre Beschreibung im aria-label. */}
+            <ul className="manifesto-legend" aria-hidden="true">
+              <li>
+                <span className="manifesto-swatch" data-tone="hot" />
+                {manifesto.chart.curveHot}
+              </li>
+              <li>
+                <span className="manifesto-swatch" data-tone="gap" />
+                {manifesto.chart.gap}
+              </li>
+              <li>
+                <span className="manifesto-swatch" data-tone="cool" />
+                {manifesto.chart.curveCool}
+              </li>
+            </ul>
           </div>
 
           <div className="manifesto-text">

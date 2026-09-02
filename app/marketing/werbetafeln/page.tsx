@@ -22,6 +22,8 @@
    WebGL-Szene, Bewegung am Scrollstand, drei Schleifen und sonst
    Stillstand. Grundlage ist _ref3/brief-werbetafeln.md. */
 
+import { existsSync } from "node:fs";
+import path from "node:path";
 import type { Metadata } from "next";
 import Navbar from "../../components/system/Navbar";
 import Footer from "../../components/system/Footer";
@@ -32,6 +34,7 @@ import Band from "../../components/werbetafeln/Band";
 import Inhalte from "../../components/werbetafeln/Inhalte";
 import Ablauf from "../../components/werbetafeln/Ablauf";
 import Abschluss from "../../components/werbetafeln/Abschluss";
+import styles from "../../components/werbetafeln/werbetafeln.module.css";
 import { werbetafelnPage as t } from "../../copy";
 
 export const metadata: Metadata = {
@@ -39,8 +42,20 @@ export const metadata: Metadata = {
   description: t.meta.description,
 };
 
+/* Die Videos auf dem Schirm entstehen ausserhalb dieses Baus und liegen
+   nicht immer vollstaendig vor. Geprueft wird deshalb beim Bauen, welche
+   Dateien wirklich da sind. Fehlt eine, bleibt es beim Standbild und die
+   Seite fordert nie eine Adresse an, die es nicht gibt. */
+function videosVorhanden(): boolean {
+  const ordner = path.join(process.cwd(), "public");
+  return t.spots
+    .slice(0, 3)
+    .every((spot) => existsSync(path.join(ordner, spot.video)));
+}
+
 export default function WerbetafelnPage() {
   const spots = t.spots;
+  const bewegt = videosVorhanden();
 
   /* Jede Tafel der Seite zeigt einen anderen Spot nach M3, damit ohne
      einen Satz Erklaerung klar ist, dass hier wechselnde Betriebe
@@ -49,8 +64,10 @@ export default function WerbetafelnPage() {
     <>
       <Navbar />
 
-      <main>
-        <Hero spots={spots.slice(0, 3)} />
+      {/* Die Palette dieser Welt haengt an einer Klasse und nicht an
+          :root, damit sie keine andere Seite beruehrt. */}
+      <main className={styles.page}>
+        <Hero spots={spots.slice(0, 3)} bewegt={bewegt} />
         <Gruende />
         <Orte />
         <Band spots={spots} />

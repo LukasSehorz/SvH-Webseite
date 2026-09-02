@@ -1016,11 +1016,44 @@
 }
 
 .strand[data-lage="rechts"] .strandPaar {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, clamp(360px, 28vw, 400px));
 }
 
 .strand[data-lage="links"] .strandPaar {
   grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+}
+
+/* AUF SEHR BREITEN SCHIRMEN WAECHST DER TEXTBLOCK, DAS SCHAUSTUECK
+   ABER NICHT. Gemessen bei 2560 stand der Beitrag im Hochformat mit 408
+   Bildpunkten neben einer Markenspalte von 830, und jede Marke war ein
+   Balken mit einem Wort am linken Ende. Ab 1900 Bildpunkten bekommt der
+   Text deshalb zwei Spalten und die Buehne mehr Flaeche. Frueher darf
+   der Umbruch nicht kommen: bei 1600 blieben der Markenspalte 318
+   Bildpunkte, und zwei Spalten davon tragen kein Kurzwort. */
+@media (min-width: 1900px) {
+  /* Die Spaltenzahl steht hier mit einer Stufe mehr Gewicht, weil die
+     Grundregel weiter unten im Blatt steht und bei gleichem Gewicht
+     gewinnen wuerde. */
+  .strand .markGrid[data-spalten="1"] {
+    --sp: 2;
+  }
+
+  .strand[data-lage="rechts"] .strandPaar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 430px);
+  }
+
+  .strand[data-lage="links"] .strandPaar {
+    grid-template-columns: minmax(0, 520px) minmax(0, 1fr);
+  }
+
+  .soPhone,
+  .soBlatt {
+    width: 262px;
+  }
+
+  .bdWrap {
+    max-width: 520px;
+  }
 }
 
 /* Der stille Verweis auf die Unterseite. Ein Link und keine
@@ -1281,7 +1314,15 @@
 
    NUR 01 UND 02 NEHMEN DEN ZUSCHLAG. Beide sitzen mit ihrer rechten
    Kante am rechten Ende des Blocks. 03 steht links und gewaenne dadurch
-   nichts, wuerde aber in die Kette daneben laufen. */
+   nichts, wuerde aber in die Kette daneben laufen.
+
+   DER ZUSCHLAG IST 7,6vw UND NICHT 8. Gerechnet steht die rechte Kante
+   bei 4vw plus 50vw plus dem Zuschlag; mit 8 waeren das genau 62
+   Prozent, also der Grenzwert selbst. Gemessen kam die Buehne bei 1440
+   auf 61,47 Prozent, und die Differenz war allein die Breite des
+   Scrollbalkens, den vw mitzaehlt und der Setzkasten nicht. Auf einem
+   Schirm mit ueberlagertem Balken faellt dieser Puffer weg. Mit 7,6
+   steht die Kante rechnerisch bei 61,6 Prozent und braucht ihn nicht. */
 .strandStage {
   opacity: 0;
   transform: translate3d(0, 24px, 0);
@@ -1295,9 +1336,36 @@
   transform: none;
 }
 
-.strand[data-lage="oben"] .strandStage,
-.strand[data-lage="rechts"] .strandStage {
-  width: calc(100% + min(8vw, var(--dna-eng)));
+.strand[data-lage="oben"] .strandStage {
+  width: calc(100% + min(7.6vw, var(--dna-eng)));
+}
+
+/* ZWISCHEN TELEFON UND SCHREIBTISCH STAPELN DIE PAARE EBENFALLS. Der
+   Umbruch bei 900 Bildpunkten war zu frueh: bei 1100 blieben der
+   Markenspalte neben dem Beitrag 158 Bildpunkte, und darin steht kein
+   Kurzwort. Erst ab 1280 traegt sie 248, also gut 200 fuer die Schrift.
+   Gestapelt bekommen die Marken zwei Spalten, denn ueber die volle
+   Breite waere jede Marke ein Balken mit einem Wort am linken Ende. */
+@media (max-width: 1279px) {
+  .strandPaar,
+  .strand[data-lage="rechts"] .strandPaar,
+  .strand[data-lage="links"] .strandPaar {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 34px;
+  }
+
+  .strand[data-lage="rechts"] .strandPaar .strandStage {
+    order: -1;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1279px) {
+  /* Zwei Spalten fuer alle drei Straenge. Bei 1024 traegt die Textspalte
+     512 Bildpunkte; drei Marken davon waeren 161 breit, zwei sind 249. */
+  .strand .markGrid[data-spalten="1"],
+  .strand .markGrid[data-spalten="3"] {
+    --sp: 2;
+  }
 }
 
 /* ------------------------------------------------- 01 Webseite */
@@ -1311,7 +1379,15 @@
   position: relative;
 }
 
+/* DER RAHMEN IST DER BEZUG FUER ALLE MASZE IN SEINEM INNEREN. Bei 2560
+   ist er 1417 Bildpunkte breit, bei 1440 noch 822 und auf dem Telefon
+   253. Feste Bildpunkte drinnen ergaben auf dem groszen Schirm eine
+   winzige Seite in einem riesigen Fenster. Die Masze stehen deshalb als
+   max() aus dem alten festen Wert und einem Anteil der Rahmenbreite:
+   bei 822 kommt genau der alte Wert heraus, darueber waechst alles mit,
+   darunter haelt der feste Wert die Schrift lesbar. */
 .wbFrame {
+  container-type: inline-size;
   position: relative;
   overflow: hidden;
   aspect-ratio: 16 / 9;
@@ -1331,15 +1407,15 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  height: 38px;
-  padding-inline: 15px;
+  height: max(38px, 4.62cqw);
+  padding-inline: max(15px, 1.82cqw);
   border-bottom: 1px solid var(--line-2);
   background: rgba(255, 255, 255, 0.024);
 }
 
 .wbAmpel {
-  width: 7px;
-  height: 7px;
+  width: max(7px, 0.85cqw);
+  height: max(7px, 0.85cqw);
   border-radius: 50%;
   background: rgba(244, 244, 246, 0.16);
 }
@@ -1353,13 +1429,13 @@
   gap: 6px;
   flex: 0 1 46%;
   min-width: 0;
-  height: 21px;
-  margin-left: 14px;
-  padding-inline: 9px;
+  height: max(21px, 2.55cqw);
+  margin-left: max(14px, 1.7cqw);
+  padding-inline: max(9px, 1.1cqw);
   border-radius: 6px;
   background: rgba(244, 244, 246, 0.055);
   font-family: var(--font-sans);
-  font-size: 10.5px;
+  font-size: max(10.5px, 1.28cqw);
   font-weight: 400;
   color: var(--ink-2);
   white-space: nowrap;
@@ -1367,14 +1443,14 @@
 }
 
 .wbAddr svg {
-  flex: 0 0 10px;
-  width: 10px;
-  height: 10px;
+  flex: 0 0 max(10px, 1.22cqw);
+  width: max(10px, 1.22cqw);
+  height: max(10px, 1.22cqw);
 }
 
 .wbView {
   position: relative;
-  height: calc(100% - 38px);
+  height: calc(100% - max(38px, 4.62cqw));
   overflow: hidden;
 }
 
@@ -1413,21 +1489,34 @@
   flex: 0 0 33.3333%;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: max(14px, 1.7cqw);
   min-height: 0;
-  padding: 18px 22px 20px;
+  padding: max(18px, 2.19cqw) max(22px, 2.68cqw) max(20px, 2.43cqw);
+}
+
+/* Der Kontaktbildschirm stellt seine Ueberschrift und den Block darunter
+   GEMEINSAM in die Mitte. Waechst stattdessen der Block, steht die
+   Ueberschrift allein oben und der Rest weit darunter; genau so hat der
+   erste Versuch ausgesehen. */
+.wbSchirm[data-mitte] {
+  justify-content: center;
+  gap: max(20px, 2.43cqw);
+}
+
+.wbSchirm[data-mitte] .wbKontakt {
+  flex: 0 0 auto;
 }
 
 .wbNav {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: max(9px, 1.1cqw);
 }
 
 .wbMarke {
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
+  width: max(20px, 2.43cqw);
+  height: max(20px, 2.43cqw);
+  border-radius: max(6px, 0.73cqw);
   background: var(--grad);
   opacity: 0.85;
 }
@@ -1437,8 +1526,8 @@
 }
 
 .wbNavKnopf {
-  width: 54px;
-  height: 19px;
+  width: max(54px, 6.57cqw);
+  height: max(19px, 2.31cqw);
   border-radius: 999px;
   border: 1px solid rgba(var(--st-ton), 0.45);
 }
@@ -1446,7 +1535,7 @@
 .wbHero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 0.88fr);
-  gap: 22px;
+  gap: max(22px, 2.68cqw);
   flex: 1 1 auto;
   min-height: 0;
   align-items: center;
@@ -1455,13 +1544,13 @@
 .wbHeroText {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: max(9px, 1.1cqw);
 }
 
 .wbHeroKnopf {
-  width: 98px;
-  height: 27px;
-  margin-top: 9px;
+  width: max(98px, 11.9cqw);
+  height: max(27px, 3.28cqw);
+  margin-top: max(9px, 1.1cqw);
   border-radius: 999px;
   background: var(--grad);
   opacity: 0.92;
@@ -1480,8 +1569,17 @@
 .wbZeile,
 .wbZeileLeise {
   display: block;
-  height: 7px;
+  height: max(7px, 0.85cqw);
   border-radius: 3px;
+}
+
+/* Die starken Zeilen der Ueberschriften. Ihre Hoehe stand als
+   Bildpunktwert im Bauteil und lief deshalb beim groszen Rahmen nicht
+   mit. */
+.wbZeile[data-gross],
+.wbZeileLeise[data-gross] {
+  height: max(12px, 1.46cqw);
+  border-radius: max(4px, 0.49cqw);
 }
 
 .wbZeile {
@@ -1495,7 +1593,7 @@
 .wbKarten {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: max(12px, 1.46cqw);
   flex: 1 1 auto;
   min-height: 0;
 }
@@ -1503,44 +1601,83 @@
 .wbKarte {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 14px 13px;
+  gap: max(8px, 0.97cqw);
+  padding: max(14px, 1.7cqw) max(13px, 1.58cqw);
   border: 1px solid var(--line-2);
-  border-radius: 10px;
+  border-radius: max(10px, 1.22cqw);
   background: rgba(255, 255, 255, 0.016);
 }
 
 .wbKarteZeichen {
-  width: 22px;
-  height: 22px;
-  margin-bottom: 5px;
-  border-radius: 7px;
+  width: max(22px, 2.68cqw);
+  height: max(22px, 2.68cqw);
+  margin-bottom: max(5px, 0.61cqw);
+  border-radius: max(7px, 0.85cqw);
   background: rgba(var(--st-ton), 0.22);
+}
+
+/* Der Kontaktbereich steht zweispaltig. Links Anrede und drei Wege zum
+   Betrieb, rechts das Formular. Eine einzelne Saeule aus Feldern ueber
+   die ganze Fensterbreite hat als graue Flaeche gelesen und nicht als
+   Abschnitt einer Seite. */
+.wbKontakt {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr);
+  gap: max(26px, 3.16cqw);
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: center;
+}
+
+.wbKontaktText {
+  display: flex;
+  flex-direction: column;
+  gap: max(10px, 1.22cqw);
+}
+
+.wbWege {
+  display: flex;
+  flex-direction: column;
+  gap: max(11px, 1.34cqw);
+  margin-top: max(12px, 1.46cqw);
+}
+
+.wbWeg {
+  display: flex;
+  align-items: center;
+  gap: max(10px, 1.22cqw);
+}
+
+.wbWegZeichen {
+  flex: 0 0 max(18px, 2.19cqw);
+  width: max(18px, 2.19cqw);
+  height: max(18px, 2.19cqw);
+  border-radius: max(6px, 0.73cqw);
+  background: rgba(var(--st-ton), 0.24);
 }
 
 .wbForm {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  flex: 1 1 auto;
+  gap: max(10px, 1.22cqw);
   min-height: 0;
-  padding: 18px;
+  padding: max(17px, 2.07cqw) max(16px, 1.95cqw) max(18px, 2.19cqw);
   border: 1px solid var(--line-2);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.02);
+  border-radius: max(12px, 1.46cqw);
+  background: rgba(255, 255, 255, 0.026);
+  box-shadow: 0 16px 40px -24px rgba(0, 0, 0, 0.9);
 }
 
 .wbFeld {
-  height: 26px;
-  border-radius: 7px;
+  height: max(25px, 3.04cqw);
+  border-radius: max(7px, 0.85cqw);
   border: 1px solid var(--line-2);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .wbFeld[data-gross] {
-  flex: 1 1 auto;
-  min-height: 30px;
+  height: max(52px, 6.33cqw);
 }
 
 .wbKnopf {
@@ -1550,11 +1687,11 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 9px 18px;
+  padding: max(9px, 1.1cqw) max(18px, 2.19cqw);
   border-radius: 999px;
   background: var(--grad);
   font-family: var(--font-sans);
-  font-size: 11.5px;
+  font-size: max(11.5px, 1.4cqw);
   font-weight: 600;
   letter-spacing: 0.01em;
   line-height: 1;
@@ -1602,13 +1739,13 @@
    einer Rechnung ueber den Scrollstand. */
 .wbZeiger {
   position: absolute;
-  left: 76px;
-  bottom: 24px;
-  width: 15px;
-  height: 17px;
+  left: max(76px, 9.25cqw);
+  bottom: max(24px, 2.92cqw);
+  width: max(15px, 1.82cqw);
+  height: max(17px, 2.07cqw);
   color: var(--ink);
   opacity: 0;
-  transform: translate3d(72px, 50px, 0);
+  transform: translate3d(max(72px, 8.76cqw), max(50px, 6.08cqw), 0);
   filter: drop-shadow(0 2px 7px rgba(0, 0, 0, 0.7));
   transition:
     transform 0.95s var(--ease-out-expo),
@@ -1640,14 +1777,14 @@
   top: 50%;
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 11px 18px;
+  gap: max(9px, 1.1cqw);
+  padding: max(11px, 1.34cqw) max(18px, 2.19cqw);
   border-radius: 999px;
   border: 1px solid rgba(var(--st-ton), 0.42);
   background: rgba(9, 9, 14, 0.88);
   backdrop-filter: blur(7px);
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: max(12px, 1.46cqw);
   font-weight: 500;
   line-height: 1;
   color: var(--ink);
@@ -1660,9 +1797,9 @@
 }
 
 .wbOk svg {
-  flex: 0 0 16px;
-  width: 16px;
-  height: 16px;
+  flex: 0 0 max(16px, 1.95cqw);
+  width: max(16px, 1.95cqw);
+  height: max(16px, 1.95cqw);
   color: rgb(var(--st-ton));
 }
 
@@ -1705,16 +1842,24 @@
   position: relative;
 }
 
+/* DIE BUEHNE IST SO BREIT WIE IHR INHALT UND NICHT WIE IHRE SPALTE.
+   Sie stand einmal auf voller Spaltenbreite, der Beitrag rechts und die
+   beiden Taefelchen links auf null. Bei 2560 lagen dazwischen 163
+   Bildpunkte Nichts. Der Innenabstand links ist jetzt der Platz, den die
+   Taefelchen brauchen, und die Buehne haengt sich rechts an. */
 .soBuehne {
   position: relative;
-  padding-left: 44px;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  padding-left: 118px;
   padding-bottom: 26px;
 }
 
 .soPhone {
   position: relative;
   margin-left: auto;
-  width: min(230px, 100%);
+  width: 240px;
   aspect-ratio: 9 / 17.4;
   padding: 12px 11px;
   border-radius: 26px;
@@ -1736,7 +1881,7 @@
   position: absolute;
   right: 0;
   top: 26px;
-  width: min(230px, 100%);
+  width: 240px;
   height: calc(100% - 66px);
   border: 1px solid var(--line-2);
   border-radius: 24px;
@@ -1951,6 +2096,17 @@
   letter-spacing: -0.02em;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
+  opacity: 1;
+  transition: opacity 0.45s var(--ease-out-expo);
+}
+
+/* Am Ende jeder Runde blenden die Ziffern aus, bevor die naechste bei
+   null beginnt. Ohne diesen Ausblender sprang die Zahl vom Hoechststand
+   sichtbar zurueck, und der Sprung las sich als Fehler statt als neue
+   Runde. Eine feste Endzahl steht hier bewusst nicht: belegt ist allein
+   die Zahl der umgesetzten Projekte. */
+.soWrap[data-pause] .soZaehlerWert {
+  opacity: 0;
 }
 
 .soZaehlerMarke {
@@ -2019,7 +2175,7 @@
 }
 
 .soWrap[data-lauf] .soKurveFeld svg {
-  animation: soDecken 6.4s cubic-bezier(0.32, 0, 0.2, 1) infinite;
+  animation: soDecken 7.3s cubic-bezier(0.32, 0, 0.2, 1) infinite;
 }
 
 @keyframes soDecken {
@@ -2030,8 +2186,8 @@
   8% {
     opacity: 1;
   }
-  84%,
-  93% {
+  88%,
+  94% {
     opacity: 1;
     clip-path: inset(0 0 0 0);
   }
@@ -2063,17 +2219,17 @@
 }
 
 .soWrap[data-lauf] .soKurveKopf {
-  animation: soKopf 6.4s cubic-bezier(0.32, 0, 0.2, 1) infinite;
+  animation: soKopf 7.3s cubic-bezier(0.32, 0, 0.2, 1) infinite;
 }
 
 @keyframes soKopf {
   0%,
-  74% {
+  78% {
     opacity: 0;
     transform: scale(0.4);
   }
-  86%,
-  93% {
+  88%,
+  94% {
     opacity: 1;
     transform: scale(1);
   }
@@ -2085,12 +2241,13 @@
 
 /* ---------------------------------------------- 03 Werbetafel */
 
-/* Die Fotos hingen bisher in einem Rahmen, der im Nichts stand. Der
-   Auftraggeber wollte die Tafel glaubhafter sehen, und deshalb steht sie
-   jetzt auf einem gezeichneten Hals mit Fusz und wirft Licht auf den
-   Boden davor.
-   Die Tafel bleibt kleiner als das Browserfenster, ebenfalls auf Ansage.
-   Sie mass einmal dieselben 760 Bildpunkte und war ihm zu grosz. */
+/* EINE STELE IM HOCHFORMAT. Bis zuletzt hing hier ein Querformat mit
+   Stockfotos, die selbst Displays in Ladenlokalen zeigten, also ein Bild
+   von einem Bildschirm. Jetzt steht dort das Geraet, und im Schirm
+   laeuft der Spot. Das Verhaeltnis 9 zu 16 kommt vom Bildmaterial und
+   ist zugleich das der Stelen, die tatsaechlich aufgestellt werden.
+   Die Tafel bleibt kleiner als das Browserfenster, auf Ansage des
+   Auftraggebers. */
 .bdWrap {
   position: relative;
   width: 100%;
@@ -2105,26 +2262,44 @@
   align-items: center;
 }
 
+/* Das Gehaeuse. Ein schmaler Rand um den Schirm, oben und unten etwas
+   mehr, so wie bei einem Geraet, das eine Elektronik tragen musz. */
+.bdKorpus {
+  position: relative;
+  width: min(262px, 72%);
+  padding: 12px 10px 20px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.07),
+    rgba(255, 255, 255, 0.018) 40%,
+    rgba(255, 255, 255, 0.035)
+  );
+  box-shadow:
+    0 34px 76px -32px rgba(0, 0, 0, 0.95),
+    0 2px 0 0 rgba(255, 255, 255, 0.05) inset;
+}
+
 .bdScreen {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 9 / 16;
   overflow: hidden;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: #07070b;
-  box-shadow: 0 26px 62px -30px rgba(0, 0, 0, 0.95);
+  border-radius: 11px;
+  background: #06060a;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.7);
 }
 
-/* Alle Aufnahmen liegen uebereinander im selben Rahmen. Nur die gerade
+/* Alle Aufnahmen liegen uebereinander im selben Schirm. Nur die gerade
    laufende ist sichtbar, die anderen stehen auf null.
    DER WECHSEL GEHT DURCH SCHWARZ UND NICHT INEINANDER. Eine
-   gleichzeitige Ueberblendung ueber eine Sekunde ergab eine
-   Doppelbelichtung: die drei Motive sind zu verschieden, und in der
-   Mitte des Wechsels lagen zwei Schaufenster uebereinander.
+   gleichzeitige Ueberblendung ergab eine Doppelbelichtung: die Motive
+   sind zu verschieden, und in der Mitte des Wechsels lagen zwei davon
+   uebereinander.
    Das abgehende Bild faellt deshalb in 0,42 Sekunden, das ankommende
-   beginnt erst nach 0,4 Sekunden. Zwischen beiden steht kurz der
-   dunkle Rahmen, und der Wechsel liest sich als Schnitt. */
+   beginnt erst nach 0,4 Sekunden. Zwischen beiden steht kurz der dunkle
+   Schirm, und der Wechsel liest sich als Schnitt. */
 .bdBild {
   position: absolute;
   inset: 0;
@@ -2133,7 +2308,7 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transform: scale(1.045);
+  transform: scale(1.05);
   transition: opacity 0.42s var(--ease-out-expo);
 }
 
@@ -2142,16 +2317,62 @@
   transform: scale(1);
   transition:
     opacity 0.7s var(--ease-out-expo) 0.4s,
-    transform 6s linear 0.4s;
+    transform 7s linear 0.4s;
 }
 
-/* Eine sehr feine waagerechte Streifung. Sie macht aus dem Foto eine
+/* Die Endkarte im freien unteren Drittel des Spots. Sie zeigt, dass auf
+   der Flaeche eine Anzeige laeuft, und behauptet dabei nichts: die Marke
+   ist eine Form, die Zeilen sind Balken. Welcher Betrieb dort wirbt und
+   womit, wissen wir nicht. */
+.bdKarte {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition:
+    opacity 0.7s var(--ease-out-expo) 0.85s,
+    transform 0.7s var(--ease-out-expo) 0.85s;
+}
+
+.strandStage[data-an] .bdKarte {
+  opacity: 1;
+  transform: none;
+}
+
+.bdKarteMarke {
+  width: 26px;
+  height: 26px;
+  margin-bottom: 3px;
+  border-radius: 8px;
+  background: var(--grad);
+  opacity: 0.92;
+}
+
+.bdKarteZeile {
+  height: 7px;
+  width: 78%;
+  border-radius: 3px;
+  background: rgba(244, 244, 246, 0.72);
+}
+
+.bdKarteZeile[data-kurz] {
+  width: 46%;
+  height: 6px;
+  background: rgba(244, 244, 246, 0.36);
+}
+
+/* Eine sehr feine waagerechte Streifung. Sie macht aus dem Spot eine
    BILDSCHIRMflaeche und kostet nichts, weil sie als Verlauf entsteht. */
 .bdRaster {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.45;
   mix-blend-mode: multiply;
   background: repeating-linear-gradient(
     180deg,
@@ -2170,59 +2391,59 @@
   pointer-events: none;
   background: linear-gradient(
     116deg,
-    rgba(255, 255, 255, 0.075) 0%,
-    rgba(255, 255, 255, 0.02) 24%,
-    transparent 48%
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.022) 22%,
+    transparent 46%
   );
 }
 
-/* Der helle Saum des Gehaeuses. Ohne ihn liest die Flaeche als Loch in
-   der Seite und nicht als Geraet. */
+/* Der helle Saum des Schirms. Ohne ihn liest die Flaeche als Loch im
+   Gehaeuse und nicht als leuchtende Scheibe. */
 .bdSaum {
   position: absolute;
   inset: 0;
   pointer-events: none;
   border-radius: inherit;
   box-shadow:
-    0 0 0 1px rgba(var(--st-ton), 0.2) inset,
-    0 0 44px -6px rgba(var(--st-ton), 0.26) inset;
+    0 0 0 1px rgba(var(--st-ton), 0.22) inset,
+    0 0 46px -6px rgba(var(--st-ton), 0.24) inset;
 }
 
-.bdHals {
-  width: 26px;
-  height: 42px;
-  border-inline: 1px solid var(--line-2);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.085),
-    rgba(255, 255, 255, 0.025)
-  );
-}
-
+/* Der Fusz. Eine flache Platte, auf der das Gehaeuse steht. Ein Hals
+   dazwischen ist entfallen: bei einem Schirm im Hochformat sitzt die
+   Elektronik im Gehaeuse selbst, und eine Stele auf duennem Stiel saehe
+   aus wie ein Bildschirm auf einem Schreibtisch. */
 .bdFuss {
-  width: 138px;
-  height: 10px;
-  border: 1px solid var(--line-2);
+  position: relative;
+  width: min(196px, 58%);
+  height: 12px;
+  border: 1px solid var(--line);
   border-top: 0;
-  border-radius: 3px 3px 5px 5px;
+  border-radius: 2px 2px 7px 7px;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.09),
-    rgba(255, 255, 255, 0.02)
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0.03)
   );
+  /* Der Schatten unter der Platte. Ohne ihn schwebt die Stele, mit ihm
+     steht sie auf etwas. */
+  box-shadow: 0 11px 24px -10px rgba(0, 0, 0, 0.9);
 }
 
-/* Drei Lichtscheine uebereinander, je einer in der Farbe eines Bildes.
+/* Vier Lichtscheine uebereinander, je einer in der Farbe eines Spots.
    Umgeblendet wird ueber die Deckkraft, denn eine Farbe laeszt sich
-   nicht auf dem Setzer bewegen, eine Deckkraft schon. Die drei Toene
-   sind an den hellsten Feldern der drei Aufnahmen abgenommen. */
+   nicht auf dem Setzer bewegen, eine Deckkraft schon. Die vier Toene
+   sind an den hellsten Feldern der vier Spots abgenommen.
+   Der Schein steht in zwei Lagen: ein enger, heller Kern gleich unter
+   dem Geraet und ein weiter, leiser Hof darum. Eine einzelne Lage sah
+   entweder wie ein Fleck oder wie gar nichts aus. */
 .bdBoden {
   position: absolute;
   left: 50%;
-  bottom: -34px;
+  bottom: -46px;
   z-index: 0;
-  width: 128%;
-  height: 190px;
+  width: 150%;
+  height: 260px;
   transform: translateX(-50%);
   pointer-events: none;
 }
@@ -2231,11 +2452,9 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  background: radial-gradient(
-    44% 56% at 50% 28%,
-    rgba(var(--ton), 0.32),
-    transparent 72%
-  );
+  background:
+    radial-gradient(26% 32% at 50% 22%, rgba(var(--ton), 0.44), transparent 74%),
+    radial-gradient(56% 64% at 50% 32%, rgba(var(--ton), 0.17), transparent 76%);
   transition: opacity 1.1s var(--ease-out-expo);
 }
 
@@ -2306,6 +2525,7 @@
   .soZaehler,
   .soKurve,
   .bdBild,
+  .bdKarte,
   .bdSchein {
     transition-duration: 0.001s;
     transition-delay: 0s;
@@ -2416,13 +2636,149 @@
      freie Flanke, in die eine Buehne hineinragen koennte, und der
      Beitrag im Hochformat wuerde ueber die volle Breite fast zwei
      Bildhoehen hoch. */
-  .strand[data-lage="oben"] .strandStage,
-  .strand[data-lage="rechts"] .strandStage {
+  .strand[data-lage="oben"] .strandStage {
     width: 100%;
   }
 
-  .strand[data-lage="rechts"] .soPhone {
-    width: min(200px, 54vw);
+  /* Der Beitrag UND die Blaetter dahinter schrumpfen gemeinsam. Standen
+     die Blaetter weiter auf 230 Bildpunkten, ragten sie rechts unter dem
+     Beitrag hervor und sahen aus wie ein Versatzfehler. */
+  .soPhone,
+  .soBlatt {
+    width: 168px;
+  }
+
+  /* Bei 253 Bildpunkten Buehne und 168 fuer den Beitrag bleiben 85 fuer
+     den Innenabstand. Die Taefelchen sind 118 breit und ragen damit um
+     33 Bildpunkte ueber den Beitrag, so wie am Schreibtisch auch. */
+  .soBuehne {
+    padding-left: 82px;
+  }
+
+  .soZaehler {
+    padding: 10px 12px;
+    gap: 5px;
+  }
+
+  .soZaehlerWert {
+    font-size: 22px;
+  }
+
+  .soKurve {
+    width: 118px;
+    padding: 10px 11px 8px;
+  }
+
+  .soKurveFeld {
+    height: 32px;
+  }
+
+  /* DAS BROWSERFENSTER WIRD AUF DEM TELEFON HOEHER STATT BREITER. Bei
+     253 Bildpunkten Breite lieszen 16 zu 9 nur 104 Bildpunkte Inhalt
+     uebrig, und darin war weder das Formular noch die Bestaetigung zu
+     lesen. Mit 5 zu 4 bleiben 170. */
+  .wbFrame {
+    aspect-ratio: 5 / 4;
+    border-radius: 13px;
+  }
+
+  .wbChrome {
+    height: 32px;
+    padding-inline: 11px;
+  }
+
+  .wbAddr {
+    height: 18px;
+    margin-left: 9px;
+    font-size: 9.5px;
+  }
+
+  .wbView {
+    height: calc(100% - 32px);
+  }
+
+  .wbSchirm {
+    gap: 10px;
+    padding: 12px 13px 13px;
+  }
+
+  .wbSchirm[data-mitte] {
+    gap: 12px;
+  }
+
+  /* Auf dem schmalen Fenster steht der Kontaktbereich einspaltig, und
+     die drei Wege entfallen. Zwei Spalten von je 100 Bildpunkten tragen
+     weder Zeile noch Feld. */
+  .wbKontakt {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .wbWege {
+    display: none;
+  }
+
+  .wbForm {
+    gap: 7px;
+    padding: 11px 11px 12px;
+  }
+
+  .wbFeld {
+    height: 18px;
+    border-radius: 5px;
+  }
+
+  .wbFeld[data-gross] {
+    height: 30px;
+  }
+
+  .wbKnopf {
+    padding: 7px 13px;
+    font-size: 10px;
+  }
+
+  .wbZeiger {
+    left: 62px;
+    bottom: 18px;
+    width: 13px;
+    height: 15px;
+  }
+
+  .wbOk {
+    padding: 9px 14px;
+    font-size: 11px;
+  }
+
+  .wbHeroKnopf {
+    width: 62px;
+    height: 20px;
+    margin-top: 6px;
+  }
+
+  .wbMarke {
+    width: 16px;
+    height: 16px;
+  }
+
+  .wbNavKnopf {
+    width: 38px;
+    height: 15px;
+  }
+
+  .wbKarte {
+    padding: 10px 9px;
+    gap: 6px;
+  }
+
+  .wbKarteZeichen {
+    width: 16px;
+    height: 16px;
+    margin-bottom: 2px;
+  }
+
+  .wbZeile,
+  .wbZeileLeise {
+    height: 5px;
   }
 
   /* Eine Spalte statt zweier. Bei rund 300 Bildpunkten Schirmbreite
@@ -2571,7 +2927,7 @@
   }
 }
 
-/* --------------------------------------------------- S4 · Showcase */
+/* --------------------------------------------------- S5 · Referenzen */
 
 .showcase {
   position: relative;
@@ -2597,13 +2953,20 @@
 }
 
 .scIntro {
-  max-width: 46ch;
+  max-width: 48ch;
   padding-bottom: 4px;
 }
 
+/* Die Buehne nimmt die ganze Breite und laeuft bewusst aus der Schale
+   heraus. Die Perspektive sitzt hier und nicht am Rahmen, damit alle
+   vier Fenster auf DENSELBEN Fluchtpunkt drehen. Steht sie am Rahmen,
+   hat jeder seinen eigenen, und die Reihe faellt in vier Richtungen
+   auseinander. */
 .scViewport {
   position: relative;
   width: 100%;
+  perspective: 1800px;
+  perspective-origin: 50% 50%;
 }
 
 .scTrack {
@@ -2611,6 +2974,7 @@
   display: flex;
   align-items: flex-start;
   gap: 40px;
+  transform-style: preserve-3d;
   will-change: transform;
 }
 
@@ -2623,16 +2987,113 @@
 .scItem {
   --t: 1;
   --g: 1;
+  --a: 0;
   --py: 0;
   flex: 0 0 auto;
   width: var(--frame-w);
-  opacity: calc(0.56 + 0.44 * var(--t));
 }
 
-.scItem .bf {
-  transform: scale(calc(0.94 + 0.06 * var(--t)));
+/* Der Link traegt die Tiefe und nicht der Rahmen. So bewegt sich die
+   Beschriftung mit dem Fenster, statt daneben stehen zu bleiben, und
+   der Fokusring liegt um das ganze Ziel. */
+.scLink {
+  display: block;
+  text-decoration: none;
+  transform: perspective(1800px) rotateY(calc(var(--a) * -7deg))
+    scale(calc(0.9 + 0.1 * var(--t)));
   transform-origin: 50% 50%;
-  box-shadow: 0 0 80px rgba(124, 106, 255, calc(0.36 * var(--g)));
+  opacity: calc(0.62 + 0.38 * var(--t));
+  transition:
+    opacity 0.4s var(--ease-out-expo),
+    filter 0.4s var(--ease-out-expo);
+  will-change: transform;
+}
+
+.scLink:focus-visible {
+  outline: 2px solid var(--acc-lav);
+  outline-offset: 12px;
+  border-radius: 20px;
+}
+
+/* Der Rahmen. Haarlinie, Radius 16, Kopfleiste mit der echten Adresse.
+   Der violette Schein gehoert dem Fenster in der Mitte und macht ohne
+   ein Wort klar, welches gerade dran ist. */
+.scFrame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.028);
+  box-shadow:
+    0 34px 80px -36px rgba(0, 0, 0, 0.95),
+    0 0 80px rgba(124, 106, 255, calc(0.34 * var(--g)));
+}
+
+.scBar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding-inline: 16px;
+  border-bottom: 1px solid var(--line-2);
+  background: rgba(255, 255, 255, 0.024);
+}
+
+.scDot {
+  flex: 0 0 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(244, 244, 246, 0.16);
+}
+
+/* DIE ADRESSE STEHT DA, WEIL SIE DER BELEG IST. Ein leerer Balken macht
+   aus der Aufnahme eine Abbildung, der Name macht daraus eine Referenz,
+   die man selbst nachsehen kann. */
+.scAddr {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 1 auto;
+  min-width: 0;
+  height: 22px;
+  margin-left: 14px;
+  padding-inline: 10px;
+  border-radius: 6px;
+  background: rgba(244, 244, 246, 0.055);
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scAddr svg {
+  flex: 0 0 11px;
+  width: 11px;
+  height: 11px;
+}
+
+.scOeffnen {
+  margin-left: auto;
+  padding-left: 12px;
+  line-height: 0;
+  color: var(--ink-3);
+  transition:
+    color 0.4s var(--ease-out-expo),
+    transform 0.4s var(--ease-out-expo);
+}
+
+.scOeffnen svg {
+  width: 15px;
+  height: 15px;
+}
+
+.scLink:hover .scOeffnen {
+  color: var(--ink);
+  transform: translate3d(2px, -2px, 0);
 }
 
 .scShot {
@@ -2641,12 +3102,15 @@
   overflow: hidden;
 }
 
+/* Der Versatz im Rahmen. Er ist klein gehalten, weil die Aufnahme
+   unveraendert bleiben soll; sechs Prozent Ueberhoehe reichen fuer den
+   Weg und schneiden kaum etwas ab. */
 .scShotInner {
   position: absolute;
   left: 0;
   right: 0;
-  top: -4%;
-  height: 108%;
+  top: -3%;
+  height: 106%;
   transform: translate3d(0, calc(var(--py, 0) * 1px), 0);
   will-change: transform;
 }
@@ -2656,16 +3120,40 @@
   object-position: 50% 0%;
 }
 
+/* Name und Branche. Zwei Angaben, mehr braucht es nicht; der Rest steht
+   auf der verlinkten Seite selbst. */
 .scCaption {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 26px;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 24px;
   padding-inline: 2px;
 }
 
-.scCaptionBody {
-  max-width: 46ch;
+.scName {
+  color: var(--ink);
+}
+
+.scKind {
+  position: relative;
+  padding-left: 13px;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+.scKind::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.52em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--acc-lav);
+  opacity: calc(0.25 + 0.75 * var(--g));
 }
 
 .scRail {
@@ -2682,6 +3170,10 @@
   transform-origin: 0 50%;
   transform: scaleX(var(--p, 0));
   opacity: 0.85;
+}
+
+.scHint {
+  margin-top: 16px;
 }
 
 /* Ruhende Reihe mit Scrollbalken. Gilt mobil und bei reduzierter Bewegung. */
@@ -2707,7 +3199,11 @@
   .showcase {
     height: 300vh;
     padding-block: 0;
-    --frame-h: min(46vh, 460px);
+    /* Die Obergrenze steht bei 560 und nicht mehr bei 460. Sie greift
+       erst oberhalb von rund 1000 Bildpunkten Schirmhoehe, denn darunter
+       ist 46vh der kleinere Wert. Auf einem hohen Schirm blieben mit 460
+       ueber 400 Bildpunkte unter der Leiste leer. */
+    --frame-h: min(46vh, 560px);
     --frame-w: min(60vw, calc(var(--frame-h) * 1.6));
   }
 
@@ -2715,7 +3211,7 @@
     height: 100vh;
     justify-content: center;
     overflow: hidden;
-    padding-block: 88px 56px;
+    padding-block: 84px 48px;
   }
 
   .scViewport {
@@ -2745,7 +3241,25 @@
   }
 
   .scCaption {
-    margin-top: 20px;
+    margin-top: 18px;
+  }
+
+  /* Auf dem Telefon dreht nichts. Eine Drehung um die Hochachse
+     verlangt Tiefe, und die gibt es in einer Reihe, die man mit dem
+     Daumen schiebt, nicht. */
+  .scLink {
+    transform: scale(calc(0.96 + 0.04 * var(--t)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scLink {
+    transform: none;
+    opacity: 1;
+  }
+
+  .scShotInner {
+    transform: none;
   }
 }
 

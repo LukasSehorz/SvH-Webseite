@@ -83,30 +83,54 @@ function useScrollStep(
 /*  Schiene zwischen zwei Schritten                                    */
 /* ------------------------------------------------------------------ */
 
-function Rail({ id, lit }: Readonly<{ id: string; lit: boolean }>) {
+/**
+ * Die Schiene zwischen zwei Schritten.
+ *
+ * Sie traegt ihren Verlauf im Koordinatenraum der Zeichnung, nicht im
+ * Raum des einzelnen Strichs. Ein waagerechter Strich hat keine Hoehe,
+ * und ein Verlauf, der sich nach dem Strich richtet, faellt darin in
+ * sich zusammen und wird grau.
+ */
+function Rail({ id, index, lit }: Readonly<{ id: string; index: number; lit: boolean }>) {
+  const grad = `${id}-rail-${index}`;
   return (
     <div className="pp-rail" aria-hidden="true">
       <svg className="pp-rail-art" viewBox="0 0 56 12" fill="none">
-        <path d="M6 6H44" stroke="rgba(255,255,255,.13)" />
+        <defs>
+          <linearGradient
+            id={grad}
+            gradientUnits="userSpaceOnUse"
+            x1={4}
+            y1={0}
+            x2={50}
+            y2={0}
+          >
+            <stop offset="0%" stopColor="#5B8CFF" />
+            <stop offset="52%" stopColor="#7C6AFF" />
+            <stop offset="100%" stopColor="#B9A5FF" />
+          </linearGradient>
+        </defs>
+        <path d="M5 6H43" stroke="rgba(255,255,255,.14)" strokeWidth={1.2} />
         <path
-          d="M40 1.6l4.4 4.4-4.4 4.4"
-          stroke="rgba(255,255,255,.13)"
+          d="M39 1.4l4.8 4.6-4.8 4.6"
+          stroke="rgba(255,255,255,.14)"
+          strokeWidth={1.2}
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <motion.path
-          d="M6 6H44"
-          stroke={`url(#${id}-ramp)`}
-          strokeWidth={1.4}
+          d="M5 6H43"
+          stroke={`url(#${grad})`}
+          strokeWidth={1.6}
           strokeLinecap="round"
           initial={false}
           animate={{ pathLength: lit ? 1 : 0, opacity: lit ? 1 : 0 }}
           transition={{ duration: 0.7, ease: EASE }}
         />
         <motion.path
-          d="M40 1.6l4.4 4.4-4.4 4.4"
-          stroke={`url(#${id}-ramp)`}
-          strokeWidth={1.4}
+          d="M39 1.4l4.8 4.6-4.8 4.6"
+          stroke={`url(#${grad})`}
+          strokeWidth={1.6}
           strokeLinecap="round"
           strokeLinejoin="round"
           initial={false}
@@ -292,9 +316,13 @@ export default function ProcessPanel() {
           </svg>
 
           <div className="pp-inner">
-            <p className="t-label pp-label">{processCopy.label}</p>
-            <h2 className="t-h1 pp-title">{processCopy.title}</h2>
-            <p className="t-body-lg pp-intro">{processCopy.intro}</p>
+            <div className="pp-head">
+              <div>
+                <p className="t-label pp-label">{processCopy.label}</p>
+                <h2 className="t-h1 pp-title">{processCopy.title}</h2>
+              </div>
+              <p className="t-body-lg pp-intro">{processCopy.intro}</p>
+            </div>
 
             <div
               className="pp-cards"
@@ -309,7 +337,11 @@ export default function ProcessPanel() {
               {processCopy.steps.map((step, index) => (
                 <Fragment key={step.n}>
                   {index > 0 ? (
-                    <Rail id={uid} lit={!reduced ? active >= index : true} />
+                    <Rail
+                      id={uid}
+                      index={index}
+                      lit={reduced ? true : active >= index}
+                    />
                   ) : null}
                   <StepCard
                     step={step}
@@ -383,9 +415,18 @@ export default function ProcessPanel() {
           max-width: 17ch;
         }
 
+        /* Breit steht der Satz neben der Ueberschrift, damit die rechte
+           Haelfte des Feldes nicht leer bleibt. */
+        .process-panel .pp-head {
+          display: grid;
+          grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.88fr);
+          gap: 24px 64px;
+          align-items: end;
+        }
+
         .process-panel .pp-intro {
-          margin-top: 20px;
-          max-width: 52ch;
+          max-width: 48ch;
+          padding-bottom: 8px;
           color: rgba(255, 255, 255, 0.7);
         }
 
@@ -513,6 +554,18 @@ export default function ProcessPanel() {
           display: block;
           width: 100%;
           height: clamp(100px, 9vw, 210px);
+        }
+
+        @media (max-width: 1199px) {
+          .process-panel .pp-head {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 20px;
+          }
+
+          .process-panel .pp-intro {
+            padding-bottom: 0;
+            max-width: 54ch;
+          }
         }
 
         @media (max-width: 1023px) {

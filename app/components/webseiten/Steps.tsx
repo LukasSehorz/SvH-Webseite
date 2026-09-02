@@ -82,13 +82,23 @@ export default function Steps({ items }: Readonly<{ items: readonly Schritt[] }>
               <li
                 key={it.head}
                 className={`${s.stepItem} ${i === aktiv ? s.stepItemOn : ""}`}
-                style={{ opacity: i === aktiv ? 1 : 0.34 }}
+                /* Der aktive Schritt steht in Weisz, die uebrigen bei
+                   0,45. Sie standen bei 0,34 und waren damit auf dem
+                   fertigen Schirm kaum noch als Schrift zu erkennen. */
+                style={{ opacity: i === aktiv ? 1 : 0.45 }}
                 aria-current={i === aktiv ? "step" : undefined}
               >
                 <span className={s.stepDot} />
                 <span className={s.stepNum}>{String(i + 1).padStart(2, "0")}</span>
                 <h3 className={s.stepHead}>{it.head}</h3>
-                <p className={s.stepBody}>{it.body}</p>
+                {/* Der Satz gehoert zum aktiven Schritt. Vier Saetze
+                    untereinander in gedaempftem Grau kann niemand lesen
+                    und sie nehmen trotzdem den ganzen Platz. */}
+                <div className={s.stepBodyWrap}>
+                  <div>
+                    <p className={s.stepBody}>{it.body}</p>
+                  </div>
+                </div>
               </li>
             ))}
           </ol>

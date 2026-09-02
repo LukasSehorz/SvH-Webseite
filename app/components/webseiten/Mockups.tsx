@@ -173,21 +173,20 @@ function ArtTempo() {
           </span>
         </div>
 
+        {/* Die Seite steht vollstaendig, jeder Balken ist gesetzt. Ein
+            zweiter, halb geladener Vergleich stand hier einmal darunter
+            und war auf dem fertigen Schirm so blass, dass das Fenster
+            unten leer aussah. */}
         <div className={s.colFlex} style={{ gap: 10 }}>
           <Bar w="60%" tone="strong" />
           <span className={s.block} style={{ height: 62 }} />
           <Bar w="88%" />
           <Bar w="70%" />
-        </div>
-
-        {/* Darunter dieselbe Seite ohne unsere Arbeit. Sie steht erst zu
-            einem Drittel und hat nur graue Kaesten. */}
-        <span className={s.loadTrack} style={{ marginTop: 8 }}>
-          <span className={`${s.loadFill} ${s.loadFillShort}`} />
-        </span>
-        <div className={s.colFlex} style={{ gap: 10, opacity: 0.4 }}>
-          <Bar w="40%" tone="soft" />
-          <span className={s.block} style={{ height: 26 }} />
+          <div className={s.rowFlex} style={{ marginTop: 4, alignItems: "stretch" }}>
+            <span className={s.block} style={{ height: 34, flex: "1 1 0" }} />
+            <span className={s.block} style={{ height: 34, flex: "1 1 0" }} />
+            <span className={s.block} style={{ height: 34, flex: "1 1 0" }} />
+          </div>
         </div>
       </div>
     </Chrome>

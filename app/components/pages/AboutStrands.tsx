@@ -54,6 +54,28 @@ function bezier(a: number, b: number, c: number, d: number, t: number): number {
   return u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * d;
 }
 
+/**
+ * Verbindungsgrad aus dem Fortschritt des Scrubs.
+ *
+ * Die ersten 42 Hundertstel des Weges halten die drei Bahnen getrennt.
+ * Der Wert ist gemessen und nicht geschaetzt: bei einem Schirm von 900
+ * Bildpunkten Hoehe steht die Buehne genau dann zum ersten Mal
+ * vollstaendig im Bild, und erst ab da beginnt das Zusammenlaufen. Ohne
+ * diese Ruhe waere der Ausgangszustand nur zu sehen, solange die Buehne
+ * noch halb unter der Bildkante steht, denn ein reines exponentielles
+ * Ausklingen nimmt gleich zu Beginn die meiste Strecke.
+ *
+ * Danach klingt die Bewegung aus, und zwar in beide Scrollrichtungen
+ * gleich, weil der Wert allein am Fortschritt haengt.
+ */
+const HOLD = 0.42;
+
+function mergeOf(progress: number): number {
+  const raw = (progress - HOLD) / (1 - HOLD);
+  const clamped = raw < 0 ? 0 : raw > 1 ? 1 : raw;
+  return 1 - Math.pow(1 - clamped, 3);
+}
+
 export default function AboutStrands() {
   const reduced = useSafeReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
@@ -130,10 +152,8 @@ export default function AboutStrands() {
     const SAMPLES = 72;
 
     const draw = () => {
-      /* Exponentielles Ausklingen. Der Weg nimmt zu Beginn viel Strecke
-         und laeuft am Ende ruhig aus. */
-      const raw = mergeRef.current;
-      const merge = 1 - Math.pow(1 - raw, 3);
+      /* Der Wert kommt bereits fertig gerechnet aus dem Scrub. */
+      const merge = mergeRef.current;
 
       ctx.clearRect(0, 0, width, height);
 
@@ -236,6 +256,12 @@ export default function AboutStrands() {
     /* ------------------------------------------------- ruhendes Bild */
 
     if (reduced) {
+      /* Der Verbindungsgrad wird hier gesetzt und nicht erst im Scrub.
+         Beide Effekte haengen an derselben Einstellung, und dieser hier
+         laeuft zuerst; ohne die Zeile zeichnete das ruhende Bild die drei
+         getrennten Bahnen und bekaeme danach keinen zweiten Anstrich. */
+      mergeRef.current = 1;
+
       const paint = () => {
         resize();
         draw();
@@ -329,16 +355,18 @@ export default function AboutStrands() {
 
     const trigger = ScrollTrigger.create({
       trigger: stage,
-      start: "top 82%",
-      end: "bottom 72%",
+      start: "top 90%",
+      end: "bottom 60%",
       scrub: 0.5,
       onUpdate: (self) => {
-        mergeRef.current = self.progress;
-        /* Der Name am Sammelpunkt erscheint erst, wenn dort auch etwas
-           zusammenlaeuft. Die Schwelle liegt bei einem Drittel. */
+        const merge = mergeOf(self.progress);
+        mergeRef.current = merge;
+        /* Der Name am Fusz erscheint erst, wenn dort auch etwas
+           zusammenlaeuft, und steht voll, sobald der Strang einer ist. */
         if (target) {
-          const eased = Math.max(0, (self.progress - 0.34) / 0.5);
-          target.style.opacity = String(Math.min(1, eased));
+          target.style.opacity = String(
+            Math.min(1, Math.max(0, (merge - 0.6) / 0.35)),
+          );
         }
       },
     });
@@ -416,12 +444,15 @@ export default function AboutStrands() {
           max-width: var(--measure);
         }
 
+        /* Die Buehne waechst mit der verbreiterten Schale mit. Bei 1080
+           Bildpunkten stand sie auf einem Schirm von 2560 als kleine
+           Insel in viel schwarzer Flaeche. */
         .about-strands .strands-stage {
           position: relative;
           width: 100%;
-          max-width: 1080px;
+          max-width: 1360px;
           margin: clamp(48px, 6vw, 84px) auto 0;
-          height: clamp(340px, 34vw, 460px);
+          height: clamp(340px, 26vw, 520px);
         }
 
         .about-strands .strands-canvas {

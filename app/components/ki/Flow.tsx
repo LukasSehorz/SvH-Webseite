@@ -373,7 +373,8 @@ export default function KiFlow() {
         }
 
         .ki-flow .ki-flow-title {
-          max-width: 12ch;
+          max-width: 15ch;
+          text-wrap: balance;
         }
 
         .ki-flow .ki-flow-intro {
@@ -387,12 +388,17 @@ export default function KiFlow() {
         /* Die Schiene laeuft durch die Ziffernspalte und fuellt sich mit
            jedem erreichten Schritt. Sie zeigt, dass die drei Schritte eine
            Reihe sind und keine Auswahl. */
+        /* Die Schiene stand auf einem Bildpunkt Breite. Gemessen war der
+           gefuellte Teil zwar da, auf dem Schirm aber nicht als Farbe zu
+           erkennen. Zwei Bildpunkte und ein leiser Schein machen den
+           Fortschritt sichtbar, ohne dass die Linie laut wird. */
         .ki-flow .ki-flow-rail {
           position: absolute;
-          left: 25px;
+          left: 24px;
           top: 0;
           bottom: 0;
-          width: 1px;
+          width: 2px;
+          border-radius: 2px;
           background: var(--line);
           overflow: hidden;
         }
@@ -401,6 +407,7 @@ export default function KiFlow() {
           position: absolute;
           inset: 0;
           background: linear-gradient(180deg, #5b8cff, #7c6aff 52%, #b9a5ff);
+          box-shadow: 0 0 12px rgba(124, 106, 255, 0.6);
           transform-origin: top center;
           transition: transform 0.9s var(--ease-out-expo);
         }
@@ -492,21 +499,21 @@ export default function KiFlow() {
           height: 100%;
         }
 
+        /* Wie bei den Kacheln sitzt der helle Kern des Verlaufs innerhalb
+           der beschnittenen Flaeche, sonst bleibt vom Farbnebel nichts
+           uebrig. */
         .ki-flow .ki-flow-mist {
           position: absolute;
-          left: 10%;
-          right: 10%;
-          bottom: -40%;
-          height: 92%;
+          inset: -16% -10% -20%;
           border-radius: 9999px;
           background: radial-gradient(
-            56% 60% at 50% 100%,
-            rgba(124, 106, 255, 0.4),
-            transparent 72%
+            48% 44% at 50% 50%,
+            rgba(124, 106, 255, 0.52),
+            transparent 74%
           );
-          filter: blur(40px);
+          filter: blur(44px);
           opacity: 0;
-          transform: translateY(12%);
+          transform: scale(0.94);
           transition:
             opacity 0.9s var(--ease-out-expo),
             transform 0.9s var(--ease-out-expo);
@@ -515,7 +522,7 @@ export default function KiFlow() {
 
         .ki-flow .ki-flow-step[data-on="true"] .ki-flow-mist {
           opacity: 1;
-          transform: translateY(0);
+          transform: scale(1);
         }
 
         @media (max-width: 1023px) {
@@ -549,6 +556,15 @@ export default function KiFlow() {
             grid-column: 2;
             margin-top: 22px;
             border-radius: 16px;
+          }
+        }
+
+        /* Auf schmalen Geraeten nimmt die Buehne die volle Breite. In der
+           eingerueckten Spalte waren die acht Knoten sonst so klein, dass
+           man ihre Zeichen nicht mehr erkannt hat. */
+        @media (max-width: 640px) {
+          .ki-flow .ki-flow-stage {
+            grid-column: 1 / -1;
           }
         }
 

@@ -460,11 +460,62 @@ button {
   padding-right: 8px;
 }
 
+.manifesto-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
 .manifesto-paragraphs {
   display: flex;
   flex-direction: column;
   gap: 22px;
   margin-top: 28px;
+}
+
+/* Die Legende traegt die Beschriftung erst dort, wo die Kastenlabels in der
+   Grafik zu klein werden. Auf breiten Schirmen bleibt sie aus. */
+.manifesto-legend {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.manifesto-legend li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.manifesto-swatch {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--grad);
+}
+
+.manifesto-swatch[data-tone="cool"] {
+  background: rgba(244, 244, 246, 0.5);
+}
+
+.manifesto-swatch[data-tone="gap"] {
+  height: 13px;
+  border-radius: 3px;
+  background: linear-gradient(
+    180deg,
+    rgba(185, 165, 255, 0.34),
+    rgba(91, 140, 255, 0.07)
+  );
 }
 
 @media (max-width: 1023px) {
@@ -477,6 +528,34 @@ button {
     order: 2;
     align-self: start;
     padding-right: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .manifesto-boxes {
+    display: none;
+  }
+
+  .manifesto-legend {
+    display: flex;
+  }
+
+  /* Ohne die Kastenlabels bleibt im Bild rechts ein Fuenftel leer. Die
+     Zeichnung wird darum breiter gezogen und der leere Rand beschnitten,
+     damit die Kurven die volle Breite des Geraets nutzen. */
+  .manifesto-chart {
+    overflow: hidden;
+  }
+
+  .manifesto-svg {
+    width: 126%;
+    overflow: hidden;
+  }
+
+  /* Die Beschriftung steht in Nutzereinheiten. Bei diesem Masztab sind 15
+     rund 10 Bildpunkte auf dem Schirm. */
+  .manifesto-axis {
+    font-size: 15px;
   }
 }
 

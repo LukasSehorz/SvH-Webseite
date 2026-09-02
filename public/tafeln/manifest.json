@@ -1,0 +1,94 @@
+{
+  "ort-restaurant": {
+    "bildUrl": "https://tempfile.aiquickdraw.com/a2/79abee80ae60c6ce8a987045d2216f56_1788361775785.png",
+    "taskId": "79abee80ae60c6ce8a987045d2216f56",
+    "breite": 2048,
+    "hoehe": 1152,
+    "prompt": "A slim modern freestanding digital display stele, about the height of a person, narrow matte-black frame, portrait screen, standing on a small flat base. The screen glows a soft abstract blue-violet gradient with gentle light streaks and no content on it. It is the brightest thing in the frame and casts a soft blue-violet pool of light on the floor around it. It stands in an upscale restaurant in the evening beside the entrance to the dining room, warm candle points far in the background kept very dim, tables and glasses out of focus. Cinematic photograph, very dark environment, near-black background #050507, the only light sources are cool blue to blue-violet (#5b8cff, #7c6aff, #b9a5ff). Premium, calm, editorial. Absolutely no text, no letters, no numbers, no logos, no brand names, no watermarks, no readable signage. No faces looking at the camera. Shallow depth of field, soft bloom around light sources, fine film grain.",
+    "erzeugt": "2026-09-02T15:09:38.238Z",
+    "modell": "gpt-image-2-text-to-image"
+  },
+  "ort-gym": {
+    "bildUrl": "https://tempfile.aiquickdraw.com/h/957d4c05d2f6fc5f87ed00808e269713_1788361911.png",
+    "taskId": "957d4c05d2f6fc5f87ed00808e269713",
+    "breite": 2688,
+    "hoehe": 1520,
+    "prompt": "A slim modern freestanding digital display stele, about the height of a person, narrow matte-black frame, portrait screen, standing on a small flat base. The screen glows a soft abstract blue-violet gradient with gentle light streaks and no content on it. It is the brightest thing in the frame and casts a soft blue-violet pool of light on the floor around it. It stands in a modern gym at night near a rack of dumbbells and a treadmill, equipment out of focus in the background, a blurred person exercising far away. Cinematic photograph, very dark environment, near-black background #050507, the only light sources are cool blue to blue-violet (#5b8cff, #7c6aff, #b9a5ff). Premium, calm, editorial. Absolutely no text, no letters, no numbers, no logos, no brand names, no watermarks, no readable signage. No faces looking at the camera. Shallow depth of field, soft bloom around light sources, fine film grain.",
+    "erzeugt": "2026-09-02T15:11:55.556Z",
+    "modell": "gpt-image-2-text-to-image"
+  },
+  "ort-event": {
+    "bildUrl": "https://tempfile.aiquickdraw.com/h/b1632d9db04c11a30d5f56e75e327e7e_1788361937.png",
+    "taskId": "b1632d9db04c11a30d5f56e75e327e7e",
+    "breite": 2688,
+    "hoehe": 1520,
+    "prompt": "A slim modern freestanding digital display stele, about the height of a person, narrow matte-black frame, portrait screen, standing on a small flat base. The screen glows a soft abstract blue-violet gradient with gentle light streaks and no content on it. It is the brightest thing in the frame and casts a soft blue-violet pool of light on the floor around it. It stands in the foyer of an evening event, a blurred crowd and stage light spill far in the background, polished floor reflecting the screen glow. Cinematic photograph, very dark environment, near-black background #050507, the only light sources are cool blue to blue-violet (#5b8cff, #7c6aff, #b9a5ff). Premium, calm, editorial. Absolutely no text, no letters, no numbers, no logos, no brand names, no watermarks, no readable signage. No faces looking at the camera. Shallow depth of field, soft bloom around light sources, fine film grain.",
+    "erzeugt": "2026-09-02T15:12:25.389Z",
+    "modell": "gpt-image-2-text-to-image"
+  },
+  "spot-gym": {
+    "bildUrl": "https://tempfile.aiquickdraw.com/a2/3b8848d0d41388a5db05bfebc77c4f69_1788361986359.png",
+    "taskId": "3b8848d0d41388a5db05bfebc77c4f69",
+    "breite": 1152,
+    "hoehe": 2048,
+    "prompt": "Advertising visual for a gym, portrait format, designed to run on a digital signage screen: a close, dramatic shot of a kettlebell and chalk dust in the air, rim-lit in electric blue, dark studio background, generous empty space in the lower third for a headline that will be added later. Cinematic photograph, very dark environment, near-black background #050507, the only light sources are cool blue to blue-violet (#5b8cff, #7c6aff, #b9a5ff). Premium, calm, editorial. Absolutely no text, no letters, no numbers, no logos, no brand names, no watermarks, no readable signage. No faces looking at the camera. Shallow depth of field, soft bloom around light sources, fine film grain.",
+    "erzeugt": "2026-09-02T15:13:10.520Z",
+    "modell": "gpt-image-2-text-to-image",
+    "videoUrl": "https://tempfile.aiquickdraw.com/v/5916aedd631713792cda469c6170032f_1788362495.mp4",
+    "videoTaskId": "5916aedd631713792cda469c6170032f",
+    "videoPrompt": "Slow cinematic loop: chalk dust drifts gently through the blue rim light, the kettlebell stays still, subtle light flicker. No text appears. Seamless, calm, 6 seconds.",
+    "videoErzeugt": "2026-09-02T15:21:46.273Z",
+    "videoModell": "veo3_fast"
+  },
+  "spot-restaurant": {
+    "bildUrl": "https://tempfile.aiquickdraw.com/a2/d977c0823edf0b9b39a3d130ae966c96_1788362027453.png",
+    "taskId": "d977c0823edf0b9b39a3d130ae966c96",
+    "breite": 1152,
+    "hoehe": 2048,
+    "prompt": "Advertising visual for a restaurant, portrait format, designed to run on a digital signage screen: a beautifully plated dish on dark slate, seen from above at a slight angle, steam rising, lit by cool blue-violet light with a faint warm highlight, generous empty space in the lower third for a headline. Cinematic photograph, very dark environment, near-black background #050507, the only light sources are cool blue to blue-violet (#5b8cff, #7c6aff, #b9a5ff). Premium, calm, editorial. Absolutely no text, no letters, no numbers, no logos, no brand names, no watermarks, no readable signage. No faces looking at the camera. Shallow depth of field, soft bloom around light sources, fine film grain.",
+    "erzeugt": "2026-09-02T15:13:50.663Z",
+    "modell": "gpt-image-2-text-to-image",
+    "videoUrl": "https://tempfile.aiquickdraw.com/v/e56796f16040723c41600f331e9e47a4_1788362524.mp4",
+    "videoTaskId": "e56796f16040723c41600f331e9e47a4",
+    "videoPrompt": "Slow cinematic loop: steam rises softly from the plated dish, the light breathes very slightly, nothing else moves. No text appears. Seamless, calm.",
+    "videoErzeugt": "2026-09-02T15:22:17.758Z",
+    "videoModell": "veo3_fast"
+  },
+  "spot-club": {
+    "bildUrl": "https://tempfile.aiquickdraw.com/h/566c03c7f71a8f64b527cb36e99662fe_1788362131.png",
+    "taskId": "566c03c7f71a8f64b527cb36e99662fe",
+    "breite": 1520,
+    "hoehe": 2688,
+    "prompt": "Advertising visual for a night club, portrait format, designed to run on a digital signage screen: haze, violet and blue light beams crossing, a blurred crowd with raised hands far below, generous empty space in the lower third for a headline. Cinematic photograph, very dark environment, near-black background #050507, the only light sources are cool blue to blue-violet (#5b8cff, #7c6aff, #b9a5ff). Premium, calm, editorial. Absolutely no text, no letters, no numbers, no logos, no brand names, no watermarks, no readable signage. No faces looking at the camera. Shallow depth of field, soft bloom around light sources, fine film grain.",
+    "erzeugt": "2026-09-02T15:15:40.729Z",
+    "modell": "gpt-image-2-text-to-image",
+    "videoUrl": "https://tempfile.aiquickdraw.com/v/1f19f1529e0ed3c35d55fc1c753ef4be_1788362492.mp4",
+    "videoTaskId": "1f19f1529e0ed3c35d55fc1c753ef4be",
+    "videoPrompt": "Slow cinematic loop: light beams sweep slowly through the haze, the crowd sways gently in the distance. No text appears. Seamless, calm.",
+    "videoErzeugt": "2026-09-02T15:21:36.418Z",
+    "videoModell": "veo3_fast"
+  },
+  "spot-event": {
+    "bildUrl": "https://tempfile.aiquickdraw.com/h/815365e0cbb95fe41b96ffb0a8fac701_1788362162.png",
+    "taskId": "815365e0cbb95fe41b96ffb0a8fac701",
+    "breite": 1520,
+    "hoehe": 2688,
+    "prompt": "Advertising visual for a local event, portrait format, designed to run on a digital signage screen: a string of small round lights hanging in the dark with soft blue-violet bokeh, a hint of a stage below, generous empty space in the lower third for a headline. Cinematic photograph, very dark environment, near-black background #050507, the only light sources are cool blue to blue-violet (#5b8cff, #7c6aff, #b9a5ff). Premium, calm, editorial. Absolutely no text, no letters, no numbers, no logos, no brand names, no watermarks, no readable signage. No faces looking at the camera. Shallow depth of field, soft bloom around light sources, fine film grain.",
+    "erzeugt": "2026-09-02T15:16:10.518Z",
+    "modell": "gpt-image-2-text-to-image",
+    "videoUrl": "https://tempfile.aiquickdraw.com/v/79192c7e5e5ef9c2dc28818482dc3700_1788362573.mp4",
+    "videoTaskId": "79192c7e5e5ef9c2dc28818482dc3700",
+    "videoPrompt": "Slow cinematic loop: the hanging lights sway very slightly, bokeh drifts, a soft pulse of light from the stage below. No text appears. Seamless, calm.",
+    "videoErzeugt": "2026-09-02T15:22:59.453Z",
+    "videoModell": "veo3_fast"
+  },
+  "ort-club": {
+    "bildUrl": "https://tempfile.aiquickdraw.com/a2/ef3816613dfcbacf90411b94ef59589a_1788362423103.png",
+    "taskId": "ef3816613dfcbacf90411b94ef59589a",
+    "breite": 2048,
+    "hoehe": 1152,
+    "prompt": "A slim modern freestanding digital display stele, about the height of a person, narrow matte-black frame, portrait screen, standing on a small flat base. The screen glows a soft abstract blue-violet gradient with gentle light streaks and no content on it. It is the brightest thing in the frame and casts a soft blue-violet pool of light on the floor around it. It stands in the lounge area of a nightclub, haze in the air, a few blurred silhouettes of guests in the background, subtle violet laser lines far away. Cinematic photograph, very dark environment, near-black background #050507, the only light sources are cool blue to blue-violet (#5b8cff, #7c6aff, #b9a5ff). Premium, calm, editorial. Absolutely no text, no letters, no numbers, no logos, no brand names, no watermarks, no readable signage. No faces looking at the camera. Shallow depth of field, soft bloom around light sources, fine film grain.",
+    "erzeugt": "2026-09-02T15:20:27.024Z",
+    "modell": "gpt-image-2-text-to-image"
+  }
+}
