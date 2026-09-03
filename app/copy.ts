@@ -753,11 +753,17 @@ export const contactPage = {
     fields: {
       name: "Ihr Name",
       company: "Unternehmen",
+      /* Branche und Mitarbeiterzahl hat der Auftraggeber am 03.09.2026
+         dazu verlangt, damit er vor dem Gespraech weisz, mit wem er es zu
+         tun hat. Beide sind freiwillig, damit die Huerde niedrig bleibt. */
+      industry: "Branche",
+      employees: "Zahl der Mitarbeiter",
       email: "E-Mail-Adresse",
       phone: "Telefon (optional)",
       topic: "Worum geht es?",
       message: "Ihre Nachricht",
     },
+    employeeOptions: ["1 bis 5", "6 bis 20", "21 bis 50", "51 bis 200", "Mehr als 200"],
     /* Dieselben Worte wie in Leiste und Fusszeile, damit der Besucher
        seine Leistung im Auswahlfeld sofort wiederfindet. */
     topics: [
@@ -793,6 +799,26 @@ export const contactPage = {
     email: "E-Mail",
     address: "Anschrift",
     hours: "Erreichbarkeit",
+  },
+  /* Die Worte in der E-Mail, die das Formular an den Auftraggeber
+     schickt. Sie stehen hier, damit die Mail dieselbe Sprache spricht wie
+     die Seite und an einer Stelle gepflegt wird. */
+  mail: {
+    brand: "SVH Consulting",
+    title: "Neue Anfrage über die Webseite",
+    subject: "Anfrage über die Webseite von",
+    none: "keine Angabe",
+    replyNote: "Antworten Sie einfach auf diese E-Mail, die Antwort geht an",
+    labels: {
+      name: "Name",
+      company: "Unternehmen",
+      industry: "Branche",
+      employees: "Mitarbeiter",
+      email: "E-Mail",
+      phone: "Telefon",
+      topic: "Thema",
+      message: "Nachricht",
+    },
   },
 };
 

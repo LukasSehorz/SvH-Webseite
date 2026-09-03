@@ -15,6 +15,7 @@
 
 import { NextResponse } from "next/server";
 import { company } from "../../content";
+import { betreff, htmlFassung, textFassung, type Anfrage } from "./format";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -24,15 +25,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
    Resend-Kontos senden. */
 const ABSENDER_VORGABE = "SVH Webseite <onboarding@resend.dev>";
 
-type Eingabe = {
-  name: string;
-  company: string;
-  email: string;
-  phone: string;
-  topic: string;
-  message: string;
-  website: string;
-};
+type Eingabe = Anfrage & { website: string };
 
 function lesen(daten: unknown): Eingabe {
   const d = (daten && typeof daten === "object" ? daten : {}) as Record<string, unknown>;
@@ -40,6 +33,8 @@ function lesen(daten: unknown): Eingabe {
   return {
     name: text("name", 120),
     company: text("company", 160),
+    industry: text("industry", 120),
+    employees: text("employees", 40),
     email: text("email", 200),
     phone: text("phone", 60),
     topic: text("topic", 80),
@@ -74,16 +69,6 @@ export async function POST(request: Request) {
   const empfaenger = process.env.ANFRAGE_EMPFAENGER || company.email;
   const absender = process.env.ANFRAGE_ABSENDER || ABSENDER_VORGABE;
 
-  const zeilen = [
-    `Name        ${eingabe.name}`,
-    `Unternehmen ${eingabe.company || "keine Angabe"}`,
-    `E-Mail      ${eingabe.email}`,
-    `Telefon     ${eingabe.phone || "keine Angabe"}`,
-    `Thema       ${eingabe.topic || "keine Angabe"}`,
-    "",
-    eingabe.message,
-  ];
-
   try {
     const antwort = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -95,8 +80,9 @@ export async function POST(request: Request) {
         from: absender,
         to: [empfaenger],
         reply_to: eingabe.email,
-        subject: `Anfrage über die Webseite von ${eingabe.name}`,
-        text: zeilen.join("\n"),
+        subject: betreff(eingabe),
+        text: textFassung(eingabe),
+        html: htmlFassung(eingabe),
       }),
     });
 

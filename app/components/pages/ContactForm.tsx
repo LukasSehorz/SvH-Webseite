@@ -21,6 +21,7 @@ import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
 import { contactPage } from "../../copy";
 import { company } from "../../content";
+import { betreff, textFassung, type Anfrage } from "../../api/anfrage/format";
 import { Reveal } from "../system/ui";
 
 const { form } = contactPage;
@@ -42,10 +43,7 @@ const CONSENT_LINK_WORD = "Datenschutzerklärung";
 
 type Status = "idle" | "sending" | "done" | "fallback" | "failure";
 
-type Eingabe = Record<
-  "name" | "company" | "email" | "phone" | "topic" | "message" | "website",
-  string
->;
+type Eingabe = Anfrage & { website: string };
 
 /**
  * Setzt die Einwilligungszeile aus copy.ts und verlinkt darin das Wort
@@ -109,23 +107,14 @@ function MailMark() {
 
 /**
  * Die Nachricht als mailto-Adresse, wenn der Versand ueber die Seite nicht
- * eingerichtet ist. Betreff und Zeilen entsprechen dem, was der Route
- * Handler verschicken wuerde, damit die Anfrage in beiden Wegen gleich
+ * eingerichtet ist. Betreff und Text kommen aus derselben Formatierung wie
+ * die Mail des Route Handlers, damit die Anfrage auf beiden Wegen gleich
  * ankommt.
  */
 function mailtoAdresse(eingabe: Eingabe): string {
-  const zeilen = [
-    `Name ${eingabe.name}`,
-    `Unternehmen ${eingabe.company || "keine Angabe"}`,
-    `E-Mail ${eingabe.email}`,
-    `Telefon ${eingabe.phone || "keine Angabe"}`,
-    `Thema ${eingabe.topic || "keine Angabe"}`,
-    "",
-    eingabe.message,
-  ];
-  const betreff = encodeURIComponent(`Anfrage über die Webseite von ${eingabe.name}`);
-  const text = encodeURIComponent(zeilen.join("\n"));
-  return `mailto:${company.email}?subject=${betreff}&body=${text}`;
+  const subject = encodeURIComponent(betreff(eingabe));
+  const body = encodeURIComponent(textFassung(eingabe));
+  return `mailto:${company.email}?subject=${subject}&body=${body}`;
 }
 
 export default function ContactForm() {
@@ -177,6 +166,8 @@ export default function ContactForm() {
     const eingabe: Eingabe = {
       name: read("name"),
       company: read("company"),
+      industry: read("industry"),
+      employees: read("employees"),
       email,
       phone: read("phone"),
       topic: read("topic"),
@@ -287,6 +278,34 @@ export default function ContactForm() {
                       name="company"
                       autoComplete="organization"
                     />
+                  </div>
+                </div>
+
+                <div className="anfrage-row">
+                  <div className="anfrage-field">
+                    <label className="t-label" htmlFor="anfrage-industry">
+                      {form.fields.industry}
+                    </label>
+                    <input
+                      type="text"
+                      id="anfrage-industry"
+                      name="industry"
+                      autoComplete="organization-title"
+                    />
+                  </div>
+
+                  <div className="anfrage-field">
+                    <label className="t-label" htmlFor="anfrage-employees">
+                      {form.fields.employees}
+                    </label>
+                    <select id="anfrage-employees" name="employees" defaultValue="">
+                      <option value="">{form.selectPlaceholder}</option>
+                      {form.employeeOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
