@@ -172,10 +172,19 @@ export default function KiTiles() {
             box-shadow 0.5s var(--ease-out-expo);
         }
 
+        /* Unter dem Zeiger leuchtet die Kachel sichtbar auf. Rahmen und
+           Schein in der Markenfarbe, damit man ohne Zweifel sieht, auf
+           welcher Kachel man steht; die helle Rahmenfarbe allein war dem
+           Auftraggeber zu leise. */
         .ki-tiles .kt-card:hover,
         .ki-tiles .kt-card:focus-visible {
-          border-color: rgba(244, 244, 246, 0.24);
+          border-color: rgba(124, 106, 255, 0.55);
+          background: #0e0d18;
           transform: translateY(-4px);
+          box-shadow:
+            0 0 0 1px rgba(124, 106, 255, 0.18),
+            0 18px 60px rgba(124, 106, 255, 0.16),
+            inset 0 0 48px rgba(124, 106, 255, 0.06);
         }
 
         .ki-tiles .kt-card:focus-visible {

@@ -111,22 +111,26 @@ function usePhase(
    Die Dauern stehen in Millisekunden und gehoeren zum jeweiligen
    Abschnitt, nicht zum Uebergang dorthin. Die Uebergangsdauern stehen
    im Blatt bei der jeweiligen Regel.
-   Die 2600 im siebten Abschnitt sind zugleich die Dauer der Fahrt im
+   Die 1700 im siebten Abschnitt sind zugleich die Dauer der Fahrt im
    Blatt. Wer eines von beiden aendert, aendert das andere mit, sonst
-   haelt die Seite mitten in der Bewegung an. */
+   haelt die Seite mitten in der Bewegung an.
+   Der Auftraggeber fand die erste Fassung mit 13,5 Sekunden je Runde zu
+   langsam, vor allem den Weg vom ersten Besuch bis zur Anfrage. Die
+   Runde dauert jetzt rund 10,5 Sekunden; die Ruhe am Ende bleibt, damit
+   die Anfrage auf dem Telefon lange genug zu lesen ist. */
 const WEB_TAKT = [
-  900, // 0. Ruhe. Das Suchfeld steht leer vor dem gedimmten Fenster.
-  1300, // 1. Das Suchwort tippt sich in das Feld.
-  900, // 2. Die Trefferliste klappt auf, und der erste Treffer leuchtet.
-  700, // 3. Der Zeiger faehrt auf den ersten Treffer.
-  260, // 4. Der Druck auf den Treffer.
-  900, // 5. Die Suche weicht, das Fenster tritt vor, die Gaeste laufen los.
-  2600, // 6. Die Fahrt durch die Seite, die Sterne leuchten nacheinander auf.
-  700, // 7. Halt am Formular, die Ortsmarke faellt auf die Karte.
-  950, // 8. Der Zeiger faehrt zum Knopf.
-  340, // 9. Der Druck auf den Knopf.
-  1500, // 10. Der Termin ist bestaetigt.
-  2400, // 11. Die Anfrage steht auf dem Telefon, und der Zaehler springt um eins.
+  700, // 0. Ruhe. Das Suchfeld steht leer vor dem gedimmten Fenster.
+  1000, // 1. Das Suchwort tippt sich in das Feld.
+  700, // 2. Die Trefferliste klappt auf, und der erste Treffer leuchtet.
+  520, // 3. Der Zeiger faehrt auf den ersten Treffer.
+  220, // 4. Der Druck auf den Treffer.
+  700, // 5. Die Suche weicht, das Fenster tritt vor, die Gaeste laufen los.
+  1700, // 6. Die Fahrt durch die Seite, die Sterne leuchten nacheinander auf.
+  520, // 7. Halt am Formular, die Ortsmarke faellt auf die Karte.
+  700, // 8. Der Zeiger faehrt zum Knopf.
+  300, // 9. Der Druck auf den Knopf.
+  1300, // 10. Der Termin ist bestaetigt.
+  2200, // 11. Die Anfrage steht auf dem Telefon, und der Zaehler springt um eins.
 ] as const;
 
 /** Der letzte Abschnitt ist der Endzustand. Bei reduzierter Bewegung

@@ -17,6 +17,11 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        {/* Die Referenzen stehen seit dem 03.09.2026 direkt hinter dem
+            Kopf, weil der Auftraggeber will, dass ein Besucher die echten
+            Arbeiten sofort sieht. Der zweite Knopf im Kopf springt genau
+            hierher. */}
+        <Showcase />
         <Manifesto />
         <KiLayers />
         <KiTiles />
@@ -26,7 +31,6 @@ export default function Home() {
         <DnaZone>
           <MarketingDna />
         </DnaZone>
-        <Showcase />
         <Faq />
         <FinalCta />
       </main>

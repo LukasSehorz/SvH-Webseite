@@ -12,10 +12,13 @@ export const company = {
   country: "Deutschland",
   phone: "0172 3465896",
   phoneHref: "+491723465896",
-  /* Vom Auftraggeber am 03.09.2026 genannt. An diese Adresse gehen die
-     Anfragen aus dem Formular, und sie steht auf der Kontaktseite, in der
-     Fusszeile und in den Rechtstexten. */
-  email: "lukas.sehorz@schconsult.de",
+  /* An diese Adresse gehen die Anfragen aus dem Formular, und sie steht
+     auf der Kontaktseite, in der Fusszeile und in den Rechtstexten. Der
+     Auftraggeber hatte am 03.09.2026 zuerst schconsult.de geschrieben;
+     diese Domain hat laut DNS keinen Mailserver, svhconsult.de dagegen
+     einen bei Google, und der Versand soll ueber resend@svhconsult.de
+     laufen. Deshalb steht hier svhconsult.de. */
+  email: "lukas.sehorz@svhconsult.de",
   hours: "Montag bis Sonntag von 8 bis 21 Uhr",
   partners: ["Lukas Sehorz", "Jannik vom Hofe"],
 };

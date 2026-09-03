@@ -123,7 +123,6 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      <hr className="hairline-dotted hero-rule" />
 
       <style jsx global>{`
         .hero-state {

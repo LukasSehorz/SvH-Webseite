@@ -19,11 +19,13 @@ import { betreff, htmlFassung, textFassung, type Anfrage } from "./format";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-/* Resend erlaubt als Absender nur eine geprüfte Domain oder die eigene
-   Testadresse. Bis die Domain des Auftraggebers bei Resend eingetragen
-   ist, bleibt es bei der Testadresse; sie darf nur an die Adresse des
-   Resend-Kontos senden. */
-const ABSENDER_VORGABE = "SVH Webseite <onboarding@resend.dev>";
+/* Der Absender, den der Auftraggeber am 03.09.2026 festgelegt hat. Resend
+   nimmt ihn nur an, wenn die Domain svhconsult.de dort eingetragen und
+   ueber ihre DNS-Eintraege bestaetigt ist; bis dahin lehnt Resend den
+   Versand ab und das Formular faellt auf das E-Mail-Programm des
+   Besuchers zurueck. Ueber ANFRAGE_ABSENDER laesst er sich beim Hoster
+   uebersteuern. */
+const ABSENDER_VORGABE = "SVH Consulting <resend@svhconsult.de>";
 
 type Eingabe = Anfrage & { website: string };
 

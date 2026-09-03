@@ -537,8 +537,28 @@ export default function IsoStage() {
           will-change: transform, opacity;
         }
 
-        /* Ohne Bewegung bleibt es beim flachen Grundzustand — dem fertigen
-           Schema. Nichts weiter zu tun, --iso steht schon auf 0. */
+        /* Ohne Bewegung bleibt es beim flachen Grundzustand, also dem
+           fertigen Schema. Nichts weiter zu tun, --iso steht schon auf 0. */
+
+        /* WAS SVH EINZIEHT, IST VOR DEM ERSTEN BILD DER ZEITLEISTE
+           UNSICHTBAR. Die Zeitleiste setzt die Anfangswerte zwar selbst,
+           aber erst, wenn ihr Skript laeuft. Bis dahin zeigte der Browser
+           das fertige Schema samt aller Kacheln, und wer die Seite mitten
+           in der Sektion neu lud, sah die Kacheln erst stehen, dann
+           verschwinden und dann einfahren. Der Auftraggeber hat genau das
+           am 03.09.2026 beanstandet. Deshalb stehen die eingezogenen Ebenen,
+           die Kachelreihe und das Logo-Feld hier unsichtbar, solange die
+           Buehne in der Schraegsicht laeuft; die Zeitleiste ueberschreibt
+           das ueber ihre Inline-Werte. Ohne Bewegung und auf schmalen
+           Schirmen greift die Regel nicht, dort steht das fertige Schema. */
+        @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+          .kl-plate[data-role="added"],
+          .kl-tiles,
+          .kl-badge {
+            opacity: 0;
+            visibility: hidden;
+          }
+        }
       `}</style>
     </div>
   );

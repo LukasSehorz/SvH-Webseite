@@ -107,6 +107,15 @@ export default function KiLayers() {
         // den Anfang bei jedem Refresh neu.
         const START = { immediateRender: true } as const;
 
+        /* Der Anfang steht zusaetzlich als fester Satz, bevor die
+           Zeitleiste entsteht. Die eingezogenen Ebenen, die Kachelreihe und
+           das Logo-Feld sind damit ab dem ersten Skriptlauf unsichtbar,
+           auch wenn ScrollTrigger die Leiste erst nach dem Vermessen
+           anlegt. Das Blatt haelt sie ausserdem ueber eine eigene Regel
+           unsichtbar, siehe IsoStage. */
+        gsap.set([agents, llm, tiles, tile], { autoAlpha: 0 });
+        if (badge) gsap.set(badge, { autoAlpha: 0 });
+
         const tl = gsap.timeline({
           defaults: { ease: "power2.out" },
           scrollTrigger: {
@@ -121,7 +130,9 @@ export default function KiLayers() {
               return `top top-=${Math.max(0, Math.round(lead))}`;
             },
             end: "bottom bottom",
-            scrub: 0.6,
+            /* Etwas traeger als zuvor, damit die Kacheln beim Einfahren
+               ruhig nachziehen statt am Scrollrad zu kleben. */
+            scrub: 0.9,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
               // Die Punkt-Marke poppt über CSS-Übergänge, gestaffelt je Punkt.
@@ -242,6 +253,9 @@ export default function KiLayers() {
           { ...START, autoAlpha: 1, duration: 0.25 },
           7.9,
         );
+        /* Die Kacheln fahren langsamer ein als zuvor (0.9 und 0.2). Der
+           Auftraggeber will sehen, wie sie nacheinander nach vorn kommen,
+           und bei 0.9 waren sie bei zuegigem Scrollen schon da. */
         tl.fromTo(
           tile,
           { "--x": LAYOUT.slideX, "--y": LAYOUT.slideY, autoAlpha: 0 },
@@ -250,8 +264,8 @@ export default function KiLayers() {
             "--x": 0,
             "--y": 0,
             autoAlpha: 1,
-            duration: 0.9,
-            stagger: 0.2,
+            duration: 1.3,
+            stagger: 0.26,
             ease: "power2.out",
           },
           8.0,
