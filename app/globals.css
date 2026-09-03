@@ -789,25 +789,20 @@ textarea {
   color: var(--ink);
 }
 
-/* Das Monogramm ist hoeher als breit (98 zu 160), die Wortmarke sehr
-   breit (737 zu 96). Beide haengen an der Hoehe, damit sie in der Leiste
-   nebeneinander auf einer Grundlinie stehen. Die Wortmarke steht etwas
-   kleiner als das Monogramm, weil ihr SvH sonst das Monogramm daneben
-   wiederholt und erdrueckt. */
-.nav-mark-bild {
-  height: 32px;
-  width: auto;
-}
-
+/* Die Wortmarke ist sehr breit (737 zu 96) und haengt an der Hoehe. Mit
+   26 Bildpunkten stehen die kleinen Buchstaben von Consulting bei rund
+   neun Bildpunkten und bleiben auf einem dichten Schirm lesbar. Auf dem
+   Telefon wird sie etwas kleiner, damit sie neben dem Menueknopf Platz
+   hat. */
 .nav-mark-wort {
-  height: 24px;
+  height: 26px;
   width: auto;
-  opacity: 0.92;
+  opacity: 0.94;
 }
 
 @media (max-width: 640px) {
   .nav-mark-wort {
-    display: none;
+    height: 22px;
   }
 }
 
