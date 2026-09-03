@@ -1215,11 +1215,13 @@
    durchschalten kann. Der Inhalt selbst klebt in der Mitte. */
 .stepWrap {
   position: relative;
-  /* Ueber diese Strecke schalten vier Schritte durch. Bei 160
-     Bildhoehen bleiben 60 Prozent einer Bildhoehe Weg fuer die Liste,
-     also rund 135 Bildpunkte je Schritt. Kuerzer wird das Umschalten
-     nervoes, laenger wird die Seite zu lang. */
-  height: 150vh;
+  /* Ueber diese Strecke schalten vier Schritte durch. Bei 150
+     Bildhoehen blieben 50 Prozent einer Bildhoehe Weg, also rund 115
+     Bildpunkte je Schritt, und der Auftraggeber fand am 03.09.2026, der
+     Vorgang laufe zu schnell durch. Mit 250 Bildhoehen bleiben 150
+     Prozent Weg, also rund 340 Bildpunkte je Schritt, und jeder Schritt
+     steht lange genug, um Satz und Fenster zu lesen. */
+  height: 250vh;
 }
 
 .stepSticky {
@@ -1471,5 +1473,231 @@
 @media (max-width: 640px) {
   .page {
     --section-y: 68px;
+  }
+}
+
+/* ------------------------------------------ Aufbau beim Eintritt (M6b) */
+
+/* Seit dem 03.09.2026 bauen sich die Vorteile beim ersten Eintritt ins
+   Bild auf. Fade setzt data-build auf jeden Block und data-in, sobald er
+   im Bild steht; die Nummer --n je Teil kommt ebenfalls von dort. Vor dem
+   Eintritt stehen die Teile unsichtbar, danach kommen sie nacheinander,
+   je Teil 45 Millisekunden spaeter. Die Schritte-Sektion nutzt Fade nicht
+   und bleibt davon unberuehrt. */
+
+.whyGlow {
+  position: absolute;
+  left: -10%;
+  top: -20%;
+  width: 70%;
+  height: 60%;
+  border-radius: 9999px;
+  background: radial-gradient(ellipse at 30% 20%, rgba(124, 106, 255, 0.28), rgba(91, 140, 255, 0.1) 50%, transparent 72%);
+  filter: blur(30px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s var(--ease-out-expo) calc(var(--k, 0) * 120ms + 200ms);
+}
+
+.whyCell[data-in] .whyGlow {
+  opacity: 1;
+}
+
+.whyCell .whyHead,
+.whyCell .whyBody,
+.whyCell .whyNum {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity 0.7s var(--ease-out-expo),
+    transform 0.7s var(--ease-out-expo);
+}
+
+.whyCell[data-in] .whyHead {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--k, 0) * 120ms);
+}
+
+.whyCell[data-in] .whyBody {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--k, 0) * 120ms + 140ms);
+}
+
+.whyCell[data-in] .whyNum {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--k, 0) * 120ms + 260ms);
+}
+
+/* Text links kommt aus der Kante, das Fenster waechst leicht, die Liste
+   rechts tropft Punkt fuer Punkt herein. */
+[data-build] .rowText {
+  opacity: 0;
+  transform: translate3d(-18px, 0, 0);
+  transition:
+    opacity 0.8s var(--ease-out-expo),
+    transform 0.8s var(--ease-out-expo);
+}
+
+[data-build][data-in] .rowText {
+  opacity: 1;
+  transform: none;
+}
+
+[data-build] .win {
+  opacity: 0;
+  transform: scale(0.96) translate3d(0, 10px, 0);
+  transition:
+    opacity 0.8s var(--ease-out-expo) 0.1s,
+    transform 0.9s var(--ease-out-expo) 0.1s;
+}
+
+[data-build][data-in] .win {
+  opacity: 1;
+  transform: none;
+}
+
+[data-build] .rowList > li,
+[data-build] .trioList > li {
+  opacity: 0;
+  transform: translate3d(12px, 0, 0);
+  transition:
+    opacity 0.6s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo);
+}
+
+[data-build][data-in] .rowList > li,
+[data-build][data-in] .trioList > li {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--n, 0) * 45ms + 300ms);
+}
+
+/* Die Teile der gezeichneten Oberflaeche. Balken wachsen von links,
+   alles andere taucht mit einem kleinen Hub auf. */
+[data-build] .bar {
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+[data-build][data-in] .bar {
+  animation: bauBalken 0.7s var(--ease-out-expo) both;
+  animation-delay: calc(var(--n, 0) * 45ms + 260ms);
+}
+
+[data-build] .artBar,
+[data-build] .block,
+[data-build] .formField,
+[data-build] .searchField,
+[data-build] .hit,
+[data-build] .answer,
+[data-build] .sourceChip,
+[data-build] .formSend,
+[data-build] .loadTrack,
+[data-build] .phone,
+[data-build] .artLabel {
+  opacity: 0;
+}
+
+[data-build][data-in] .artBar,
+[data-build][data-in] .block,
+[data-build][data-in] .formField,
+[data-build][data-in] .searchField,
+[data-build][data-in] .hit,
+[data-build][data-in] .answer,
+[data-build][data-in] .sourceChip,
+[data-build][data-in] .formSend,
+[data-build][data-in] .loadTrack,
+[data-build][data-in] .phone,
+[data-build][data-in] .artLabel {
+  animation: bauTeil 0.6s var(--ease-out-expo) both;
+  animation-delay: calc(var(--n, 0) * 45ms + 260ms);
+}
+
+/* Die Ladeanzeige fuellt sich, nachdem sie erschienen ist. */
+[data-build] .loadFill {
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+[data-build][data-in] .loadFill {
+  animation: bauBalken 1.1s var(--ease-out-expo) both;
+  animation-delay: calc(var(--n, 0) * 45ms + 700ms);
+}
+
+/* Der Daumenring pulsiert, sobald das Telefon steht. */
+[data-build] .tapRing {
+  opacity: 0;
+}
+
+[data-build][data-in] .tapRing {
+  animation: bauRing 2.4s ease-out infinite;
+  animation-delay: calc(var(--n, 0) * 45ms + 700ms);
+}
+
+@keyframes bauBalken {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes bauTeil {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bauRing {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whyGlow,
+  .whyCell .whyHead,
+  .whyCell .whyBody,
+  .whyCell .whyNum,
+  [data-build] .rowText,
+  [data-build] .win,
+  [data-build] .rowList > li,
+  [data-build] .trioList > li,
+  [data-build] .bar,
+  [data-build] .artBar,
+  [data-build] .block,
+  [data-build] .formField,
+  [data-build] .searchField,
+  [data-build] .hit,
+  [data-build] .answer,
+  [data-build] .sourceChip,
+  [data-build] .formSend,
+  [data-build] .loadTrack,
+  [data-build] .loadFill,
+  [data-build] .phone,
+  [data-build] .artLabel,
+  [data-build] .tapRing {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
   }
 }

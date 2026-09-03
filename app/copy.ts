@@ -1242,7 +1242,9 @@ export const webseitenPage = {
       "Das sind vier Webseiten von uns. Ein Klick auf den Namen öffnet die echte Seite in einem neuen Fenster.",
     overviewNote: "Zu diesem Projekt springen",
     linkNote: "Öffnet die Seite in einem neuen Fenster",
-    runNote: "Die ganze Seite läuft im Fenster mit, während Sie scrollen.",
+    /* Bis zum 03.09.2026 hiesz es "Die ganze Seite". Seit das Fenster
+       langsamer laeuft, zeigen lange Aufnahmen nicht mehr ihr Ende. */
+    runNote: "Die Seite läuft im Fenster mit, während Sie scrollen.",
     items: [
       {
         id: "brandhuber",

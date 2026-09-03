@@ -21,7 +21,15 @@
    Drittens das Telefon. Dort laeuft nichts durch, dort steht nur der
    Startausschnitt. Ein Durchlauf ueber 8000 Bildpunkte kostet auf einem
    Telefon Leistung und bringt nichts, weil der Ausschnitt zu klein ist,
-   um etwas zu erkennen. */
+   um etwas zu erkennen.
+
+   Viertens das Tempo. Bis zum 03.09.2026 lief die ganze Aufnahme ueber
+   die Strecke, in der das Fenster durch das Bild wandert, also bis zu
+   18000 Bildpunkte Bild auf rund 1150 Bildpunkte Scrollweg. Das war ein
+   Verhaeltnis von bis zu sechzehn zu eins, und der Auftraggeber fand,
+   die Referenzbilder scrollten zu schnell durch. Jetzt laeuft das Bild
+   hoechstens MAX_VERHAELTNIS mal so weit wie die Seite; lange Aufnahmen
+   zeigen dann nicht mehr ihr Ende, dafuer kann man lesen, was vorbeizieht. */
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -30,6 +38,12 @@ import { ExternalIcon, LockIcon } from "./Icons";
 import s from "./webseiten.module.css";
 
 const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+/** Hoechstens so viele Bildpunkte Aufnahme je Bildpunkt Scrollweg. */
+const MAX_VERHAELTNIS = 2.6;
+
+/** Anteil des Durchgangs, in dem das Fenster laeuft, siehe die Stuetzstellen unten. */
+const LAUF_ANTEIL = 0.72;
 
 export default function RefWindow({
   id,
@@ -86,8 +100,11 @@ export default function RefWindow({
   const messen = useCallback(() => {
     const v = view.current;
     const b = bild.current;
-    if (!v || !b) return;
-    setStrecke(Math.max(0, b.offsetHeight - v.clientHeight));
+    const w = wrap.current;
+    if (!v || !b || !w) return;
+    const ganz = Math.max(0, b.offsetHeight - v.clientHeight);
+    const weg = (w.offsetHeight + window.innerHeight) * LAUF_ANTEIL;
+    setStrecke(Math.min(ganz, weg * MAX_VERHAELTNIS));
   }, []);
 
   useEffect(() => {

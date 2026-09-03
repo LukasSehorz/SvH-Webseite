@@ -29,13 +29,46 @@
    groszen Schirm traegt, uebernimmt dort der Abstand zwischen den
    Bloecken.
 
-   Bei prefers-reduced-motion steht alles bei voller Deckkraft. */
+   DAZU KOMMT SEIT DEM 03.09.2026 DER AUFBAU BEIM EINTRITT. Der
+   Auftraggeber wollte, dass die Vorteile animiert erscheinen. Beim ersten
+   Eintritt ins Bild bekommt der Block das Merkmal data-in, und alles
+   darin, was das Blatt unter data-build kennt (Balken, Bloecke, Felder,
+   Listenpunkte), baut sich gestaffelt auf. Die Reihenfolge kommt aus dem
+   Blatt selbst: jedes dieser Teile bekommt hier seine Nummer im Block als
+   Variable --n, und die Verzoegerung im Blatt rechnet daraus. So braucht
+   keine gezeichnete Oberflaeche eigene Zeitleisten.
+
+   Bei prefers-reduced-motion steht alles sofort bei voller Deckkraft und
+   fertig aufgebaut. */
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useSafeReducedMotion } from "../system/ui";
+import s from "./webseiten.module.css";
 
 const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+/* Alles, was beim Eintritt nacheinander aufgebaut wird, in der Reihenfolge
+   des Blattes. Die Klassen kommen aus dem Modul, damit die Liste mit dem
+   Blatt zusammen bleibt. */
+const BAUTEILE = [
+  s.artBar,
+  s.bar,
+  s.block,
+  s.formField,
+  s.searchField,
+  s.hit,
+  s.answer,
+  s.sourceChip,
+  s.formSend,
+  s.loadTrack,
+  s.phone,
+  s.artLabel,
+  s.tapRing,
+]
+  .map((klasse) => `.${klasse}`)
+  .concat([`.${s.rowList} > li`, `.${s.trioList} > li`])
+  .join(", ");
 
 export default function Fade({
   children,
@@ -55,6 +88,8 @@ export default function Fade({
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useSafeReducedMotion();
   const [breit, setBreit] = useState(true);
+  const drin = useInView(ref, { once: true, margin: "0px 0px -14% 0px" });
+  const gebaut = drin || reduced;
 
   useIsoLayoutEffect(() => {
     const m = window.matchMedia("(min-width: 1024px)");
@@ -62,6 +97,15 @@ export default function Fade({
     const auf = (e: MediaQueryListEvent) => setBreit(e.matches);
     m.addEventListener("change", auf);
     return () => m.removeEventListener("change", auf);
+  }, []);
+
+  /* Die Nummern werden vor dem ersten Anstrich gesetzt, sonst liefe die
+     erste Verzoegerung mit Null und alle Teile kaemen auf einmal. */
+  useIsoLayoutEffect(() => {
+    const wurzel = ref.current;
+    if (!wurzel) return;
+    const teile = wurzel.querySelectorAll<HTMLElement>(BAUTEILE);
+    teile.forEach((teil, i) => teil.style.setProperty("--n", String(i)));
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -81,6 +125,8 @@ export default function Fade({
       ref={ref}
       className={className}
       style={{ ...style, opacity: reduced || !breit ? 1 : opacity }}
+      data-build=""
+      data-in={gebaut ? "" : undefined}
     >
       {children}
     </motion.div>
