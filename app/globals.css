@@ -782,33 +782,33 @@ textarea {
 .nav-mark {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 12px;
   height: 44px;
-  padding-inline: 14px;
+  padding-inline: 12px 14px;
   border-radius: 9999px;
   color: var(--ink);
 }
 
-.nav-mark-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
-  background: var(--grad);
+/* Das Monogramm ist hoeher als breit (98 zu 160), die Wortmarke sehr
+   breit (737 zu 96). Beide haengen an der Hoehe, damit sie in der Leiste
+   nebeneinander auf einer Grundlinie stehen. Die Wortmarke steht etwas
+   kleiner als das Monogramm, weil ihr SvH sonst das Monogramm daneben
+   wiederholt und erdrueckt. */
+.nav-mark-bild {
+  height: 32px;
+  width: auto;
 }
 
-.nav-mark-text {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: 0.04em;
+.nav-mark-wort {
+  height: 24px;
+  width: auto;
+  opacity: 0.92;
 }
 
-.nav-mark-sub {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 300;
-  letter-spacing: 0.04em;
-  color: var(--ink-3);
+@media (max-width: 640px) {
+  .nav-mark-wort {
+    display: none;
+  }
 }
 
 /* Die Bereiche stehen in der Mitte des Riegels und bleiben dort, gleich
@@ -1456,16 +1456,18 @@ textarea {
    Schale ist ab dieser Bildbreite 2240 breit. Unterhalb von 2416
    Bildpunkten greift ohnehin weiterhin der Anteil von 11,2 Prozent der
    Bildbreite, dort aendert sich nichts. */
+/* Die Wortmarke am Fusz ist seit dem 03.09.2026 das Logo des
+   Auftraggebers als Bild und keine gesetzte Schrift mehr. Sie spannt ueber
+   die ganze Schale, so wie die Schriftfassung vorher, und steht in
+   derselben leisen Helligkeit wie die zweite Haarlinie. */
 .footer-watermark {
-  font-family: var(--font-display);
-  font-size: min(11.2vw, 271px);
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--line-2);
+  display: block;
+  width: 100%;
+  height: auto;
   margin: 88px 0 26px;
-  white-space: nowrap;
+  opacity: 0.075;
   user-select: none;
+  pointer-events: none;
 }
 
 .footer-legal {

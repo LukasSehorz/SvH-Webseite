@@ -301,17 +301,32 @@ export default function Navbar() {
         data-open={open}
       >
         <div className="nav-bar">
-          {/* Links · Wortmarke */}
+          {/* Links das Logo. Seit dem 03.09.2026 stehen hier das Monogramm
+              und die Wortmarke des Auftraggebers statt der gesetzten
+              Wortmarke; auf schmalen Schirmen bleibt nur das Monogramm,
+              weil die Wortmarke dort unter zwanzig Bildpunkte Hoehe
+              fiele und die kleinen Buchstaben unlesbar wuerden. */}
           <Link
             href="/"
             className="nav-mark"
             aria-label="SVH Consulting, zur Startseite"
           >
-            <span className="nav-mark-dot" aria-hidden="true" />
-            <span className="nav-mark-text">SVH</span>
-            <span className="nav-mark-sub" aria-hidden="true">
-              Consulting
-            </span>
+            <img
+              className="nav-mark-bild"
+              src="/logo/svh-bild-160.webp"
+              alt=""
+              width={98}
+              height={160}
+              decoding="async"
+            />
+            <img
+              className="nav-mark-wort"
+              src="/logo/svh-wort-96.webp"
+              alt=""
+              width={737}
+              height={96}
+              decoding="async"
+            />
           </Link>
 
           {/* Mitte · Bereiche */}

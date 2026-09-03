@@ -49,19 +49,6 @@ const ISO = { a: 0.928, b: -0.161, d: 0.894, ox: -10.3, oy: 93.3 } as const;
 
 const TOOLS = kiLayers.integrations.tools;
 
-/** Punkt-Marke des Logo-Felds. Ein aufsteigender Pfeil aus Punkten. */
-const MARK: ReadonlyArray<readonly [number, number, number]> = [
-  [50, 10, 10],
-  [36, 26, 9],
-  [64, 26, 9],
-  [22, 44, 8],
-  [50, 40, 8],
-  [78, 44, 8],
-  [8, 62, 7],
-  [36, 58, 7],
-  [64, 58, 7],
-  [92, 62, 7],
-];
 
 export default function IsoStage() {
   return (
@@ -110,21 +97,17 @@ export default function IsoStage() {
               <span className="kl-mark" />
               <span className="kl-trail kl-trail-a" />
               <span className="kl-trail kl-trail-b" />
+              {/* Im Logo-Feld steht seit dem 03.09.2026 das Monogramm des
+                  Auftraggebers statt einer Punktmarke. */}
               <span className="kl-badge-mark">
-                {MARK.map(([x, y, s], k) => (
-                  <span
-                    key={`${x}-${y}`}
-                    className="kl-dot"
-                    data-dot
-                    style={{
-                      left: `${x}%`,
-                      top: `${y}%`,
-                      width: `${s}%`,
-                      aspectRatio: "1",
-                      transitionDelay: `${k * 34}ms`,
-                    }}
-                  />
-                ))}
+                <img
+                  className="kl-badge-logo"
+                  src="/logo/svh-bild-160.webp"
+                  alt=""
+                  width={98}
+                  height={160}
+                  decoding="async"
+                />
               </span>
             </div>
 
@@ -488,30 +471,30 @@ export default function IsoStage() {
 
         .kl-badge-mark {
           position: absolute;
-          left: 27%;
-          top: 29%;
-          width: 54%;
-          aspect-ratio: 1;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
-        .kl-dot {
-          position: absolute;
-          border-radius: 999px;
-          /* Helle Stufe derselben Markenfarbe, damit die Marke auf dem
-             getönten Feld steht statt darin zu verschwinden. */
-          background: #b9a5ff;
+        /* Das Monogramm fuellt gut die Haelfte der Feldhoehe. Es ist weisz
+           und steht damit auf dem getoenten Feld, ohne darin zu
+           verschwinden. */
+        .kl-badge-logo {
+          height: 52%;
+          width: auto;
           opacity: 1;
-          transform: translate(-50%, -50%);
-          /* Exponentielles Ausklingen statt Nachfedern. Die Punkte kommen
-             schnell heraus und legen sich ruhig hin. */
+          scale: 1;
+          /* Exponentielles Ausklingen statt Nachfedern. Das Zeichen kommt
+             schnell heraus und legt sich ruhig hin. */
           transition:
-            scale 0.46s cubic-bezier(0.22, 1, 0.36, 1),
+            scale 0.5s cubic-bezier(0.22, 1, 0.36, 1),
             opacity 0.3s ease;
         }
 
-        /* GSAP setzt data-hidden auf dem Feld, die Punkte folgen gestaffelt. */
-        .kl-badge[data-hidden="true"] .kl-dot {
-          scale: 0;
+        /* GSAP setzt data-hidden auf dem Feld, das Zeichen folgt. */
+        .kl-badge[data-hidden="true"] .kl-badge-logo {
+          scale: 0.6;
           opacity: 0;
         }
 

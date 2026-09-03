@@ -169,7 +169,7 @@ export const hero = {
 /* ------------------------------------------------------------------ */
 
 export const manifesto = {
-  label: "02 · Warum jetzt",
+  label: "01 · Warum jetzt",
   title: "Mit KI schafft Ihr Team mehr.",
   paragraphs: [
     "Ein Team ohne KI kommt voran, aber langsam. Ein Team, das KI richtig nutzt, schafft in derselben Zeit deutlich mehr.",
@@ -200,10 +200,7 @@ export const manifesto = {
 /* ------------------------------------------------------------------ */
 
 export const showcase = {
-  /* Die Arbeiten stehen seit dem 03.09.2026 direkt hinter dem Kopf der
-     Startseite. Der Auftraggeber will, dass Besucher die Referenzen
-     sofort sehen, statt erst nach vier Sektionen. */
-  label: "01 · Arbeiten",
+  label: "05 · Arbeiten",
   title: "Arbeit, die man ansehen kann.",
   intro:
     "Vier Seiten, die wir gebaut haben. Jede ist einzeln entwickelt, lädt schnell und ist darauf ausgelegt, Anfragen zu bringen. Ein Klick öffnet die Seite.",
@@ -250,7 +247,7 @@ export const showcase = {
 /* ------------------------------------------------------------------ */
 
 export const process = {
-  label: "04 · Ablauf",
+  label: "03 · Ablauf",
   title: "Vom Gespräch zum laufenden System.",
   /** Sagt vorweg, dass die drei Schritte nacheinander laufen. */
   intro:
@@ -844,7 +841,7 @@ export const heroField = {
 /* ------------------------------------------------------------------ */
 
 export const kiLayers = {
-  label: "03 · KI",
+  label: "02 · KI",
   title: "Eine neue Ebene in Ihrem Betrieb.",
   intro:
     "Zwischen Ihrem Team und Ihren Programmen entsteht eine neue Ebene. Sie kennt Ihren Betrieb, erledigt die tägliche Fleißarbeit und lernt dabei dazu.",
@@ -955,7 +952,7 @@ export const kiTiles = {
    ergaenzen, sobald sie belegbar sind. Bis dahin bleibt der Abschnitt ohne
    Zahlen, statt geschaetzte einzusetzen. */
 export const marketingDna = {
-  label: "05 · Marketing",
+  label: "04 · Marketing",
   titleBefore: "Wir bauen Ihre",
   gradientWord: "Marketing-DNA.",
   titleAfter: "",

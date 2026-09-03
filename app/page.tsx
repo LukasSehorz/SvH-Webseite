@@ -17,11 +17,6 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        {/* Die Referenzen stehen seit dem 03.09.2026 direkt hinter dem
-            Kopf, weil der Auftraggeber will, dass ein Besucher die echten
-            Arbeiten sofort sieht. Der zweite Knopf im Kopf springt genau
-            hierher. */}
-        <Showcase />
         <Manifesto />
         <KiLayers />
         <KiTiles />
@@ -31,6 +26,11 @@ export default function Home() {
         <DnaZone>
           <MarketingDna />
         </DnaZone>
+        {/* Die Referenzen standen am 03.09.2026 fuer kurze Zeit direkt
+            hinter dem Kopf; der Auftraggeber hat sie noch am selben Tag
+            wieder hierher zurueckverlangt. Der zweite Knopf im Kopf
+            springt weiterhin hierher. */}
+        <Showcase />
         <Faq />
         <FinalCta />
       </main>

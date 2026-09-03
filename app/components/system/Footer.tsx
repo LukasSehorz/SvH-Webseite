@@ -54,9 +54,15 @@ export default function Footer() {
           </div>
         </div>
 
-        <p className="footer-watermark" aria-hidden="true">
-          {footer.watermark}
-        </p>
+        <img
+          className="footer-watermark"
+          src="/logo/svh-wort-2400.webp"
+          alt={footer.watermark}
+          width={2400}
+          height={312}
+          loading="lazy"
+          decoding="async"
+        />
 
         <hr className="hairline" style={{ background: "var(--line-2)" }} />
 
