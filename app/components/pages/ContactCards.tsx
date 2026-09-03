@@ -10,15 +10,17 @@ import { Reveal, RevealGroup, RevealItem } from "../system/ui";
  * Bildbreite.
  *
  * Unter 1280 Bildpunkten stehen sie untereinander in der Reihenfolge, in
- * der sie im Blatt stehen, also Wege, Direkt, Angaben. Ab 1280 steht der
- * Block Direkt links und die Wege mit den Angaben rechts, getrennt durch
- * eine senkrechte Haarlinie, die beide Spalten zu einem Rahmen bindet. Der
+ * der sie im Blatt stehen, also Wege, Formular, Angaben. Ab 1280 steht das
+ * Formular links und die Wege mit den Angaben rechts, getrennt durch eine
+ * senkrechte Haarlinie, die beide Spalten zu einem Rahmen bindet. Der
  * Pruefbericht vom 03.09.2026 hatte gemessen, dass die Seite auf einem
  * Schirm von 2560 Bildpunkten nur die linken 37 Prozent nutzte.
  *
- * Der linke Block bleibt beim Scrollen stehen, solange die rechte Spalte
- * laenger ist als der Schirm. Telefon und E-Mail sind das Ziel der Seite
- * und sollen deshalb nie aus dem Bild laufen.
+ * Das Formular klebt nicht beim Scrollen. Es ist hoeher als die rechte
+ * Spalte, und ein klebender Block, der laenger ist als der Schirm, springt
+ * beim Scrollen. Der fruehere Block Direkt mit Telefon und E-Mail war
+ * kurz genug dafuer; seit dem 03.09.2026 steht an seiner Stelle das
+ * Formular, und Telefon und E-Mail stehen bei den Angaben.
  */
 export function ContactGrid({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
@@ -64,10 +66,8 @@ export function ContactGrid({ children }: Readonly<{ children: React.ReactNode }
             background: var(--line);
           }
 
-          .contact-grid .contact-direct {
+          .contact-grid .contact-form {
             grid-area: direct;
-            position: sticky;
-            top: calc(var(--nav-h) + 28px);
           }
 
           .contact-grid .contact-ways {
@@ -96,7 +96,7 @@ export function ContactGrid({ children }: Readonly<{ children: React.ReactNode }
 
 /**
  * Zwei Wege-Karten und die Fakten zum Erstgespraech.
- * Die erste Karte springt zum Block Direkt, die zweite oeffnet das
+ * Die erste Karte springt zum Formular, die zweite oeffnet das
  * Mailprogramm mit der Adresse aus content.ts.
  */
 export default function ContactCards() {

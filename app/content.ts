@@ -12,7 +12,10 @@ export const company = {
   country: "Deutschland",
   phone: "0172 3465896",
   phoneHref: "+491723465896",
-  email: "kontakt@svh-consulting.de", // ❗TODO finale Adresse eintragen
+  /* Vom Auftraggeber am 03.09.2026 genannt. An diese Adresse gehen die
+     Anfragen aus dem Formular, und sie steht auf der Kontaktseite, in der
+     Fusszeile und in den Rechtstexten. */
+  email: "lukas.sehorz@schconsult.de",
   hours: "Montag bis Sonntag von 8 bis 21 Uhr",
   partners: ["Lukas Sehorz", "Jannik vom Hofe"],
 };

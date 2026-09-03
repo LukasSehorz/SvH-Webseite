@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "../components/system/Navbar";
 import Footer from "../components/system/Footer";
 import ContactCards, { ContactGrid } from "../components/pages/ContactCards";
-import ContactDirect from "../components/pages/ContactDirect";
+import ContactForm from "../components/pages/ContactForm";
 import ContactDetails from "../components/pages/ContactDetails";
 import { contactPage, meta } from "../copy";
 import { SplitHeadline } from "../components/system/ui";
@@ -35,18 +35,15 @@ export default function ContactPage() {
         </section>
 
         {/* Die Reihenfolge im Blatt gilt unter 1280 Bildpunkten. Ab 1280
-            ordnet das Raster um und stellt den Block Direkt links neben
-            Wege und Angaben, damit ein breiter Schirm nicht halb leer
-            bleibt.
+            ordnet das Raster um und stellt das Formular links neben Wege
+            und Angaben, damit ein breiter Schirm nicht halb leer bleibt.
 
-            Statt des Formulars stehen im Block Direkt Telefon und E-Mail.
-            Die Komponente ContactForm bleibt gebaut und ungerendert, weil
-            der Empfaenger noch nicht feststeht und eine Erfolgsmeldung
-            ohne Versand eine Luege waere. Sobald der Versand angebunden
-            ist, wird ContactDirect wieder gegen ContactForm getauscht. */}
+            Das Formular ist seit dem 03.09.2026 wieder eingehaengt, denn
+            der Empfaenger steht fest. Telefon und E-Mail stehen bei den
+            Angaben, damit beide Wege auch ohne Formular sichtbar bleiben. */}
         <ContactGrid>
           <ContactCards />
-          <ContactDirect />
+          <ContactForm />
           <ContactDetails />
         </ContactGrid>
       </main>

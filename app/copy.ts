@@ -735,16 +735,18 @@ export const contactPage = {
     { label: "Dauer", value: "Rund zwanzig Minuten" },
     { label: "Ansprechpartner", value: "Die beiden Gründer" },
   ],
-  /* Steht unter dem Anker anfrage anstelle des Formulars. Solange kein
-     Empfaenger feststeht, waere ein Formular ein Versprechen ohne Deckung,
-     deshalb fuehren hier die beiden Wege, die sicher ankommen. */
+  /* Stand bis zum 03.09.2026 unter dem Anker anfrage anstelle des
+     Formulars. Seit der Empfaenger feststeht, ist das Formular wieder
+     eingehaengt; die beiden Zeilen bleiben als Merkposten, falls der
+     Block einmal zurueckkommt. */
   direct: {
     title: "Direkt zu uns",
     body: "Ein Anruf oder eine Mail genügt. Das Erstgespräch dauert rund zwanzig Minuten und kostet nichts.",
   },
-  /* ❗TODO Das Formular ist gebaut, wird aber nicht gerendert, solange der
-     Empfaenger fehlt. Diese Texte bleiben hier als Merkposten stehen und
-     werden gebraucht, sobald der Versand angebunden ist. */
+  /* Das Formular ist seit dem 03.09.2026 wieder eingehaengt. Der Versand
+     laeuft ueber app/api/anfrage an die Adresse aus content.ts; ohne
+     Schluessel beim Hoster oeffnet sich stattdessen das E-Mail-Programm
+     des Besuchers mit der fertigen Nachricht. */
   form: {
     title: "Allgemeine Anfrage",
     body: "Schreiben Sie uns kurz, worum es geht. Je konkreter Ihre Nachricht, desto besser können wir uns vorbereiten.",
@@ -767,7 +769,17 @@ export const contactPage = {
     consent:
       "Mit dem Absenden stimmen Sie zu, dass wir Ihre Angaben zur Bearbeitung Ihrer Anfrage verwenden. Einzelheiten stehen in der Datenschutzerklärung.",
     submit: "Anfrage senden",
+    sending: "Wird gesendet",
     success: "Danke, Ihre Anfrage ist angekommen. Wir melden uns bei Ihnen.",
+    /* Erscheint, wenn der Versand ueber die Seite gerade nicht eingerichtet
+       ist. Die Nachricht wandert dann in das E-Mail-Programm des
+       Besuchers, und dieser Satz sagt ihm, was er noch tun muss. */
+    fallback:
+      "Ihr E-Mail-Programm öffnet sich mit Ihrer Nachricht an uns. Sie müssen sie nur noch abschicken.",
+    /* Erscheint, wenn der Versand mit einem Fehler endet. Die Adresse
+       haengt die Komponente aus content.ts an. */
+    failure:
+      "Die Nachricht konnte gerade nicht gesendet werden. Rufen Sie uns an oder schreiben Sie direkt an",
     selectPlaceholder: "Bitte wählen",
     errors: {
       name: "Bitte geben Sie Ihren Namen an.",
@@ -775,7 +787,6 @@ export const contactPage = {
       emailInvalid: "Diese E-Mail-Adresse sieht unvollständig aus.",
       message: "Bitte schreiben Sie uns kurz Ihr Anliegen.",
     },
-    /** ❗TODO Versand anbinden. Aktuell nur Oberfläche ohne Empfänger. */
   },
   detailLabels: {
     phone: "Telefon",

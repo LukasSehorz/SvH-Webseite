@@ -7,13 +7,13 @@ import { RevealGroup, RevealItem } from "../system/ui";
 const { detailLabels } = contactPage;
 
 /**
- * Ruhige Zeile mit Erreichbarkeit und Anschrift. Die Angaben stammen aus
- * content.ts, die Beschriftungen aus copy.ts, damit beides jeweils nur an
- * einer Stelle gepflegt wird.
+ * Ruhige Zeilen mit Telefon, E-Mail, Erreichbarkeit und Anschrift. Die
+ * Angaben stammen aus content.ts, die Beschriftungen aus copy.ts, damit
+ * beides jeweils nur an einer Stelle gepflegt wird.
  *
- * Telefon und E-Mail standen hier bis zum 02.09.2026 ebenfalls. Seit sie
- * im Block Direkt stehen, waeren sie zweimal innerhalb einer Bildhoehe zu
- * lesen gewesen. Hier bleibt, was dort nicht steht.
+ * Telefon und E-Mail stehen seit dem 03.09.2026 wieder hier, denn an der
+ * Stelle des frueheren Blocks Direkt steht jetzt das Formular, und die
+ * beiden Wege sollen auch ohne Formular auf der Seite bleiben.
  *
  * Der Block bringt keine eigene Sektion mehr mit. Seine Lage bestimmt das
  * Raster in ContactCards, das ihn ab 1280 Bildpunkten rechts unter die
@@ -25,6 +25,20 @@ export default function ContactDetails() {
       <hr className="hairline" />
 
       <RevealGroup as="ul" className="details-grid">
+        <RevealItem as="li">
+          <p className="t-label">{detailLabels.phone}</p>
+          <a href={`tel:${company.phoneHref}`} className="details-value details-link">
+            {company.phone}
+          </a>
+        </RevealItem>
+
+        <RevealItem as="li">
+          <p className="t-label">{detailLabels.email}</p>
+          <a href={`mailto:${company.email}`} className="details-value details-link">
+            {company.email}
+          </a>
+        </RevealItem>
+
         <RevealItem as="li">
           <p className="t-label">{detailLabels.hours}</p>
           <p className="details-value">{company.hours}</p>
@@ -53,6 +67,15 @@ export default function ContactDetails() {
           list-style: none;
           margin: 0;
           padding: 44px 0 0;
+        }
+
+        .contact-details .details-link {
+          display: block;
+          transition: color 0.3s var(--ease-out-expo);
+        }
+
+        .contact-details .details-link:hover {
+          color: var(--acc-lav);
         }
 
         .contact-details .details-value {

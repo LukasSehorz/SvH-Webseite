@@ -1311,29 +1311,47 @@ textarea {
 .final-cta {
   position: relative;
   overflow: hidden;
-  /* Angehobene Fläche, damit das Band auch in den Ecken nicht in reines
-     Schwarz kippt. Die Schleier liegen darüber.
-
-     Der Wechsel lief einmal ueber eine Haarlinie und einen Sprung in der
-     Helligkeit. Nach der Sektion mit den Fragen, die auf reinem Schwarz
-     steht, lag dort eine gerade Kante quer durch das Bild. Sie laeuft
-     jetzt ueber 120 Bildpunkte aus. */
-  background: linear-gradient(180deg, var(--bg) 0px, var(--bg-raise) 120px);
-}
-
-/* Der obere Schleier beginnt 110 Bildpunkte ueber der Sektion und wird
-   von deren overflow abgeschnitten. Diese Schnittkante war die eigentliche
-   Naht, denn sie lief als gerade helle Linie quer durchs Bild. Der
-   Schleier laeuft jetzt ueber dieselben 120 Bildpunkte an. */
-.final-cta .veil {
-  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 120px);
-  mask-image: linear-gradient(180deg, transparent 0, #000 120px);
   min-height: 85vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-block: clamp(120px, 15vw, 200px);
+  padding-block: clamp(140px, 16vw, 240px);
   text-align: center;
+  /* Angehobene Flaeche, damit das Band auch in den Ecken nicht in reines
+     Schwarz kippt. Die Schleier liegen darueber.
+
+     Der Wechsel lief einmal ueber eine Haarlinie und einen Sprung in der
+     Helligkeit, danach ueber einen Anlauf von 120 Bildpunkten, und der
+     war auf einem breiten Schirm immer noch eine sichtbare Kante. Die
+     Flaeche laeuft jetzt ueber das obere Drittel an und ueber das untere
+     Drittel wieder in den Grund aus, sodass das Band oben aus der Sektion
+     davor und unten aus dem Seitenfusz herauswaechst, statt als
+     Rechteck dazwischen zu stehen.
+
+     Hoehe, Innenabstand und Ausrichtung standen bis zum 03.09.2026 in der
+     Regel des Schleiers darunter, wohin sie bei einer frueheren Aenderung
+     gerutscht waren. Dort wirkten sie nicht, und das Band stand ohne
+     jeden Abstand direkt ueber dem Seitenfusz. */
+  background: linear-gradient(
+    180deg,
+    var(--bg) 0%,
+    var(--bg-raise) 34%,
+    var(--bg-raise) 60%,
+    var(--bg) 88%
+  );
+}
+
+/* Die Schleier und das Korn laufen ueber dieselben Drittel an und aus wie
+   die Flaeche. Ohne diese Maske bildete das Korn eine harte Kante an der
+   Ober- und Unterkante der Sektion, weil es dort abgeschnitten wurde.
+   Unten sind Flaeche und Schleier schon bei 88 beziehungsweise 90 Prozent
+   ganz ausgelaufen, damit die letzten Bildpunkte vor dem Seitenfusz
+   dasselbe Schwarz tragen wie der Fusz selbst; endeten sie erst bei 100
+   Prozent, blieb an der Naht eine sichtbare Stufe. */
+.final-cta .veil,
+.final-cta .noise {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 32%, #000 60%, transparent 90%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 32%, #000 60%, transparent 90%);
 }
 
 .final-cta-inner {
@@ -1368,6 +1386,19 @@ textarea {
 .site-footer {
   position: relative;
   overflow: hidden;
+}
+
+/* Die Haarlinie am Kopf des Seitenfuszes laeuft an beiden Enden aus. Als
+   durchgehende Linie stand sie direkt unter dem Abschlussband als harte
+   Kante quer ueber die ganze Breite. */
+.site-footer > .hairline {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--line) 16%,
+    var(--line) 84%,
+    transparent 100%
+  );
 }
 
 /* Nebelschleier im Grund des Seitenfußes. Dichte nach der Valo-Stimmung
