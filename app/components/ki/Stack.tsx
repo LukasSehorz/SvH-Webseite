@@ -145,8 +145,21 @@ const TONES: readonly (readonly [number, number, number])[] = [
   [0.1, 0.35, 0.55],
 ];
 
-/** Hoechstzahl der Punkte. Gezeichnet wird je nach Breite ein Teil davon. */
-const MAX_DOTS = 150;
+/** Hoechstzahl der Punkte. Gezeichnet wird je nach Breite ein Teil davon.
+ *  Der Auftraggeber wollte am 03.09.2026 mehr Punkte und drei Strahlen
+ *  statt drei Wolken, deshalb fast das Doppelte der ersten Fassung. */
+const MAX_DOTS = 280;
+
+/** Waerme eines Feldes. Jeder ankommende Punkt hebt sie um HEAT_GAIN, und
+ *  je Sekunde klingt sie um HEAT_DECAY ab. Bei rund zwanzig Ankuenften je
+ *  Sekunde und Feld pendelt sie damit knapp unter eins und flackert leise,
+ *  statt entweder aus oder voll zu sein. */
+const HEAT_GAIN = 0.06;
+const HEAT_DECAY = 1 / 1100;
+const HEAT_STILL = 0.35;
+
+/** Stuetzstellen je Strahl fuer den weichen Lichtschlauch. */
+const BEAM_SAMPLES = 28;
 
 /** Umlaufdauer eines Punktes in Millisekunden, Unter- und Obergrenze. */
 const TRAVEL_MIN = 2500;
@@ -213,14 +226,17 @@ function pickColor(strand: number, r: number): number {
 
 /** Wuerfelt die Bahn eines Punktes neu, beim Start wie bei jedem Neustart. */
 function reroll(dot: Dot, rand: () => number): void {
-  dot.su = rand();
-  dot.eu = rand();
-  /* Die Stuetzpunkte weichen hoechstens 28 Bildpunkte zur Seite aus. Mit
-     35 lagen die Bahnen so weit auseinander, dass die drei Buendel wie
-     Wolken und nicht wie Faeden gelesen wurden. */
-  dot.c1 = (rand() - 0.5) * 56;
-  dot.c2 = (rand() - 0.5) * 56;
-  dot.amp = 1.5 + rand() * 4;
+  /* Start und Ziel liegen dreieckig verteilt um die Mitte, also dicht am
+     Kern des Strahls und nach aussen duenner. Mit gleichverteilten Werten
+     waren die Buendel Wolken, mit der Dreiecksverteilung lesen sie als
+     Strahl mit hellem Kern und weichem Saum. */
+  dot.su = 0.5 + (rand() + rand() - 1) * 0.5;
+  dot.eu = 0.5 + (rand() + rand() - 1) * 0.5;
+  /* Die Stuetzpunkte weichen hoechstens 14 Bildpunkte zur Seite aus; mit
+     28 lagen die Bahnen fuer einen Strahl noch zu weit auseinander. */
+  dot.c1 = (rand() - 0.5) * 28;
+  dot.c2 = (rand() - 0.5) * 28;
+  dot.amp = 0.8 + rand() * 2.2;
   dot.freq = 1.2 + rand() * 1.8;
   dot.phase = rand() * Math.PI * 2;
   dot.dur = TRAVEL_MIN + rand() * TRAVEL_SPAN;
@@ -308,13 +324,13 @@ function pathOf(
   if (!side) {
     const cardW = card.x1 - card.x0;
     const cardCx = (card.x0 + card.x1) / 2;
-    /* Start ueber gut zwei Drittel der Feldbreite, leicht zur Mitte des
-       Fundaments gezogen, Ziel ueber siebzig Prozent der Feldbreite. So
-       bleibt jedes Buendel als ein Faden lesbar und faechert erst im Feld
-       auf. */
-    let sx = cardCx + (foundCx - cardCx) * 0.28 + (su - 0.5) * cardW * 0.66;
+    /* Start ueber gut ein Drittel der Feldbreite, leicht zur Mitte des
+       Fundaments gezogen, Ziel ueber vierzig Prozent der Feldbreite. So
+       liest jedes Buendel als ein Strahl, der erst im Feld auffaechert.
+       Zwei Drittel und siebzig Prozent waren die Wolke der ersten Fassung. */
+    let sx = cardCx + (foundCx - cardCx) * 0.28 + (su - 0.5) * cardW * 0.36;
     sx = Math.min(found.x1 - 16, Math.max(found.x0 + 16, sx));
-    const ex = card.x0 + cardW * (0.15 + eu * 0.7);
+    const ex = card.x0 + cardW * (0.3 + eu * 0.4);
     const ey = card.y1 - 16;
     out[0] = sx;
     out[1] = sy;
@@ -398,6 +414,23 @@ export default function KiStack() {
     let count = 0;
     const pts = new Float64Array(8);
 
+    /* Die Mittellinie jedes Strahls, einmal je Vermessung abgetastet. Der
+       Lichtschlauch wird jedes Bild daraus gezeichnet, ohne die Bahn neu
+       zu rechnen. */
+    const beams: Float64Array[] = [0, 1, 2].map(
+      () => new Float64Array((BEAM_SAMPLES + 1) * 2),
+    );
+
+    /* Die Waerme je Feld und der zuletzt ins Blatt geschriebene Wert. */
+    const heat = [0, 0, 0];
+    const litShown = [-1, -1, -1];
+    const applyLit = (strand: number, value: number) => {
+      const rounded = Math.round(value * 50) / 50;
+      if (rounded === litShown[strand]) return;
+      litShown[strand] = rounded;
+      cardRefs.current[strand]?.style.setProperty("--lit", rounded.toFixed(2));
+    };
+
     /** Lage eines Elements relativ zur Innenkante des Containers, ohne
         laufende Transformationen, deshalb ueber die Offset-Kette. */
     const boxOf = (el: HTMLElement): Box => {
@@ -445,9 +478,48 @@ export default function KiStack() {
       });
       geo = draft;
 
+      for (let strand = 0; strand < 3; strand += 1) {
+        pathOf(strand, 0.5, 0.5, 0, 0, draft, pts);
+        const line = beams[strand];
+        for (let i = 0; i <= BEAM_SAMPLES; i += 1) {
+          const t = i / BEAM_SAMPLES;
+          line[i * 2] = bez(pts[0], pts[2], pts[4], pts[6], t);
+          line[i * 2 + 1] = bez(pts[1], pts[3], pts[5], pts[7], t);
+        }
+      }
+
       /* Je breiter der Container, desto mehr Punkte, innerhalb der
-         Grenzen von 90 und 150. */
-      count = Math.round(Math.min(MAX_DOTS, Math.max(90, w / 11)));
+         Grenzen von 150 und 280. */
+      count = Math.round(Math.min(MAX_DOTS, Math.max(150, w / 5.5)));
+    };
+
+    /** Der weiche Lichtschlauch je Strahl. Drei Striche uebereinander,
+        breit und sehr transparent, damit der Strahl auch zwischen den
+        Punkten Licht traegt. Mit der Waerme des Feldes wird er etwas
+        kraeftiger. */
+    const drawBeams = (birth: number) => {
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      for (let strand = 0; strand < 3; strand += 1) {
+        const [r, gg, b] = COLORS[strand];
+        const line = beams[strand];
+        ctx.beginPath();
+        for (let i = 0; i <= BEAM_SAMPLES; i += 1) {
+          if (i === 0) ctx.moveTo(line[0], line[1]);
+          else ctx.lineTo(line[i * 2], line[i * 2 + 1]);
+        }
+        const k = birth * (0.7 + heat[strand] * 0.3);
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = `rgba(${r},${gg},${b},${(0.035 * k).toFixed(3)})`;
+        ctx.lineWidth = 34;
+        ctx.stroke();
+        ctx.strokeStyle = `rgba(${r},${gg},${b},${(0.06 * k).toFixed(3)})`;
+        ctx.lineWidth = 12;
+        ctx.stroke();
+        ctx.strokeStyle = `rgba(${r},${gg},${b},${(0.1 * k).toFixed(3)})`;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
     };
 
     const drawDot = (x: number, y: number, size: number, color: number, alpha: number) => {
@@ -461,6 +533,7 @@ export default function KiStack() {
       if (!g) return;
       ctx.clearRect(0, 0, g.w, g.h);
       ctx.globalCompositeOperation = "lighter";
+      drawBeams(birth);
 
       for (let i = 0; i < count; i += 1) {
         const dot = dots[i];
@@ -534,6 +607,7 @@ export default function KiStack() {
       const paint = () => {
         measure();
         drawStill();
+        for (let strand = 0; strand < 3; strand += 1) applyLit(strand, HEAT_STILL);
       };
       paint();
       const observer = new ResizeObserver(paint);
@@ -558,16 +632,24 @@ export default function KiStack() {
       if (!born || now < born) return;
       const birth = Math.min(1, (now - born) / FLOW_FADE);
 
+      for (let strand = 0; strand < 3; strand += 1) {
+        heat[strand] = Math.max(0, heat[strand] - delta * HEAT_DECAY);
+      }
+
       for (let i = 0; i < count; i += 1) {
         const dot = dots[i];
         dot.t += delta / (dot.dur * g.scale[dot.strand]);
         if (dot.t > 1) {
-          /* Neustart unter dem Fundament mit neuer Bahn, damit die Faeden
-             lebendig bleiben und nicht als Schleife auffallen. */
+          /* Der Punkt ist im Feld angekommen und laesst es aufleuchten.
+             Dann Neustart unter dem Fundament mit neuer Bahn, damit die
+             Strahlen lebendig bleiben und nicht als Schleife auffallen. */
+          heat[dot.strand] = Math.min(1, heat[dot.strand] + HEAT_GAIN);
           reroll(dot, rand);
           dot.t = -rand() * 0.25;
         }
       }
+
+      for (let strand = 0; strand < 3; strand += 1) applyLit(strand, heat[strand]);
 
       drawFlow(birth);
     };
@@ -741,20 +823,32 @@ export default function KiStack() {
         /* Vor dem Eintritt haengen die Felder etwas ueber ihrem Platz und
            sind unsichtbar. Sobald der Container gesehen wurde, fallen sie
            nacheinander ein, das erste zuerst. */
+        /* Jedes Feld traegt seinen Ton als Tripel und eine Waerme --lit
+           zwischen 0 und 1, die der Canvas schreibt, sobald Punkte im Feld
+           ankommen. Rahmen, innerer und aeusserer Schein haengen daran, so
+           leuchtet das Feld auf, wenn der Strahl es erreicht, und klingt
+           wieder ab. Grell wird es nie, die Obergrenzen sind gemessen leise. */
         .ki-stack .ki-stack-module {
+          --lit: 0;
+          --ton: 124, 106, 255;
           position: relative;
           display: flex;
           flex-direction: column;
           gap: 14px;
           padding: 24px 24px 26px;
-          border: 1px solid var(--line);
+          border: 1px solid rgba(var(--ton), calc(0.2 + var(--lit) * 0.5));
           border-radius: 18px;
           background: var(--bg-raise);
+          box-shadow:
+            inset 0 0 40px rgba(var(--ton), calc(var(--lit) * 0.2)),
+            0 0 60px rgba(var(--ton), calc(var(--lit) * 0.14));
           opacity: 0;
           transform: translateY(-28px);
           transition:
             opacity 0.6s var(--ease-out-expo),
-            transform 0.6s var(--ease-out-expo);
+            transform 0.6s var(--ease-out-expo),
+            border-color 0.3s linear,
+            box-shadow 0.3s linear;
         }
 
         .ki-stack .ki-stack-module:nth-child(1) {
@@ -773,26 +867,32 @@ export default function KiStack() {
            Grund muss deckend sein, damit die Punkte hinter der Karte
            tatsaechlich verschwinden. */
         .ki-stack .ki-stack-module[data-tone="automation"] {
+          --ton: 91, 140, 255;
           background:
             linear-gradient(rgba(91, 140, 255, 0.05), rgba(91, 140, 255, 0.05)),
             var(--bg-raise);
         }
 
         .ki-stack .ki-stack-module[data-tone="agents"] {
+          --ton: 124, 106, 255;
           background:
             linear-gradient(rgba(124, 106, 255, 0.05), rgba(124, 106, 255, 0.05)),
             var(--bg-raise);
         }
 
         .ki-stack .ki-stack-module[data-tone="os"] {
+          --ton: 185, 165, 255;
           background:
             linear-gradient(rgba(185, 165, 255, 0.05), rgba(185, 165, 255, 0.05)),
             var(--bg-raise);
         }
 
+        /* Das Zeichen nimmt die Waerme des Feldes mit auf. */
         .ki-stack .ki-stack-icon {
           display: inline-flex;
-          color: var(--ink-3);
+          color: rgb(var(--ton));
+          opacity: calc(0.45 + var(--lit) * 0.55);
+          transition: opacity 0.3s linear;
         }
 
         /* Unter 1500 Bildpunkten Schalenbreite schrumpfen die Titel leicht,
@@ -848,7 +948,7 @@ export default function KiStack() {
           border: 1px solid rgba(124, 106, 255, 0.5);
           border-radius: 18px;
           background:
-            linear-gradient(180deg, rgba(124, 106, 255, 0.16), rgba(124, 106, 255, 0) 46%),
+            linear-gradient(180deg, rgba(124, 106, 255, 0.24), rgba(124, 106, 255, 0) 46%),
             linear-gradient(rgba(124, 106, 255, 0.08), rgba(124, 106, 255, 0.08)),
             var(--bg-raise);
           box-shadow: inset 0 0 48px rgba(124, 106, 255, 0.1);
