@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "../components/system/Navbar";
 import Footer from "../components/system/Footer";
-import ContactCards from "../components/pages/ContactCards";
+import ContactCards, { ContactGrid } from "../components/pages/ContactCards";
 import ContactDirect from "../components/pages/ContactDirect";
 import ContactDetails from "../components/pages/ContactDetails";
 import { contactPage, meta } from "../copy";
@@ -34,16 +34,21 @@ export default function ContactPage() {
           </div>
         </section>
 
-        <ContactCards />
+        {/* Die Reihenfolge im Blatt gilt unter 1280 Bildpunkten. Ab 1280
+            ordnet das Raster um und stellt den Block Direkt links neben
+            Wege und Angaben, damit ein breiter Schirm nicht halb leer
+            bleibt.
 
-        {/* Statt des Formulars stehen hier Telefon und E-Mail. Die
-            Komponente ContactForm bleibt gebaut und ungerendert, weil der
-            Empfaenger noch nicht feststeht und eine Erfolgsmeldung ohne
-            Versand eine Luege waere. Sobald der Versand angebunden ist,
-            wird ContactDirect wieder gegen ContactForm getauscht. */}
-        <ContactDirect />
-
-        <ContactDetails />
+            Statt des Formulars stehen im Block Direkt Telefon und E-Mail.
+            Die Komponente ContactForm bleibt gebaut und ungerendert, weil
+            der Empfaenger noch nicht feststeht und eine Erfolgsmeldung
+            ohne Versand eine Luege waere. Sobald der Versand angebunden
+            ist, wird ContactDirect wieder gegen ContactForm getauscht. */}
+        <ContactGrid>
+          <ContactCards />
+          <ContactDirect />
+          <ContactDetails />
+        </ContactGrid>
       </main>
 
       {/* Kein Abschlussband. Diese Seite ist bereits das Ziel. */}

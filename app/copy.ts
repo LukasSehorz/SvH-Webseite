@@ -27,9 +27,12 @@ export const meta = {
       "Wir automatisieren die Arbeit, die sich in Ihrem Betrieb jeden Tag wiederholt. Der erste Schritt ist ein kostenloses Gespräch von zwanzig Minuten.",
   },
   marketing: {
-    title: "Marketing mit Webseiten, Social Media und Werbetafeln",
+    /* Die Werbetafeln sind seit dem 03.09.2026 auf Wunsch des Auftraggebers
+       vorerst aus dem Angebot genommen. Titel und Beschreibung nennen
+       deshalb nur noch die beiden Wege, die die Seite auch zeigt. */
+    title: "Marketing mit Webseiten und Social Media",
     description:
-      "Drei Wege, damit man Sie sieht. Eine Webseite, die Anfragen bringt, Ihre Kanäle auf Instagram und TikTok und digitale Tafeln an gut besuchten Orten.",
+      "Zwei Wege, damit man Sie sieht. Eine Webseite, die Anfragen bringt, und Ihre Kanäle auf Instagram und TikTok.",
   },
   about: {
     title: "Über uns",
@@ -81,11 +84,10 @@ export const nav: {
           href: "/marketing/social-media",
           note: "Sichtbar auf Instagram und TikTok",
         },
-        {
-          label: "Werbetafeln",
-          href: "/marketing/werbetafeln",
-          note: "Digitale Tafeln an belebten Orten",
-        },
+        /* Der dritte Eintrag Werbetafeln ist am 03.09.2026 auf Wunsch des
+           Auftraggebers herausgenommen worden, denn die Tafeln werden
+           vorerst nicht angeboten. Die Seite /marketing/werbetafeln bleibt
+           gebaut und erreichbar, es fuehrt nur kein Verweis mehr dorthin. */
       ],
     },
     { label: "Über uns", href: "/ueber-uns" },
@@ -109,14 +111,14 @@ export const footer = {
       title: "Leistungen",
       links: [
         { label: "KI-Automatisierung", href: "/ki" },
-        /* Seit dem 02.09.2026 hat Marketing drei Unterseiten, und die
-           Fusszeile fuehrt direkt dorthin statt auf die Uebersicht.
+        /* Seit dem 02.09.2026 hat Marketing eigene Unterseiten, und die
+           Fusszeile fuehrt direkt dorthin statt auf die Uebersicht. Die
+           Werbetafeln stehen seit dem 03.09.2026 nicht mehr darunter.
            Die Beschriftungen sind dieselben wie im Aufklappmenue der
            Leiste, damit ueberall dasselbe Wort fuer dieselbe Leistung
            steht. */
         { label: "Webseiten", href: "/marketing/webseiten" },
         { label: "Social Media", href: "/marketing/social-media" },
-        { label: "Werbetafeln", href: "/marketing/werbetafeln" },
       ],
     },
     {
@@ -148,10 +150,16 @@ export const footer = {
 
 export const hero = {
   /** Die Überschrift wird um `gradientWord` herum gesetzt, das Wort trägt den Verlauf. */
-  titleBefore: "Wir machen Ihren Betrieb",
-  gradientWord: "digital.",
+  /* Die Zeile hiesz bis zum 03.09.2026 "Wir machen Ihren Betrieb digital."
+     Der Auftraggeber fand sie zu allgemein, denn digital macht jede
+     Agentur. SVH steht laut Produktakte fuer den Weg ins KI-Zeitalter, und
+     genau das sagt die Zeile jetzt. Der Absatz darunter nennt die drei
+     Leistungen und ihren Nutzen, damit in einem Blick klar ist, was SVH
+     ist und wofuer es steht. */
+  titleBefore: "Wir bringen Ihren Betrieb ins",
+  gradientWord: "KI-Zeitalter.",
   titleAfter: "",
-  lead: "Wir bauen KI, die Arbeit abnimmt, betreuen Ihr Marketing und entwickeln Webseiten, die Kunden bringen. So sparen Sie Kosten, gewinnen Zeit und wachsen.",
+  lead: "Wir bauen KI, die Ihnen die tägliche Arbeit abnimmt, Webseiten, die Kunden bringen, und Marketing, das Ihren Namen in der Region bekannt macht. Alles aus einer Hand, damit am Ende alles zusammenpasst.",
   primary: { label: "Kostenloses Strategiegespräch", href: "/kontakt" },
   secondary: { label: "Unsere Arbeiten ansehen", href: "#referenzen" },
 };
@@ -320,9 +328,12 @@ export const kiPage = {
     cta: { label: "Kostenloses Strategiegespräch", href: "/kontakt" },
   },
 
-  /* Die Reihenfolge gilt fuer die Kacheln im Kopf und fuer die Liste
-     darunter. Beide zeigen dasselbe Zeichen, damit man den Bezug sofort
-     sieht. `id` waehlt zugleich das Zeichen und die bewegte Szene. */
+  /* Die Reihenfolge gilt fuer die Kacheln im Kopf. Die Liste darunter ist
+     am 03.09.2026 entfallen, weil sie dieselben acht Aufgaben ein zweites
+     Mal zeigte und der Pruefbericht das als Wiederholung vermerkt hat. Der
+     Satz je Aufgabe steht seither in der Kachel selbst. `id` waehlt
+     zugleich das Zeichen und die bewegte Szene. `title` und `intro` stehen
+     als Zeile ueber dem Kachelfeld. */
   services: {
     title: "Was wir automatisieren.",
     intro:
@@ -398,18 +409,75 @@ export const kiPage = {
 };
 
 /* ------------------------------------------------------------------ */
+/*  Unterseite /ki · Der Aufbau, Fundament und drei Ebenen darueber    */
+/* ------------------------------------------------------------------ */
+
+/* Die zweite Sektion der KI-Seite. Der Auftraggeber hat sie am 03.09.2026
+   ausdruecklich zurueckverlangt: unten das Fundament Corporate LLM, darueber
+   drei Felder, in die Lichtpunkte aus dem Fundament aufsteigen. Die vier
+   Namen sind seine Worte. Damit auch ein Kind versteht, was dahinter
+   steckt, traegt jedes Feld eine Zeile in einfacher Sprache. Zahlen,
+   Preise und Zeitraeume stehen hier bewusst nicht. */
+export const kiStack = {
+  label: "Der Aufbau",
+  titleBefore: "Alles wächst aus einem",
+  gradientWord: "Fundament.",
+  titleAfter: "",
+  intro:
+    "Unten liegt das Wissen Ihres Betriebs. Daraus speist sich alles, was darüber für Sie arbeitet, und jede Ebene lässt sich einzeln einführen.",
+  modules: [
+    {
+      id: "automation",
+      title: "Automatisierungen",
+      line: "Arbeit, die von allein läuft.",
+      tags: ["E-Mail", "Angebote und Rechnungen", "Kundendaten", "Übergaben im Team"],
+    },
+    {
+      id: "agents",
+      title: "Voice Agents",
+      line: "Telefon und Chat, die selbst antworten.",
+      tags: ["Telefon", "WhatsApp", "Chat auf der Webseite", "Terminbuchung"],
+    },
+    {
+      id: "os",
+      title: "Operating System",
+      line: "Ihr ganzer Betrieb auf einem Bildschirm.",
+      tags: ["Übersicht", "Wissen", "Abläufe", "Berichte"],
+    },
+  ],
+  foundation: {
+    title: "Corporate LLM",
+    subtitle: "Das Wissen Ihres Betriebs an einem Ort",
+    tags: [
+      "Firmenwissen gebündelt",
+      "Antworten mit Quelle",
+      "Rechte und Rollen",
+      "Verbunden mit Ihren Programmen",
+    ],
+  },
+  closing:
+    "Wir beginnen mit dem Baustein, der Ihnen sofort Zeit zurückgibt, und bauen von dort weiter.",
+  figureAlt:
+    "Ein Fundament mit der Aufschrift Corporate LLM. Aus ihm steigen Lichtpunkte in drei Felder darüber auf, Automatisierungen, Voice Agents und Operating System.",
+};
+
+/* ------------------------------------------------------------------ */
 /*  Unterseite /marketing                                              */
 /* ------------------------------------------------------------------ */
 
-/* Seit der Aufteilung in drei Unterseiten ist /marketing nur noch die
+/* Seit der Aufteilung in Unterseiten ist /marketing nur noch die
    Uebersicht. Die ausfuehrlichen Texte je Leistung stehen bei der
    jeweiligen Unterseite, hier steht zu jeder Leistung genau ein Satz. */
 export const marketingPage = {
   hero: {
-    titleBefore: "Drei Wege, damit man Sie",
+    titleBefore: "Zwei Wege, damit man Sie",
     gradientWord: "sieht.",
     titleAfter: "",
-    lead: "Eine eigene Webseite, Ihre Kanäle im Netz und digitale Werbetafeln in Ihrer Region. Jede Leistung wirkt für sich, und zusammen ergeben sie einen Auftritt, der zusammenpasst.",
+    lead: "Eine eigene Webseite und Ihre Kanäle im Netz. Jede Leistung wirkt für sich, und zusammen ergeben sie einen Auftritt, der zusammenpasst.",
+    /* Der Knopf stand bis zum 03.09.2026 nicht im Kopf. Der Pruefbericht
+       hat bemaengelt, dass der erste Bildschirm keinen Weg ins Gespraech
+       kannte. */
+    cta: { label: "Kostenloses Strategiegespräch", href: "/kontakt" },
   },
   services: [
     {
@@ -426,20 +494,16 @@ export const marketingPage = {
       href: "/marketing/social-media",
       cta: "Social Media ansehen",
     },
-    {
-      id: "dooh",
-      name: "Werbetafeln",
-      body: "Digitale Displays an gut besuchten Orten in Ihrer Nähe, samt der Inhalte, die darauf laufen.",
-      href: "/marketing/werbetafeln",
-      cta: "Werbetafeln ansehen",
-    },
+    /* Das dritte Feld Werbetafeln ist am 03.09.2026 auf Wunsch des
+       Auftraggebers entfallen. Die Texte der Unterseite stehen weiter
+       unter werbetafelnPage. */
   ],
   faqTitle: "Fragen zum Marketing.",
-  faqIntro: "Die Punkte, die für alle drei Leistungen gelten.",
+  faqIntro: "Die Punkte, die für beide Leistungen gelten.",
   faq: [
     {
       q: "Kann ich einzelne Leistungen buchen?",
-      a: "Ja. Webseiten, Social Media und Werbetafeln funktionieren einzeln. Zusammen entfalten sie die größte Wirkung, weil überall dieselbe Handschrift sichtbar wird.",
+      a: "Ja. Webseite und Social Media funktionieren einzeln. Zusammen entfalten sie die größte Wirkung, weil überall dieselbe Handschrift sichtbar wird.",
     },
     {
       q: "Wer kümmert sich um die Inhalte?",
@@ -698,7 +762,6 @@ export const contactPage = {
       "KI-Automatisierung",
       "Webseiten",
       "Social Media",
-      "Werbetafeln",
       "Etwas anderes",
     ],
     consent:
@@ -844,7 +907,7 @@ export const kiTiles = {
 /*  Landing v2 · S4 Marketing-DNA (Stil der DNA-Startseite)            */
 /* ------------------------------------------------------------------ */
 
-/* Der Abschnitt traegt auszer den drei Ringen bewusst keine Zahl. Jede
+/* Der Abschnitt traegt auszer dem einen Ring bewusst keine Zahl. Jede
    Aussage beschreibt, WAS die Leistung ist, WIE sie ablaeuft und WAS der
    Kunde davon hat. Keine nennt einen Preis, eine Laufzeit, einen Standort,
    eine Reichweite oder eine Zusage, denn nichts davon liegt uns belegt vor.
@@ -862,14 +925,17 @@ export const marketingDna = {
      aufgeschlagen werden. Er gibt dem Leser das Bild, das die Sektion
      danach ausbuchstabiert. */
   introMore:
-    "Dahinter stehen drei Stränge in derselben Handschrift. Ihre Webseite macht aus Interesse eine Anfrage, Social Media hält Sie im Gespräch, und die Werbetafeln bringen Ihren Namen dorthin, wo Ihre Kundschaft täglich unterwegs ist.",
-  /** Ringe zeichnen sich beim Eintritt in die Sektion. Werte vom Auftraggeber genannt. */
-  rings: [
-    { value: "35+", label: "Umgesetzte Projekte" },
-    { value: "1", label: "Regionaler Ansprechpartner für alles" },
-    { value: "3", label: "Bausteine einer Marketing-DNA" },
+    "Dahinter stehen zwei Stränge in derselben Handschrift. Ihre Webseite macht aus Interesse eine Anfrage, und Social Media hält Sie im Gespräch, auch wenn gerade niemand sucht.",
+  /* Nur noch EIN Ring. Der Pruefbericht hat festgehalten, dass die Ringe
+     mit 1 und 3 die eigene Gliederung zaehlten und keine Aussage trugen.
+     Belegt ist allein die Zahl der Projekte, und nur sie steht grosz. Die
+     beiden anderen Aussagen stehen als Saetze daneben. */
+  rings: [{ value: "35+", label: "Umgesetzte Projekte" }],
+  ringNotes: [
+    "Ein Ansprechpartner aus der Region für alles.",
+    "Zwei Stränge, die zusammen Ihre Marketing-DNA ergeben.",
   ],
-  strandsLabel: "Die drei Stränge",
+  strandsLabel: "Die zwei Stränge",
   /* Jeder Strang traegt Kopf, EINEN Satz, sechs Marken, den Ablauf in drei
      Schritten und einen stillen Verweis auf seine Unterseite.
      DER ERKLAERENDE ABSATZ IST ENTFALLEN. Der Auftraggeber hat die Sektion
@@ -929,6 +995,18 @@ export const marketingDna = {
         adresse: "ihr-betrieb.de",
         knopf: "Termin buchen",
         bestaetigt: "Termin bestätigt",
+        /* Das Suchwort, das sich zu Beginn der Szene in das Suchfeld
+           tippt. Es nennt eine Branche und keinen Betrieb, denn welcher
+           Betrieb auf der Seite steht, wissen wir nicht. */
+        suche: "Handwerker in der Nähe",
+        /* Die Meldung, die am Ende der Szene auf dem Telefon des Betriebs
+           aufleuchtet, nachdem der Termin bestaetigt ist. */
+        anfrage: "Neue Anfrage",
+        /* Die Beschriftung am kleinen Zaehler neben dem Fenster. Er
+           springt in jeder Runde um eins hoch und bleibt damit erkennbar
+           eine Vorfuehrung, denn eine belegte Endzahl gibt es dafuer
+           nicht. */
+        zaehler: "Anfragen",
       },
     },
     {
@@ -970,58 +1048,14 @@ export const marketingDna = {
          laeuft von null hoch und beginnt danach wieder von vorn. */
       szene: { zaehler: "Wer Ihnen folgt", kurve: "Aufrufe" },
     },
-    {
-      n: "03",
-      id: "dooh",
-      title: "Werbetafeln",
-      kicker: "Ihr Name steht dort, wo Ihre Kundschaft täglich vorbeigeht.",
-      pointsTitle: "Was dazugehört",
-      /* Der letzte Punkt ist eine Luecke und keine Aussage.
-         ❗TODO Buchbare Standorte, moegliche Zeitraeume und Preisrahmen
-         ergaenzen. Solange die Angaben fehlen, bleibt die Zeile so stehen,
-         denn jede Zahl an dieser Stelle waere erfunden. Dieselbe Luecke ist
-         auf der Unterseite /marketing bereits vermerkt. */
-      points: [
-        { icon: "pin", text: "Standorte in der Region", lang: "Digitale Flächen an frequenzstarken Standorten Ihrer Region" },
-        { icon: "palette", text: "Motive in Ihrem Stil", lang: "Gestaltung der Motive im Stil Ihrer Marke" },
-        { icon: "remote", text: "Aus der Ferne bespielt", lang: "Inhalte werden aus der Ferne bespielt" },
-        { icon: "clock", text: "Kurzfristig änderbar", lang: "Aktionen, Öffnungszeiten und offene Stellen kurzfristig anpassbar" },
-        { icon: "link", text: "Passend zum Netz", lang: "Abgestimmt auf Ihre Werbung im Netz" },
-        /* ❗TODO Verfügbare Standorte, Buchungszeiträume und Preisrahmen
-           ergänzen, sobald der Auftraggeber sie liefert. Die Marke stand
-           bis zum 02.09.2026 sichtbar in der Liste; für den Livegang hat
-           der Auftraggeber entschieden, dass keine Platzhalter auf der
-           Seite erscheinen. Die Lücke bleibt hier vermerkt. */
-      ],
-      stepsTitle: "So läuft es ab",
-      steps: [
-        {
-          n: "01",
-          title: "Standorte wählen",
-          body: "Wir suchen die Flächen nach den Wegen Ihrer Kundschaft aus.",
-        },
-        {
-          n: "02",
-          title: "Motive gestalten",
-          body: "Die Motive lesen sich im Vorbeigehen in wenigen Sekunden.",
-        },
-        {
-          n: "03",
-          title: "Bespielen und wechseln",
-          body: "Inhalte ändern wir aus der Ferne, meist noch am selben Tag.",
-        },
-      ],
-      note: "Von Ihnen brauchen wir Ihr Einzugsgebiet und die Aktionen, die Sie in den kommenden Monaten bewerben wollen.",
-      link: { label: "Mehr zu Werbetafeln", href: "/marketing/werbetafeln" },
-      /* Die Stele traegt bewusst keine Beschriftung. Die drei Aufnahmen
-         zeigen echte Displays im Ladenlokal, und ein aufgesetztes Wort
-         auf dem Gehaeuse laese sich als Platzhalter. */
-      szene: {},
-    },
+    /* Der dritte Strang Werbetafeln ist am 03.09.2026 auf Wunsch des
+       Auftraggebers aus der Sektion genommen, vorerst. Seine Buehne, die
+       Stele mit den vier Spots, bleibt in StrandStage.tsx erhalten und
+       laesst sich mit einem Eintrag an dieser Stelle wieder einhaengen. */
   ],
   closingLabel: "Zusammenspiel",
   closing:
-    "Erst zusammen ergeben die drei Stränge eine DNA. Wer Sie auf einer Tafel gesehen hat, erkennt Sie im Netz wieder und landet auf einer Seite, die dieselbe Sprache spricht. Deshalb betreuen wir alle drei aus einer Hand.",
+    "Erst zusammen ergeben die zwei Stränge eine DNA. Wer Sie auf Instagram gesehen hat, erkennt Sie auf Ihrer Webseite wieder, und die spricht dieselbe Sprache. Deshalb betreuen wir beide aus einer Hand.",
   link: { label: "Marketing im Detail", href: "/marketing" },
 };
 
@@ -1488,4 +1522,22 @@ export const werbetafelnPage = {
     cta: { label: "Kostenloses Strategiegespräch", href: "/kontakt" },
     note: "Das Gespräch dauert rund zwanzig Minuten und kostet nichts.",
   },
+};
+
+/* ------------------------------------------------------------------ */
+/*  Seite nicht gefunden                                                */
+/* ------------------------------------------------------------------ */
+
+/* Bis zum 03.09.2026 zeigte die Seite die nackte Vorgabe von Next. Der
+   Pruefbericht hat das als offenen Punkt gefuehrt. Die Zeile sagt in
+   einfachen Worten, was passiert ist, und bietet zwei Wege zurueck. */
+export const notFoundPage = {
+  meta: { title: "Seite nicht gefunden" },
+  label: "404",
+  titleBefore: "Diese Adresse führt ins",
+  gradientWord: "Leere.",
+  titleAfter: "",
+  lead: "Vielleicht ist die Adresse falsch geschrieben, oder die Seite ist umgezogen. Von hier aus finden Sie zurück.",
+  primary: { label: "Zur Startseite", href: "/" },
+  secondary: { label: "Kostenloses Strategiegespräch", href: "/kontakt" },
 };

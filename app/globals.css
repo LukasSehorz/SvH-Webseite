@@ -1597,3 +1597,48 @@ textarea {
     scroll-behavior: auto !important;
   }
 }
+
+/* ------------------------------------------------ Seite nicht gefunden */
+
+/* Die 404-Seite ist ein Server-Bauteil und kann keine eigenen styled-jsx
+   Bloecke tragen, deshalb stehen ihre wenigen Regeln hier. Sie borgt sich
+   Kopf und Absatz der Unterseiten und traegt nur den Schleier und die
+   Knopfreihe selbst. */
+.not-found {
+  position: relative;
+  overflow: hidden;
+  min-height: calc(100vh - 320px);
+}
+
+.not-found-fog {
+  position: absolute;
+  left: 8%;
+  top: -180px;
+  width: min(820px, 92vw);
+  height: 580px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    var(--acc-violet) 0%,
+    var(--acc-blue) 46%,
+    transparent 74%
+  );
+  opacity: 0.13;
+  filter: blur(130px);
+  pointer-events: none;
+}
+
+.not-found-inner {
+  position: relative;
+}
+
+.not-found-title {
+  max-width: 14ch;
+}
+
+.not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 42px;
+}

@@ -15,8 +15,9 @@
    scrollt und nimmt einen Termin an, ein Zaehler laeuft von null hoch,
    eine Tafel wechselt ihr Bild und faerbt das Licht davor mit.
 
-   ERSTER BILDSCHIRM. Kopf, drei Ringe, darunter der erste Strang mit
-   seinem laufenden Browserfenster ueber die volle nutzbare Breite.
+   ERSTER BILDSCHIRM. Kopf, ein Ring mit zwei Saetzen daneben, darunter
+   der erste Strang mit seinem laufenden Browserfenster ueber die volle
+   nutzbare Breite.
 
    FORM. Oben, rechts, links. Die drei Buehnen stehen verschieden, damit
    niemand dreimal dasselbe liest. Text nur so viel, wie ein Kind
@@ -40,8 +41,9 @@ import {
 /* ------------------------------------------------------------------ */
 /*  S4v2 · Marketing-DNA                                               */
 /*                                                                     */
-/*  Im Grund liegt das Partikelband, davor stehen Kopf, drei           */
-/*  Ring-Zaehler und die drei Leistungsstraenge.                       */
+/*  Im Grund liegt das Partikelband, davor stehen Kopf, ein            */
+/*  Ring-Zaehler mit zwei Saetzen und die Leistungsstraenge aus         */
+/*  copy.ts, derzeit zwei.                                             */
 /*                                                                     */
 /*  DIE BLOCKBEWEGUNG LIEGT JETZT IM BLATT UND NICHT MEHR IN           */
 /*  FRAMER-MOTION. Vorher trug jede der achtzehn Marken und jedes der  */
@@ -398,6 +400,12 @@ export default function MarketingDna() {
           </p>
         </Reveal>
 
+        {/* EIN RING, ZWEI SAETZE DANEBEN. Von den drei Ringen zaehlten
+            zwei die eigene Gliederung und trugen keine Aussage. Belegt
+            ist allein die Zahl der Projekte, und nur sie wird noch
+            gezeichnet und gezaehlt. Die beiden anderen Aussagen stehen
+            als schlichte Liste daneben und blenden gestaffelt ein,
+            sobald der Ring aktiv ist. */}
         <div className={styles.dnaRings} ref={rings} data-shot="dna-rings">
           {marketingDna.rings.map((entry, index) => (
             <RingStat
@@ -408,6 +416,18 @@ export default function MarketingDna() {
               active={ringsIn}
             />
           ))}
+          <ul className={styles.ringNotes} data-an={ringsIn ? "" : undefined}>
+            {marketingDna.ringNotes.map((satz, i) => (
+              <li
+                className={`t-body-lg ${styles.ringNote}`}
+                key={satz}
+                style={{ "--i": i } as React.CSSProperties}
+              >
+                <span className={styles.ringNoteMarke} aria-hidden="true" />
+                {satz}
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className={styles.dnaStrands} data-shot="dna-strands">

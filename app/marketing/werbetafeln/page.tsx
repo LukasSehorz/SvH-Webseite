@@ -40,6 +40,12 @@ import { werbetafelnPage as t } from "../../copy";
 export const metadata: Metadata = {
   title: t.meta.title,
   description: t.meta.description,
+  /* Seit dem 03.09.2026 werden die Werbetafeln vorerst nicht angeboten.
+     Die Seite bleibt gebaut, damit nichts verloren geht, fuehrt aber von
+     nirgends mehr her und soll bis auf Weiteres auch in keiner Suche
+     auftauchen. Wer sie zurueckholt, entfernt diese Zeile und haengt die
+     Verweise in copy.ts und sitemap.ts wieder ein. */
+  robots: { index: false, follow: false },
 };
 
 /* Die Videos auf dem Schirm entstehen ausserhalb dieses Baus und liegen

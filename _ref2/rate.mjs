@@ -9,12 +9,14 @@
  * Der Sprung laeuft ueber document.scrollingElement, weil Lenis
  * window.scrollTo abfaengt, und er wird zweimal gesetzt.
  */
-import { chromium } from 'playwright';
+import { starten } from './browser.mjs';
 
 const PORT = process.argv[2] || '3100';
 const LABEL = process.argv[3] || 'stand';
 
-const browser = await chromium.launch({ headless: false });
+// Ueber browser.mjs, damit das Fenster auf dem Nebenschirm aufgeht und der
+// Fokus beim Auftraggeber bleibt; die Messung selbst ist unveraendert.
+const { browser, aufraeumen } = await starten();
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
 await page.goto(`http://localhost:${PORT}/`, { waitUntil: 'domcontentloaded', timeout: 120000 });
 await page.waitForTimeout(3000);
@@ -36,4 +38,4 @@ await page.waitForTimeout(8000);
 const ft = (await page.evaluate(() => window.__ft.slice(12))).sort((a, b) => a - b);
 const p = (q) => ft[Math.floor(ft.length * q)].toFixed(1);
 console.log(`${LABEL.padEnd(14)} n=${ft.length}  p50=${p(0.5)}  p95=${p(0.95)}  max=${ft[ft.length - 1].toFixed(1)}`);
-await browser.close();
+await aufraeumen();

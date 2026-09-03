@@ -7,48 +7,45 @@ import { RevealGroup, RevealItem } from "../system/ui";
 const { detailLabels } = contactPage;
 
 /**
- * Ruhige Zeile unter den beiden Wegen. Die Angaben stammen aus content.ts,
- * die Beschriftungen aus copy.ts, damit beides jeweils nur an einer Stelle
- * gepflegt wird.
+ * Ruhige Zeile mit Erreichbarkeit und Anschrift. Die Angaben stammen aus
+ * content.ts, die Beschriftungen aus copy.ts, damit beides jeweils nur an
+ * einer Stelle gepflegt wird.
  *
- * Telefon und E-Mail standen hier bis zum 02.09.2026 ebenfalls. Seit an
- * ihrer Stelle die Komponente ContactDirect steht, waeren sie zweimal
- * innerhalb einer Bildhoehe zu lesen gewesen. Hier bleibt, was dort nicht
- * steht.
+ * Telefon und E-Mail standen hier bis zum 02.09.2026 ebenfalls. Seit sie
+ * im Block Direkt stehen, waeren sie zweimal innerhalb einer Bildhoehe zu
+ * lesen gewesen. Hier bleibt, was dort nicht steht.
+ *
+ * Der Block bringt keine eigene Sektion mehr mit. Seine Lage bestimmt das
+ * Raster in ContactCards, das ihn ab 1280 Bildpunkten rechts unter die
+ * Wege stellt und darunter ans Ende der Seite.
  */
 export default function ContactDetails() {
   return (
-    <section className="contact-details">
-      <div className="shell">
-        <hr className="hairline" />
+    <div className="contact-details">
+      <hr className="hairline" />
 
-        <RevealGroup as="ul" className="details-grid">
-          <RevealItem as="li">
-            <p className="t-label">{detailLabels.hours}</p>
-            <p className="details-value">{company.hours}</p>
-          </RevealItem>
+      <RevealGroup as="ul" className="details-grid">
+        <RevealItem as="li">
+          <p className="t-label">{detailLabels.hours}</p>
+          <p className="details-value">{company.hours}</p>
+        </RevealItem>
 
-          <RevealItem as="li">
-            <p className="t-label">{detailLabels.address}</p>
-            <p className="details-value">
-              {company.street}
-              <br />
-              {company.zipCity}
-            </p>
-          </RevealItem>
-        </RevealGroup>
-      </div>
+        <RevealItem as="li">
+          <p className="t-label">{detailLabels.address}</p>
+          <p className="details-value">
+            {company.street}
+            <br />
+            {company.zipCity}
+          </p>
+        </RevealItem>
+      </RevealGroup>
 
       {/*
-        Global deklariert, aber durchgehend unter `.contact-details` gehängt.
-        Nötig, weil styled-jsx seine Scope-Klasse nicht an eigene
+        Global deklariert, aber durchgehend unter `.contact-details` gehaengt.
+        Noetig, weil styled-jsx seine Scope-Klasse nicht an eigene
         Komponenten wie RevealGroup weiterreicht.
       */}
       <style jsx global>{`
-        .contact-details {
-          padding-bottom: var(--section-y);
-        }
-
         .contact-details .details-grid {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -81,6 +78,6 @@ export default function ContactDetails() {
           }
         }
       `}</style>
-    </section>
+    </div>
   );
 }

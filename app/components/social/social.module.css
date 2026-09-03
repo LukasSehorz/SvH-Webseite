@@ -121,6 +121,20 @@ h1.heroTitle {
 .headInner {
   position: relative;
   z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+
+/* Ab 1024 Bildpunkten steht rechts neben dem Text das Schaustueck aus
+   den beiden Sinnbildern. Darunter fehlt dafuer der Platz, und auf dem
+   Telefon sollen Ueberschrift, Satz und Knopf den ersten Bildschirm
+   behalten. */
+@media (min-width: 1024px) {
+  .headInner {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    column-gap: clamp(40px, 5vw, 120px);
+  }
 }
 
 /* Der Ausgleich verteilt die Woerter gleichmaeszig auf die Zeilen. Ohne
@@ -132,6 +146,116 @@ h1.heroTitle {
 
 .headLead {
   margin-top: 28px;
+}
+
+.headText {
+  position: relative;
+}
+
+.headAction {
+  display: flex;
+  margin-top: 38px;
+}
+
+/* Die Zelle rechts im Raster. Sie zentriert das Schaustueck und bleibt
+   unter 1024 Bildpunkten leer und ohne Hoehe. */
+.headSlot {
+  display: grid;
+  justify-items: center;
+}
+
+/* --------------------------------------------- Schaustueck im Kopf */
+
+.headShow {
+  display: none;
+  position: relative;
+  justify-self: center;
+  --sig-zoom: 1.2;
+}
+
+/* Die Stufen sind an der Spalte gemessen. Bei 1024 ist sie rund 420
+   Bildpunkte breit, und mit 1,3 ragte das Schaustueck ueber sie hinaus;
+   bei 2560 ist sie rund 1080 breit, und mit 2,4 blieb es eine Insel. */
+@media (min-width: 1024px) {
+  .headShow {
+    display: grid;
+    place-items: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  .headShow {
+    --sig-zoom: 1.4;
+  }
+}
+
+@media (min-width: 1440px) {
+  .headShow {
+    --sig-zoom: 1.6;
+  }
+}
+
+@media (min-width: 1920px) {
+  .headShow {
+    --sig-zoom: 2;
+  }
+}
+
+@media (min-width: 2400px) {
+  .headShow {
+    --sig-zoom: 2.6;
+  }
+}
+
+/* Ein weicher Hof in beiden Toenen hinter dem Schaustueck, damit die
+   Haarlinien der Sinnbilder nicht auf reinem Schwarz stehen. */
+.headShowGlow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 120%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 42% 40%,
+    rgba(91, 140, 255, 0.2),
+    rgba(124, 106, 255, 0.12) 42%,
+    transparent 68%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+/* Die Sinnbilder sind in festen Bildpunkten gezeichnet, weil sie in den
+   Bloecken unten klein und scharf stehen sollen. Fuer den Kopf werden sie
+   ueber zoom vergroeszert statt neu gezeichnet. Anders als bei transform
+   waechst dabei auch der Platz mit, den sie im Blatt einnehmen, und das
+   Raster des Kopfes kann sie wie ein Bild behandeln. */
+.headShowZoom {
+  position: relative;
+  zoom: var(--sig-zoom);
+}
+
+/* Das Fenster steht hinten links, der Beitrag vorn rechts und greift in
+   die untere Ecke des Fensters. Die Masze sind die Summen der beiden
+   Sinnbilder samt dem Herz, das rechts aus dem Beitrag herausragt. */
+.headShowStage {
+  position: relative;
+  width: 340px;
+  height: 282px;
+}
+
+.headShowWeb {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.headShowPost {
+  position: absolute;
+  left: 178px;
+  top: 46px;
 }
 
 /* --------------------------------------------- Sektionskopf, allgemein */
@@ -740,92 +864,175 @@ h1.heroTitle {
   margin-top: 16px;
 }
 
-/* ------------------------------------- Uebersicht, die drei Leistungen */
+/* ------------------------------------- Uebersicht, die zwei Leistungen */
 
+/* Die Sektion traegt oben nur einen kleinen Abstand und unten keinen,
+   weil die Bloecke ihren eigenen Innenabstand mitbringen. Mit dem vollen
+   Sektionsabstand stand der erste Block auf einem Schirm von 900
+   Bildpunkten Hoehe ganz unter der Bildkante, und zwischen dem letzten
+   Block und den Fragen lag ein leeres Feld von fast einem halben Schirm. */
+.fieldsSection {
+  padding: clamp(16px, 3vh, 40px) 0 0;
+}
+
+/* Die Bloecke stehen untereinander ueber die ganze Schale. Der Zoom
+   der Sinnbilder waechst mit der Bildbreite, damit sie auf einem Schirm
+   von 2560 Bildpunkten nicht als Briefmarke in der Haelfte stehen. */
 .fields {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(20px, 2vw, 34px);
+  grid-template-columns: minmax(0, 1fr);
+  --sig-zoom: 1.15;
 }
 
-.field {
+@media (min-width: 1024px) {
+  .fields {
+    --sig-zoom: 1.45;
+  }
+}
+
+@media (min-width: 1440px) {
+  .fields {
+    --sig-zoom: 1.7;
+  }
+}
+
+@media (min-width: 1920px) {
+  .fields {
+    --sig-zoom: 2.1;
+  }
+}
+
+@media (min-width: 2400px) {
+  .fields {
+    --sig-zoom: 2.5;
+  }
+}
+
+/* Je Block ein Ton aus der Rampe. Blau fuer die Webseiten, Violett fuer
+   Social Media. Der Ton steht als Zahlentripel, damit er in rgba mit
+   eigener Deckkraft weiterverwendet werden kann. */
+.block {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: clamp(26px, 2.4vw, 40px);
-  border: 1px solid var(--line);
-  border-radius: 26px;
-  background: linear-gradient(180deg, rgba(244, 244, 246, 0.03), transparent 58%);
+  --tone: 91, 140, 255;
+}
+
+.block[data-tone="social"] {
+  --tone: 124, 106, 255;
+}
+
+.block + .block {
+  border-top: 1px solid var(--line);
+}
+
+.blockLink {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: center;
+  padding-block: clamp(48px, 5vw, 96px);
   color: var(--ink);
-  transition:
-    border-color 0.5s var(--ease-out-expo),
-    transform 0.5s var(--ease-out-expo),
-    background-color 0.5s var(--ease-out-expo);
 }
 
-.field:hover,
-.field:focus-visible {
-  transform: translateY(-3px);
-  border-color: rgba(244, 244, 246, 0.24);
-  background-color: rgba(244, 244, 246, 0.02);
+/* Ab 1024 stehen Sinnbild und Text nebeneinander. Der erste Block fuehrt
+   das Fenster links, der zweite den Beitrag rechts, damit sich die zwei
+   Wege nicht wie zwei Zeilen derselben Tabelle lesen. */
+@media (min-width: 1024px) {
+  .blockLink {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    column-gap: clamp(40px, 5vw, 120px);
+  }
+
+  .block[data-tone="social"] .blockLink {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  }
+
+  .block[data-tone="social"] .blockStage {
+    order: 2;
+  }
 }
 
-/* Das bewegte Sinnbild der jeweiligen Welt. Die Hoehe ist so gewaehlt,
-   dass der hochkante Beitrag vollstaendig hineinpasst; er ist von den
-   drei Zeichnungen die hoechste. */
-.sigil {
+.blockStage {
   position: relative;
   display: grid;
   place-items: center;
-  height: clamp(252px, 19vw, 290px);
-  margin-bottom: clamp(28px, 3vw, 44px);
-  overflow: hidden;
+  padding-block: clamp(16px, 2vw, 40px);
 }
 
-.sigil::before {
-  content: "";
+/* Der Schein im Ton des Blocks. Er zieht bei Beruehrung leicht an, das
+   ist neben dem erneuten Anlaufen des Sinnbilds die einzige Antwort. */
+.blockGlow {
   position: absolute;
   left: 50%;
-  top: 55%;
-  width: 260px;
-  height: 260px;
+  top: 50%;
+  width: 72%;
+  max-width: 760px;
+  aspect-ratio: 1;
   transform: translate(-50%, -50%);
   border-radius: 9999px;
-  background: radial-gradient(circle at 50% 50%, rgba(124, 106, 255, 0.2), transparent 68%);
-  filter: blur(46px);
+  background: radial-gradient(circle at 50% 50%, rgba(var(--tone), 0.22), transparent 66%);
+  filter: blur(56px);
+  opacity: 0.75;
+  pointer-events: none;
+  transition: opacity 0.7s var(--ease-out-expo);
 }
 
-.fieldName {
+.blockLink:hover .blockGlow,
+.blockLink:focus-visible .blockGlow {
+  opacity: 1;
+}
+
+.blockZoom {
+  position: relative;
+  zoom: var(--sig-zoom);
+}
+
+.blockText {
+  max-width: var(--measure);
+}
+
+.blockName {
   margin: 0;
 }
 
-.fieldBody {
-  margin-top: 16px;
-  margin-bottom: 30px;
+.blockBody {
+  margin-top: 18px;
 }
 
-/* Der Abschluss wird nach unten gedrueckt, damit die drei Verweise auf
-   einer Linie stehen, auch wenn ein Satz eine Zeile mehr braucht. */
-.fieldGo {
+.blockGo {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  margin-top: auto;
-  padding-top: 22px;
-  border-top: 1px solid var(--line-2);
-  font-size: 14.5px;
+  margin-top: 30px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--ink-2);
   transition: color 0.4s var(--ease-out-expo);
 }
 
-.field:hover .fieldGo {
+/* Ein Punkt im Ton des Blocks vor dem Verweis. So traegt auch der Text
+   die Farbe, die der Schein hinter dem Sinnbild vorgibt. */
+.blockGo::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: rgb(var(--tone));
+}
+
+.blockGo svg {
+  width: 17px;
+  height: 17px;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.blockLink:hover .blockGo,
+.blockLink:focus-visible .blockGo {
   color: var(--ink);
 }
 
-.fieldGo svg {
-  width: 17px;
-  height: 17px;
+.blockLink:hover .blockGo svg,
+.blockLink:focus-visible .blockGo svg {
+  transform: translateX(4px);
 }
 
 /* --------------------------------------------- Sinnbild Webseiten */
@@ -969,10 +1176,6 @@ h1.heroTitle {
 /* ------------------------------------------------------------ Schmaler */
 
 @media (max-width: 1100px) {
-  .fields {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .scopeList {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1057,8 +1260,8 @@ h1.heroTitle {
     padding: 22px;
   }
 
-  .field {
-    padding: 22px;
+  .blockLink {
+    padding-block: 44px;
   }
 }
 
@@ -1068,8 +1271,9 @@ h1.heroTitle {
 @media (prefers-reduced-motion: reduce) {
   .step,
   .stepNode,
-  .field,
-  .fieldGo,
+  .blockGlow,
+  .blockGo,
+  .blockGo svg,
   .replay {
     transition: none;
   }
@@ -1079,8 +1283,8 @@ h1.heroTitle {
     filter: none;
   }
 
-  .field:hover,
-  .field:focus-visible {
+  .blockLink:hover .blockGo svg,
+  .blockLink:focus-visible .blockGo svg {
     transform: none;
   }
 }

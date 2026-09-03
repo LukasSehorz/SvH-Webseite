@@ -1,24 +1,29 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { aboutPage } from "../../copy";
-import { Reveal, SplitHeadline, useSafeReducedMotion } from "../system/ui";
+import { useSafeReducedMotion } from "../system/ui";
 
 /* ------------------------------------------------------------------ */
 /*  /ueber-uns · Drei Straenge werden zu einem                         */
 /*                                                                     */
-/*  Die Aussage der Sektion lautet, dass Webseite, Social Media und    */
+/*  Die Aussage der Buehne lautet, dass Webseite, Social Media und     */
 /*  KI bei SVH an einer Stelle zusammenlaufen statt bei drei           */
 /*  Anbietern. Die Bewegung sagt genau das und braucht dafuer keinen   */
-/*  erklaerenden Satz: beim Hineinscrollen stehen drei getrennte       */
-/*  Bahnen, beim Weiterscrollen biegen sie zueinander und enden in     */
-/*  einem einzigen hellen Punkt.                                       */
+/*  erklaerenden Satz. Zuerst stehen drei getrennte Bahnen, dann       */
+/*  biegen sie zueinander und enden in einem einzigen hellen Punkt.    */
 /*                                                                     */
-/*  Gefuehrt wird das ueber einen Scrub, damit derselbe Weg beim       */
-/*  Zurueckscrollen rueckwaerts laeuft. Der Ausgangszustand ist voll   */
-/*  sichtbar, es wird also nichts eingeblendet, sondern verformt.      */
+/*  Seit dem 03.09.2026 steht die Buehne im ersten Bildschirm der      */
+/*  Seite und nicht mehr in einer eigenen Sektion darunter. Dort war   */
+/*  sie an einen Scroll-Scrub gebunden; im Kopf ist sie sofort im Bild */
+/*  und ein Scrub haette nichts zu fuehren. Deshalb laeuft das         */
+/*  Zusammenfuehren jetzt einmal zeitgesteuert nach dem Laden ab und   */
+/*  bleibt danach verbunden. Bei Beruehrung der Buehne loesen sich die */
+/*  Bahnen noch einmal und laufen erneut zusammen.                     */
+/*                                                                     */
+/*  Die Zeichnung selbst, also Bahnen, Farben, Punkte und Sammelring,  */
+/*  ist abgenommen und unveraendert. Geaendert sind nur Ort und        */
+/*  Antrieb.                                                           */
 /* ------------------------------------------------------------------ */
 
 /** Waagerechte Startlage der drei Straenge, als Anteil der Buehnenbreite. */
@@ -29,7 +34,7 @@ const SOURCES = [0.15, 0.5, 0.85] as const;
  * Naht schwingt der Strang seitlich ein, zwischen Naht und Fusz laeuft er
  * senkrecht weiter. Bei vollem Verbindungsgrad liegen alle drei
  * Fuszstuecke uebereinander, und aus den drei Bahnen wird sichtbar ein
- * einziger heller Strang. Genau das ist die Aussage der Sektion.
+ * einziger heller Strang. Genau das ist die Aussage der Buehne.
  */
 const Y_TOP = 0.2;
 const Y_JOIN = 0.66;
@@ -49,43 +54,61 @@ const COLORS = [
 const DOTS_PER_STRAND = 7;
 const TRAVEL_MS = 3400;
 
+/**
+ * Zeitplan des Zusammenlaufens in Millisekunden.
+ *
+ * Nach dem Laden halten die drei Bahnen erst eine gute Sekunde getrennt,
+ * damit der Ausgangszustand ueberhaupt gesehen wird, bevor er sich
+ * veraendert. Dann laufen sie in knapp zwei Sekunden zusammen. Beim
+ * erneuten Anlaufen durch Beruehrung loesen sich die Bahnen zuerst
+ * wieder, stehen kurz getrennt und laufen dann noch einmal zusammen;
+ * ein harter Sprung zurueck auf drei Bahnen saehe wie ein Fehler aus.
+ */
+const HOLD_MS = 1200;
+const MERGE_MS = 1800;
+const RELEASE_MS = 500;
+const REHOLD_MS = 800;
+
+type Phase = "hold" | "merge" | "done" | "release";
+
 function bezier(a: number, b: number, c: number, d: number, t: number): number {
   const u = 1 - t;
   return u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * d;
 }
 
 /**
- * Verbindungsgrad aus dem Fortschritt des Scrubs.
- *
- * Die ersten 42 Hundertstel des Weges halten die drei Bahnen getrennt.
- * Der Wert ist gemessen und nicht geschaetzt: bei einem Schirm von 900
- * Bildpunkten Hoehe steht die Buehne genau dann zum ersten Mal
- * vollstaendig im Bild, und erst ab da beginnt das Zusammenlaufen. Ohne
- * diese Ruhe waere der Ausgangszustand nur zu sehen, solange die Buehne
- * noch halb unter der Bildkante steht, denn ein reines exponentielles
- * Ausklingen nimmt gleich zu Beginn die meiste Strecke.
- *
- * Danach klingt die Bewegung aus, und zwar in beide Scrollrichtungen
- * gleich, weil der Wert allein am Fortschritt haengt.
+ * Die Ausklingkurve des Zusammenlaufens. Sie ist dieselbe, die die Buehne
+ * schon am Scrub hatte, damit die abgenommene Bewegung gleich bleibt.
  */
-const HOLD = 0.42;
-
-function mergeOf(progress: number): number {
-  const raw = (progress - HOLD) / (1 - HOLD);
-  const clamped = raw < 0 ? 0 : raw > 1 ? 1 : raw;
+function easeOut(progress: number): number {
+  const clamped = progress < 0 ? 0 : progress > 1 ? 1 : progress;
   return 1 - Math.pow(1 - clamped, 3);
 }
 
-export default function AboutStrands() {
+/** Deckkraft des Namens am Fusz aus dem Verbindungsgrad. */
+function targetOpacity(merge: number): number {
+  return Math.min(1, Math.max(0, (merge - 0.6) / 0.35));
+}
+
+/**
+ * Die Buehne mit den drei Straengen. Sie fuellt die Breite und Hoehe, die
+ * ihr Elternteil vorgibt, und bringt Beschriftungen und Namen mit. Der
+ * Hero stellt sie ab 1024 Bildpunkten rechts neben den Text.
+ */
+export function StrandsFigure({ className }: Readonly<{ className?: string }>) {
   const reduced = useSafeReducedMotion();
-  const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const targetRef = useRef<HTMLParagraphElement>(null);
 
   /* Der Verbindungsgrad. Null heiszt drei getrennte Bahnen, eins heiszt
      ein gemeinsamer Endpunkt. Die Zeichenschleife liest den Wert, der
-     Scrub schreibt ihn. */
+     Zeitplan schreibt ihn. */
   const mergeRef = useRef(reduced ? 1 : 0);
+
+  /* Das erneute Anlaufen wird von der Zeichenschleife bereitgestellt,
+     weil nur sie den Zeitplan kennt. Ohne laufende Schleife bleibt der
+     Aufruf ohne Wirkung. */
+  const replayRef = useRef<(() => void) | null>(null);
 
   /* ------------------------------------------------------ Zeichnen */
 
@@ -152,7 +175,7 @@ export default function AboutStrands() {
     const SAMPLES = 72;
 
     const draw = () => {
-      /* Der Wert kommt bereits fertig gerechnet aus dem Scrub. */
+      /* Der Wert kommt bereits fertig gerechnet aus dem Zeitplan. */
       const merge = mergeRef.current;
 
       ctx.clearRect(0, 0, width, height);
@@ -256,11 +279,11 @@ export default function AboutStrands() {
     /* ------------------------------------------------- ruhendes Bild */
 
     if (reduced) {
-      /* Der Verbindungsgrad wird hier gesetzt und nicht erst im Scrub.
-         Beide Effekte haengen an derselben Einstellung, und dieser hier
-         laeuft zuerst; ohne die Zeile zeichnete das ruhende Bild die drei
-         getrennten Bahnen und bekaeme danach keinen zweiten Anstrich. */
+      /* Der Verbindungsgrad wird hier gesetzt und nicht erst im Zeitplan.
+         Das ruhende Bild zeigt sofort den verbundenen Zustand, denn das
+         ist der Zustand, der die Aussage traegt. */
       mergeRef.current = 1;
+      if (targetRef.current) targetRef.current.style.opacity = "1";
 
       const paint = () => {
         resize();
@@ -273,6 +296,55 @@ export default function AboutStrands() {
     }
 
     /* ------------------------------------------------ laufendes Bild */
+
+    /* Der Zeitplan zaehlt mit den Bildabstaenden und nicht mit der Uhr.
+       Ist die Buehne aus dem Bild oder das Fenster verdeckt, steht die
+       Schleife, und beim Zurueckkommen laeuft die Bewegung dort weiter,
+       wo sie stand, statt ein Stueck zu ueberspringen. */
+    let phase: Phase = "hold";
+    let clock = 0;
+    let holdFor = HOLD_MS;
+    let releaseFrom = 0;
+
+    const advance = (delta: number) => {
+      clock += delta;
+
+      if (phase === "release") {
+        mergeRef.current = releaseFrom * (1 - easeOut(clock / RELEASE_MS));
+        if (clock >= RELEASE_MS) {
+          phase = "hold";
+          clock = 0;
+          holdFor = REHOLD_MS;
+          mergeRef.current = 0;
+        }
+      } else if (phase === "hold") {
+        mergeRef.current = 0;
+        if (clock >= holdFor) {
+          phase = "merge";
+          clock = 0;
+        }
+      } else if (phase === "merge") {
+        mergeRef.current = easeOut(clock / MERGE_MS);
+        if (clock >= MERGE_MS) {
+          phase = "done";
+          mergeRef.current = 1;
+        }
+      }
+
+      /* Der Name am Fusz erscheint erst, wenn dort auch etwas
+         zusammenlaeuft, und steht voll, sobald der Strang einer ist. */
+      const target = targetRef.current;
+      if (target) target.style.opacity = String(targetOpacity(mergeRef.current));
+    };
+
+    replayRef.current = () => {
+      /* Waehrend eines laufenden Vorgangs bleibt die Beruehrung ohne
+         Wirkung, sonst zuckte die Buehne bei jeder Mausbewegung. */
+      if (phase !== "done") return;
+      phase = "release";
+      releaseFrom = mergeRef.current;
+      clock = 0;
+    };
 
     let raf = 0;
     let last = 0;
@@ -289,6 +361,7 @@ export default function AboutStrands() {
         if (dot.t > 1) dot.t -= 1;
       }
 
+      advance(delta);
       draw();
     };
 
@@ -332,137 +405,59 @@ export default function AboutStrands() {
 
     return () => {
       stop();
+      replayRef.current = null;
       resizeObserver.disconnect();
       viewObserver.disconnect();
       document.removeEventListener("visibilitychange", sync);
     };
   }, [reduced]);
 
-  /* ----------------------------------------------- Scrub der Bewegung */
-
-  useEffect(() => {
-    const stage = stageRef.current;
-    const target = targetRef.current;
-    if (!stage) return;
-
-    if (reduced) {
-      mergeRef.current = 1;
-      if (target) target.style.opacity = "1";
-      return;
-    }
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const trigger = ScrollTrigger.create({
-      trigger: stage,
-      start: "top 90%",
-      end: "bottom 60%",
-      scrub: 0.5,
-      onUpdate: (self) => {
-        const merge = mergeOf(self.progress);
-        mergeRef.current = merge;
-        /* Der Name am Fusz erscheint erst, wenn dort auch etwas
-           zusammenlaeuft, und steht voll, sobald der Strang einer ist. */
-        if (target) {
-          target.style.opacity = String(
-            Math.min(1, Math.max(0, (merge - 0.6) / 0.35)),
-          );
-        }
-      },
-    });
-
-    return () => trigger.kill();
-  }, [reduced]);
-
   return (
-    <section className="section about-strands" id="bereiche">
-      <div className="shell">
-        <div className="strands-head">
-          <Reveal>
-            <SplitHeadline
-              className="t-h1 strands-title"
-              before={aboutPage.strands.titleBefore}
-              word={aboutPage.strands.gradientWord}
-              after={aboutPage.strands.titleAfter}
-            />
-          </Reveal>
+    <div
+      className={`strands-figure${className ? ` ${className}` : ""}`}
+      role="img"
+      aria-label={aboutPage.strands.figureAlt}
+      onPointerEnter={() => replayRef.current?.()}
+    >
+      <canvas ref={canvasRef} className="strands-canvas" aria-hidden="true" />
 
-          <Reveal delay={0.08}>
-            <p className="t-body-lg strands-body">{aboutPage.strands.body}</p>
-          </Reveal>
-        </div>
+      {aboutPage.strands.sources.map((label, index) => (
+        <p
+          key={label}
+          className="t-label strands-cap"
+          style={{ left: `${SOURCES[index] * 100}%` }}
+        >
+          {label}
+        </p>
+      ))}
 
-        <Reveal delay={0.14}>
-          <div
-            ref={stageRef}
-            className="strands-stage"
-            role="img"
-            aria-label={aboutPage.strands.figureAlt}
-          >
-            <canvas ref={canvasRef} className="strands-canvas" aria-hidden="true" />
-
-            {aboutPage.strands.sources.map((label, index) => (
-              <p
-                key={label}
-                className="t-label strands-cap"
-                style={{ left: `${SOURCES[index] * 100}%` }}
-              >
-                {label}
-              </p>
-            ))}
-
-            <p
-              ref={targetRef}
-              className="strands-target"
-              style={{ opacity: reduced ? 1 : 0 }}
-            >
-              {aboutPage.strands.target}
-            </p>
-          </div>
-        </Reveal>
-      </div>
+      <p
+        ref={targetRef}
+        className="strands-target"
+        style={{ opacity: reduced ? 1 : 0 }}
+      >
+        {aboutPage.strands.target}
+      </p>
 
       {/*
-        Global deklariert, aber durchgehend unter `.about-strands` gehaengt.
-        Noetig, weil styled-jsx seine Scope-Klasse nicht an eigene
-        Komponenten wie `Reveal` weiterreicht.
+        Global deklariert, aber durchgehend unter `.strands-figure` gehaengt.
+        Breite und Hoehe gibt das Elternteil vor, hier stehen nur die Lagen
+        von Zeichnung, Beschriftungen und Name.
       */}
       <style jsx global>{`
-        .about-strands .strands-head {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-          gap: 32px 72px;
-          align-items: end;
-        }
-
-        .about-strands .strands-title {
-          max-width: 14ch;
-          text-wrap: balance;
-        }
-
-        .about-strands .strands-body {
-          max-width: var(--measure);
-        }
-
-        /* Die Buehne waechst mit der verbreiterten Schale mit. Bei 1080
-           Bildpunkten stand sie auf einem Schirm von 2560 als kleine
-           Insel in viel schwarzer Flaeche. */
-        .about-strands .strands-stage {
+        .strands-figure {
           position: relative;
           width: 100%;
-          max-width: 1360px;
-          margin: clamp(48px, 6vw, 84px) auto 0;
-          height: clamp(340px, 26vw, 520px);
         }
 
-        .about-strands .strands-canvas {
+        .strands-figure .strands-canvas {
           position: absolute;
           inset: 0;
           width: 100%;
           height: 100%;
         }
 
-        .about-strands .strands-cap {
+        .strands-figure .strands-cap {
           position: absolute;
           top: 0;
           transform: translateX(-50%);
@@ -471,7 +466,7 @@ export default function AboutStrands() {
           color: var(--ink-2);
         }
 
-        .about-strands .strands-target {
+        .strands-figure .strands-target {
           position: absolute;
           left: 50%;
           bottom: 0;
@@ -479,43 +474,27 @@ export default function AboutStrands() {
           margin: 0;
           white-space: nowrap;
           font-family: var(--font-display);
-          font-size: clamp(17px, 1.7vw, 22px);
+          font-size: clamp(17px, 1.6vw, 26px);
           font-weight: 400;
           letter-spacing: -0.01em;
           color: var(--ink);
-          transition: opacity 0.5s var(--ease-out-expo);
-        }
-
-        @media (max-width: 1023px) {
-          .about-strands .strands-head {
-            grid-template-columns: minmax(0, 1fr);
-            gap: 22px;
-            align-items: start;
-          }
-
-          .about-strands .strands-title {
-            max-width: 16ch;
-          }
-
-          .about-strands .strands-stage {
-            height: clamp(320px, 78vw, 400px);
-          }
         }
 
         @media (max-width: 560px) {
-          .about-strands .strands-cap {
+          .strands-figure .strands-cap {
             font-size: 10px;
             letter-spacing: 0.08em;
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .about-strands .strands-target {
+          .strands-figure .strands-target {
             opacity: 1 !important;
-            transition: none;
           }
         }
       `}</style>
-    </section>
+    </div>
   );
 }
+
+export default StrandsFigure;

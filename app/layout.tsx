@@ -31,7 +31,20 @@ export const metadata: Metadata = {
     siteName: "SVH Consulting",
     title: meta.home.title,
     description: meta.home.description,
+    /* Das Bild fehlte bis zum 03.09.2026, und ein Link ohne Bild steht in
+       jedem Chat als graue Zeile. Es liegt als fertige Datei unter public,
+       1200 mal 630 Bildpunkte, dunkler Grund, Slogan mit Verlaufswort. Wer
+       den Slogan aendert, erzeugt das Bild neu. */
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "SVH Consulting. Wir bringen Ihren Betrieb ins KI-Zeitalter.",
+      },
+    ],
   },
+  twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
 };
 

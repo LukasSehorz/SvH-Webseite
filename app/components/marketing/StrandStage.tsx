@@ -14,9 +14,10 @@ import { useSafeReducedMotion } from "../system/ui";
 /*  Szenen geworden, die von selbst laufen und bei Beruehrung neu       */
 /*  beginnen.                                                          */
 /*                                                                     */
-/*  01 Webseite   Eine gezeichnete Seite scrollt im Fenster durch,      */
-/*                bleibt am Kontaktformular stehen, der Knopf wird      */
-/*                gedrueckt, eine Bestaetigung erscheint.               */
+/*  01 Webseite   Eine Suche findet den Betrieb, Besucher laufen in    */
+/*                das Fenster, die gezeichnete Seite scrollt durch,     */
+/*                der Termin wird gebucht, und die Anfrage kommt auf     */
+/*                dem Telefon des Betriebs an.                          */
 /*  02 Social     Ein Beitrag im Hochformat, davor ein Zaehler, der von */
 /*                null hochlaeuft, aufsteigende Herzen und eine         */
 /*                wachsende Reichweitenkurve.                           */
@@ -99,13 +100,118 @@ function usePhase(
 
 /* ----------------------------------------------------- 01 Webseite */
 
-/* Sechs Abschnitte. Die Seite steht oben, rollt durch, haelt am
-   Formular, der Zeiger faehrt heran, drueckt, und die Bestaetigung
-   steht. Danach spult die Szene zurueck.
-   Die 2600 im zweiten Abschnitt sind zugleich die Dauer der Fahrt im
+/* ZWOELF ABSCHNITTE, UND SIE ERZAEHLEN IN EINER SCHLEIFE, WIE EINE
+   WEBSEITE KUNDEN GEWINNT. Der Auftraggeber wollte in dieser Szene mehr
+   Motive sehen als die Fahrt zum Formular. Die Geschichte laeuft deshalb
+   in fuenf Bildern. Jemand sucht und findet den Betrieb, das Fenster
+   tritt vor und Besucher laufen auf drei Wegen hinein, die Seite
+   ueberzeugt beim Durchrollen mit Telefonzeile, Sternen und Karte, der
+   Termin wird gebucht, und die Anfrage kommt auf dem Telefon des
+   Betriebs an.
+   Die Dauern stehen in Millisekunden und gehoeren zum jeweiligen
+   Abschnitt, nicht zum Uebergang dorthin. Die Uebergangsdauern stehen
+   im Blatt bei der jeweiligen Regel.
+   Die 2600 im siebten Abschnitt sind zugleich die Dauer der Fahrt im
    Blatt. Wer eines von beiden aendert, aendert das andere mit, sonst
    haelt die Seite mitten in der Bewegung an. */
-const WEB_TAKT = [1500, 2600, 700, 950, 340, 2500] as const;
+const WEB_TAKT = [
+  900, // 0. Ruhe. Das Suchfeld steht leer vor dem gedimmten Fenster.
+  1300, // 1. Das Suchwort tippt sich in das Feld.
+  900, // 2. Die Trefferliste klappt auf, und der erste Treffer leuchtet.
+  700, // 3. Der Zeiger faehrt auf den ersten Treffer.
+  260, // 4. Der Druck auf den Treffer.
+  900, // 5. Die Suche weicht, das Fenster tritt vor, die Gaeste laufen los.
+  2600, // 6. Die Fahrt durch die Seite, die Sterne leuchten nacheinander auf.
+  700, // 7. Halt am Formular, die Ortsmarke faellt auf die Karte.
+  950, // 8. Der Zeiger faehrt zum Knopf.
+  340, // 9. Der Druck auf den Knopf.
+  1500, // 10. Der Termin ist bestaetigt.
+  2400, // 11. Die Anfrage steht auf dem Telefon, und der Zaehler springt um eins.
+] as const;
+
+/** Der letzte Abschnitt ist der Endzustand. Bei reduzierter Bewegung
+ *  steht die Szene sofort dort, mit Seite am Formular, Bestaetigung und
+ *  Meldung auf dem Telefon. */
+const WEB_ENDE = WEB_TAKT.length - 1;
+
+/** Die drei Wege, auf denen Besucher zu einer Seite kommen. Suche, Anruf
+ *  und Karte. Der Wert k ist die Lage in der Spalte links vom Fenster,
+ *  oben, Mitte und unten, und damit zugleich die Richtung, aus der die
+ *  Gaeste zum Fenster laufen. Die Zeichen sind gezeichnet und tragen
+ *  dieselbe Strichstaerke wie die Marken unter der Buehne. */
+const WEGE: readonly { id: string; k: number; d: readonly string[] }[] = [
+  {
+    id: "suche",
+    k: -1,
+    d: ["M3.2 7.2a4 4 0 1 0 8 0 4 4 0 0 0-8 0z", "M10.2 10.2l3.4 3.4"],
+  },
+  {
+    id: "anruf",
+    k: 0,
+    d: [
+      "M4.4 2.8h2.4l1.3 3.1-1.6 1.2a8 8 0 0 0 3.4 3.4l1.2-1.6 3.1 1.3v2.4a1.4 1.4 0 0 1-1.5 1.4A11.2 11.2 0 0 1 3 4.3a1.4 1.4 0 0 1 1.4-1.5z",
+    ],
+  },
+  {
+    id: "karte",
+    k: 1,
+    d: [
+      "M8 14.2s4.4-4.3 4.4-7.4a4.4 4.4 0 1 0-8.8 0c0 3.1 4.4 7.4 4.4 7.4z",
+      "M8 8.4a1.6 1.6 0 1 0 0-3.2 1.6 1.6 0 0 0 0 3.2z",
+    ],
+  },
+];
+
+/** Ein Gast, gezeichnet als Kopf und Schultern in einem Kreis. */
+const GAST = [
+  "M8 7.6a2.3 2.3 0 1 0 0-4.6 2.3 2.3 0 0 0 0 4.6z",
+  "M3.8 13a4.2 4.2 0 0 1 8.4 0",
+] as const;
+
+/** Der Stern der Bewertungszeile. Fuenf davon stehen in der Seite, und
+ *  eine Zahl steht bewusst nicht daneben. */
+const STERN =
+  "M8 1.7l1.9 4 4.4.6-3.2 3.1.8 4.4L8 11.7l-3.9 2.1.8-4.4L1.7 6.3l4.4-.6z";
+
+/** Der Zeiger, den beide Klicks der Szene benutzen. Einer sitzt in der
+ *  Trefferliste, der andere im Formular, damit jeder mit seinem Blatt
+ *  mitfaehrt und sein Weg eine kurze Strecke bleibt. */
+function Zeiger({ className }: Readonly<{ className: string }>) {
+  return (
+    <span className={className} aria-hidden="true">
+      <svg viewBox="0 0 16 18" fill="none">
+        <path
+          d="M1.6 1.4 14 9.1l-5.3 1.1-2 5z"
+          fill="currentColor"
+          stroke="currentColor"
+          strokeWidth={1.4}
+          strokeLinejoin="round"
+        />
+      </svg>
+    </span>
+  );
+}
+
+/** Ein gezeichnetes Zeichen aus einer Pfadliste, Strichstaerke 1,4. */
+function Zeichen({
+  d,
+  className,
+}: Readonly<{ d: readonly string[]; className?: string }>) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      {d.map((pfad) => (
+        <path
+          key={pfad}
+          d={pfad}
+          stroke="currentColor"
+          strokeWidth={1.4}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ))}
+    </svg>
+  );
+}
 
 /** Eine Zeile im gezeichneten Seiteninhalt. Die Hoehe kommt aus dem
  *  Blatt und nicht mehr als Bildpunktwert von hier, denn sie waechst mit
@@ -131,6 +237,17 @@ function WebStage({ worte }: Readonly<{ worte: Worte }>) {
   const drin = useImBild(feld);
   const [neu, setNeu] = useState(0);
   const p = usePhase(WEB_TAKT, drin, neu, ruhig);
+  const [anfragen, setAnfragen] = useState(0);
+
+  /* Der Zaehler springt, sobald die Meldung auf dem Telefon steht, und
+     zaehlt ueber die Runden hinweg weiter. Er ist eine Vorfuehrung und
+     keine Kennzahl, deshalb beginnt er bei null und hat kein Ziel. Bei
+     reduzierter Bewegung steht statt einer Zahl ein Haken, denn dort
+     gibt es keine Runde, in der er springen koennte. */
+  useEffect(() => {
+    if (ruhig || p !== WEB_ENDE) return;
+    setAnfragen((n) => n + 1);
+  }, [p, ruhig]);
 
   return (
     <div
@@ -140,126 +257,335 @@ function WebStage({ worte }: Readonly<{ worte: Worte }>) {
       aria-hidden="true"
       onPointerEnter={() => setNeu((n) => n + 1)}
     >
-      <div className={styles.wbFrame}>
-        <div className={styles.wbChrome}>
-          <span className={styles.wbAmpel} />
-          <span className={styles.wbAmpel} />
-          <span className={styles.wbAmpel} />
-          <span className={styles.wbAddr}>
-            <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
-              <path
-                d="M3.4 5.4V4.1a2.6 2.6 0 0 1 5.2 0v1.3M2.9 5.4h6.2v4.2H2.9z"
-                stroke="currentColor"
-                strokeWidth={1}
-                strokeLinejoin="round"
-              />
-            </svg>
-            {worte.adresse}
-          </span>
+      <div className={styles.wbBuehne}>
+        {/* Die drei Wege links vom Fenster. Aus jedem laufen zwei Gaeste
+            an gepunkteten Leitlinien entlang zur Mitte der linken
+            Fensterkante und verschwinden dort hinein. Das zeigt ohne ein
+            Wort, dass Besucher aus der Suche, vom Telefon und von der
+            Karte auf derselben Seite ankommen. */}
+        <div className={styles.wbQuellen}>
+          <svg
+            className={styles.wbPfade}
+            viewBox="0 0 100 400"
+            preserveAspectRatio="none"
+            fill="none"
+          >
+            {["M36 45C72 45 66 200 104 200", "M42 200H104", "M36 355C72 355 66 200 104 200"].map(
+              (d) => (
+                <path
+                  key={d}
+                  d={d}
+                  stroke="currentColor"
+                  strokeWidth={1}
+                  strokeDasharray="1.5 5"
+                  strokeLinecap="round"
+                  vectorEffect="non-scaling-stroke"
+                />
+              ),
+            )}
+          </svg>
+          {WEGE.map((weg, i) => (
+            <span
+              className={styles.wbQuelle}
+              key={weg.id}
+              data-weg={weg.id}
+              style={{ "--k": weg.k } as React.CSSProperties}
+            >
+              <Zeichen d={weg.d} />
+              {[0, 1].map((n) => (
+                <span
+                  className={styles.wbGast}
+                  key={n}
+                  style={{ "--i": i + n * 3 } as React.CSSProperties}
+                >
+                  <Zeichen d={GAST} />
+                </span>
+              ))}
+            </span>
+          ))}
         </div>
 
-        <div className={styles.wbView}>
-          <div className={styles.wbPage}>
-            {/* Bildschirm 1. Kopfbereich mit Zeile, Unterzeile und Knopf. */}
-            <div className={styles.wbSchirm}>
-              <div className={styles.wbNav}>
-                <span className={styles.wbMarke} />
-                <span className={styles.wbNavLuft} />
-                <Zeile breite="max(26px, 3.16cqw)" />
-                <Zeile breite="max(26px, 3.16cqw)" />
-                <Zeile breite="max(26px, 3.16cqw)" />
-                <span className={styles.wbNavKnopf} />
-              </div>
-              <div className={styles.wbHero}>
-                <div className={styles.wbHeroText}>
-                  <Zeile breite="82%" stark gross />
-                  <Zeile breite="58%" stark gross />
-                  <Zeile breite="70%" />
-                  <Zeile breite="48%" />
-                  <span className={styles.wbHeroKnopf} />
+        <div className={styles.wbFenster}>
+          <div className={styles.wbFrame}>
+            <div className={styles.wbChrome}>
+              <span className={styles.wbAmpel} />
+              <span className={styles.wbAmpel} />
+              <span className={styles.wbAmpel} />
+              <span className={styles.wbAddr}>
+                <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path
+                    d="M3.4 5.4V4.1a2.6 2.6 0 0 1 5.2 0v1.3M2.9 5.4h6.2v4.2H2.9z"
+                    stroke="currentColor"
+                    strokeWidth={1}
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                {worte.adresse}
+              </span>
+            </div>
+
+            <div className={styles.wbView}>
+              <div className={styles.wbPage}>
+                {/* Bildschirm 1. Kopfbereich mit Zeile, Unterzeile und Knopf. */}
+                <div className={styles.wbSchirm}>
+                  <div className={styles.wbNav}>
+                    <span className={styles.wbMarke} />
+                    <span className={styles.wbNavLuft} />
+                    <Zeile breite="max(26px, 3.16cqw)" />
+                    <Zeile breite="max(26px, 3.16cqw)" />
+                    <Zeile breite="max(26px, 3.16cqw)" />
+                    {/* Die Telefonzeile im Kopf. Sie leuchtet kurz auf,
+                        sobald das Fenster vorgetreten ist, denn die
+                        Nummer ist das Erste, was ein Besucher sucht. */}
+                    <span className={styles.wbTel}>
+                      <span className={styles.wbTelLicht} />
+                      <Zeichen d={WEGE[1].d} />
+                      <Zeile breite="max(24px, 2.92cqw)" />
+                    </span>
+                    <span className={styles.wbNavKnopf} />
+                  </div>
+                  <div className={styles.wbHero}>
+                    <div className={styles.wbHeroText}>
+                      <Zeile breite="82%" stark gross />
+                      <Zeile breite="58%" stark gross />
+                      <Zeile breite="70%" />
+                      <Zeile breite="48%" />
+                      <span className={styles.wbHeroKnopf} />
+                    </div>
+                    <span className={styles.wbHeroBild} />
+                  </div>
                 </div>
-                <span className={styles.wbHeroBild} />
-              </div>
-            </div>
 
-            {/* Bildschirm 2. Drei Leistungen als Karten. */}
-            <div className={styles.wbSchirm}>
-              <Zeile breite="34%" stark gross />
-              <div className={styles.wbKarten}>
-                {[0, 1, 2].map((i) => (
-                  <span className={styles.wbKarte} key={i}>
-                    <span className={styles.wbKarteZeichen} />
-                    <Zeile breite="72%" />
-                    <Zeile breite="92%" />
-                    <Zeile breite="64%" />
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Bildschirm 3. Der Kontaktbereich, an dem die Fahrt endet.
-                Er steht zweispaltig wie ein gebauter Kontaktabschnitt:
-                links die Anrede und drei Wege zum Betrieb, rechts das
-                Formular. Eine einzelne Formularsaeule ueber die ganze
-                Breite hat als graue Flaeche gelesen. */}
-            <div className={styles.wbSchirm} data-mitte="">
-              <Zeile breite="40%" stark gross />
-              <div className={styles.wbKontakt}>
-                <div className={styles.wbKontaktText}>
-                  <Zeile breite="88%" />
-                  <Zeile breite="66%" />
-                  <span className={styles.wbWege}>
-                    {["72%", "58%", "64%"].map((w) => (
-                      <span className={styles.wbWeg} key={w}>
-                        <span className={styles.wbWegZeichen} />
-                        <Zeile breite={w} />
+                {/* Bildschirm 2. Drei Leistungen als Karten, darueber die
+                    Bewertungszeile mit fuenf Sternen, die beim
+                    Vorbeirollen nacheinander aufleuchten. */}
+                <div className={styles.wbSchirm}>
+                  <div className={styles.wbKopfzeile}>
+                    <Zeile breite="34%" stark gross />
+                    <span className={styles.wbSterne}>
+                      {[0, 1, 2, 3, 4].map((i) => (
+                        <svg
+                          className={styles.wbStern}
+                          key={i}
+                          viewBox="0 0 16 16"
+                          style={{ "--i": i } as React.CSSProperties}
+                        >
+                          <path
+                            d={STERN}
+                            fill="currentColor"
+                            fillOpacity={0.35}
+                            stroke="currentColor"
+                            strokeWidth={1.4}
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      ))}
+                      <Zeile breite="max(22px, 2.68cqw)" />
+                    </span>
+                  </div>
+                  <div className={styles.wbKarten}>
+                    {[0, 1, 2].map((i) => (
+                      <span className={styles.wbKarte} key={i}>
+                        <span className={styles.wbKarteZeichen} />
+                        <Zeile breite="72%" />
+                        <Zeile breite="92%" />
+                        <Zeile breite="64%" />
                       </span>
                     ))}
-                  </span>
+                  </div>
                 </div>
 
-                <div className={styles.wbForm}>
-                  <span className={styles.wbFeld} />
-                  <span className={styles.wbFeld} />
-                  <span className={styles.wbFeld} data-gross="" />
-                  <span className={styles.wbKnopf}>
-                    {worte.knopf}
-                    <span className={styles.wbWelle} aria-hidden="true" />
-                  </span>
-                  <span className={styles.wbZeiger} aria-hidden="true">
-                    <svg viewBox="0 0 16 18" fill="none">
-                      <path
-                        d="M1.6 1.4 14 9.1l-5.3 1.1-2 5z"
-                        fill="currentColor"
-                        stroke="currentColor"
-                        strokeWidth={1.4}
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
+                {/* Bildschirm 3. Der Kontaktbereich, an dem die Fahrt endet.
+                    Er steht zweispaltig wie ein gebauter Kontaktabschnitt:
+                    links die Anrede, drei Wege zum Betrieb und der
+                    Kartenausschnitt, rechts das Formular. Eine einzelne
+                    Formularsaeule ueber die ganze Breite hat als graue
+                    Flaeche gelesen. */}
+                <div className={styles.wbSchirm} data-mitte="">
+                  <Zeile breite="40%" stark gross />
+                  <div className={styles.wbKontakt}>
+                    <div className={styles.wbKontaktText}>
+                      <Zeile breite="88%" />
+                      <Zeile breite="66%" />
+                      <span className={styles.wbWege}>
+                        {["72%", "58%", "64%"].map((w) => (
+                          <span className={styles.wbWeg} key={w}>
+                            <span className={styles.wbWegZeichen} />
+                            <Zeile breite={w} />
+                          </span>
+                        ))}
+                      </span>
+                      {/* Der Kartenausschnitt. Zwei Wege als Linien und
+                          eine Ortsmarke, die faellt, sobald die Fahrt am
+                          Formular haelt. */}
+                      <span className={styles.wbOrt}>
+                        <svg viewBox="0 0 100 56" preserveAspectRatio="none" fill="none">
+                          <path
+                            d="M0 33C28 30 44 44 100 25"
+                            stroke="currentColor"
+                            strokeWidth={1.4}
+                            vectorEffect="non-scaling-stroke"
+                          />
+                          <path
+                            d="M36 0C42 18 30 40 46 56"
+                            stroke="currentColor"
+                            strokeWidth={1.4}
+                            vectorEffect="non-scaling-stroke"
+                          />
+                        </svg>
+                        <span className={styles.wbOrtHof} />
+                        <svg className={styles.wbOrtMarke} viewBox="0 0 16 16" fill="none">
+                          <path
+                            d={WEGE[2].d[0]}
+                            fill="currentColor"
+                            fillOpacity={0.3}
+                            stroke="currentColor"
+                            strokeWidth={1.4}
+                            strokeLinejoin="round"
+                          />
+                          <path d={WEGE[2].d[1]} stroke="currentColor" strokeWidth={1.4} />
+                        </svg>
+                      </span>
+                    </div>
+
+                    <div className={styles.wbForm}>
+                      <span className={styles.wbFeld} />
+                      <span className={styles.wbFeld} />
+                      <span className={styles.wbFeld} data-gross="" />
+                      <span className={styles.wbKnopf}>
+                        {worte.knopf}
+                        <span className={styles.wbWelle} aria-hidden="true" />
+                      </span>
+                      <Zeiger className={styles.wbZeiger} />
+                    </div>
+                  </div>
                 </div>
               </div>
+
+              {/* Die Bestaetigung liegt ueber der Seite und nicht in ihr,
+                  damit sie beim Zuruecklaufen nicht mitwandert. */}
+              <span className={styles.wbOk}>
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path
+                    d="M4.6 10.4 8.4 14l7-8"
+                    stroke="currentColor"
+                    strokeWidth={1.8}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                {worte.bestaetigt}
+              </span>
             </div>
+
+            {/* Der Schleier ueber dem Fenster, solange die Suche davor
+                steht. Er hebt sich, sobald der Treffer geklickt ist. */}
+            <span className={styles.wbScrim} />
           </div>
 
-          {/* Die Bestaetigung liegt ueber der Seite und nicht in ihr,
-              damit sie beim Zuruecklaufen nicht mitwandert. */}
-          <span className={styles.wbOk}>
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path
-                d="M4.6 10.4 8.4 14l7-8"
-                stroke="currentColor"
-                strokeWidth={1.8}
-                strokeLinecap="round"
-                strokeLinejoin="round"
+          {/* Die Suche vor dem Fenster. Ein Feld, in das sich das Suchwort
+              tippt, darunter drei Treffer, deren erster die Adresse des
+              Betriebs traegt und hervorgehoben wird. Der Zeiger klickt
+              ihn, und das Fenster tritt vor. */}
+          <div className={styles.wbSuche}>
+            <div className={styles.wbSuchFeld}>
+              <Zeichen d={WEGE[0].d} />
+              <span className={styles.wbSuchWort}>
+                {worte.suche}
+                <span className={styles.wbSuchStrich} />
+              </span>
+            </div>
+            <div className={styles.wbTreffer}>
+              <span
+                className={styles.wbTrefferZeile}
+                data-erster=""
+                style={{ "--i": 0 } as React.CSSProperties}
+              >
+                <span className={styles.wbTrefferLicht} />
+                <span className={styles.wbTrefferMarke} />
+                <span className={styles.wbTrefferText}>
+                  <span className={styles.wbTrefferAdresse}>{worte.adresse}</span>
+                  <Zeile breite="64%" />
+                </span>
+              </span>
+              {[1, 2].map((i) => (
+                <span
+                  className={styles.wbTrefferZeile}
+                  key={i}
+                  style={{ "--i": i } as React.CSSProperties}
+                >
+                  <span className={styles.wbTrefferMarke} />
+                  <span className={styles.wbTrefferText}>
+                    <Zeile breite={i === 1 ? "38%" : "46%"} />
+                    <Zeile breite={i === 1 ? "72%" : "58%"} />
+                  </span>
+                </span>
+              ))}
+            </div>
+            <Zeiger className={styles.wbSuchZeiger} />
+          </div>
+
+          <span className={styles.wbSchein} aria-hidden="true" />
+        </div>
+
+        {/* Rechts vom Fenster der Zaehler und das Telefon des Betriebs.
+            Beide ragen ein Stueck vor das Fenster, so wie der Zaehler der
+            Social-Buehne vor dem Beitrag liegt. Auf dem Telefon leuchtet
+            am Ende jeder Runde die Meldung auf, und der Zaehler springt
+            um eins. */}
+        <div className={styles.wbZiel}>
+          <div className={styles.wbZaehler}>
+            <span
+              className={styles.wbZaehlerWert}
+              key={ruhig ? "haken" : anfragen}
+            >
+              {ruhig ? (
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path
+                    d="M4.6 10.4 8.4 14l7-8"
+                    stroke="currentColor"
+                    strokeWidth={1.8}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : (
+                anfragen
+              )}
+            </span>
+            <span className={styles.wbZaehlerMarke}>
+              <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path
+                  d="M1.8 3.2h8.4v5.8H1.8zM1.8 3.4 6 6.7l4.2-3.3"
+                  stroke="currentColor"
+                  strokeWidth={1.2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {worte.zaehler}
+            </span>
+          </div>
+
+          <div className={styles.wbHandy}>
+            <span className={styles.wbHandyKerbe} />
+            <span className={styles.wbHandyLicht} />
+            <span className={styles.wbMeldung}>
+              <Zeichen
+                d={[
+                  "M4.2 11.2V7.6a3.8 3.8 0 0 1 7.6 0v3.6l1 1.4H3.2z",
+                  "M6.6 13.6a1.4 1.4 0 0 0 2.8 0",
+                ]}
               />
-            </svg>
-            {worte.bestaetigt}
-          </span>
+              {worte.anfrage}
+            </span>
+            <span className={styles.wbHandyZeilen}>
+              <Zeile breite="82%" />
+              <Zeile breite="54%" />
+            </span>
+          </div>
         </div>
       </div>
-
-      <span className={styles.wbSchein} aria-hidden="true" />
     </div>
   );
 }

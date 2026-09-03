@@ -35,6 +35,9 @@ Transformationspartner fuer das digitale und das KI-Zeitalter, nicht eine Agentu
 - Bestaetigt am 31.08.2026: 35+ umgesetzte Projekte ist die richtige Zahl.
 - Offen (vom Auftraggeber zu liefern): Kurzprofile der beiden Gruender; Empfaenger des Kontaktformulars; Standorte, Buchungszeitraeume und Preise der Werbetafeln; Reichweiten und Kennzahlen. Entscheidung fuer den Livegang: diese Stellen werden so gebaut, dass sie ohne die Angaben sauber wirken, und die Luecken bleiben in copy.ts markiert. Kein sichtbarer Platzhalter auf der Seite.
 - Navigation, entschieden: Marketing oeffnet ein Aufklappmenue mit Webseiten, Social Media und Werbetafeln (Routen /marketing/webseiten, /marketing/social-media, /marketing/werbetafeln). KI, Ueber uns und Kontakt sind direkte Links.
+- Entscheidung vom 03.09.2026: Werbetafeln werden vorerst nicht angeboten. Die Seite /marketing/werbetafeln bleibt gebaut und erreichbar, ist aber aus Aufklappmenue, Fusszeile, Marketing-Uebersicht, Startseite (dritter Strang der Marketing-Sektion) und Sitemap genommen und traegt noindex. Sobald die Tafeln zurueckkommen, sind genau diese fuenf Stellen wieder einzuhaengen; die Texte dazu liegen weiter unter werbetafelnPage in copy.ts.
+- Entscheidung vom 03.09.2026: Der Slogan der Startseite lautet "Wir bringen Ihren Betrieb ins KI-Zeitalter." Die Fassung "Wir machen Ihren Betrieb digital." war dem Auftraggeber zu allgemein.
+- Entscheidung vom 03.09.2026: Auf /ki steht als zweite Sektion der Aufbau aus dem Fundament Corporate LLM und den drei Ebenen Automatisierungen, Voice Agents und Operating System, so wie der Auftraggeber ihn zurueckverlangt hat. Die vier Namen sind gesetzt, jede Ebene traegt dazu eine Zeile in einfacher Sprache.
 
 ## Brand Commitments
 

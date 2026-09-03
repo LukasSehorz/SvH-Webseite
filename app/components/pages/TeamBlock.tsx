@@ -6,27 +6,23 @@ import { Reveal, RevealGroup, RevealItem, SplitHeadline } from "../system/ui";
 /* ------------------------------------------------------------------ */
 /*  /ueber-uns · Die beiden Gruender                                   */
 /*                                                                     */
+/*  Ueberschrift, der Satz zu Zangberg, darunter die beiden Namen mit  */
+/*  Rolle in einer Reihe unter einer Haarlinie. Mehr steht hier nicht, */
+/*  solange die Kurzprofile und die Bilder fehlen.                     */
+/*                                                                     */
+/*  Bis zum 03.09.2026 trug jeder Name eine Kachel mit seinen          */
+/*  Initialen und einem Schimmer dahinter. Der Pruefbericht hat die    */
+/*  leeren Kacheln als Platzhalter gelesen, und genau das soll die     */
+/*  Seite nicht zeigen. Sobald die Profile kommen, bekommt der Block   */
+/*  seine Bilder; bis dahin tragen die Namen allein.                   */
+/*                                                                     */
 /*  Die Kurzprofile liegen noch nicht vor. Fuer den Livegang gilt die  */
-/*  Entscheidung, dass kein Platzhalter sichtbar wird: eine Zeile, die */
-/*  mit der Markierung beginnt, wird schlicht nicht ausgegeben. In     */
+/*  Entscheidung, dass kein Platzhalter sichtbar wird. Eine Zeile, die */
+/*  mit der Markierung beginnt, wird deshalb gar nicht ausgegeben. In  */
 /*  copy.ts bleibt die Markierung stehen, damit die Luecke spaeter     */
-/*  gefuellt wird. Der Block traegt deshalb mit Name und Rolle allein. */
+/*  gefuellt wird. Erscheint ein Profil, steht es als Absatz unter     */
+/*  Name und Rolle.                                                    */
 /* ------------------------------------------------------------------ */
-
-/**
- * Initialen aus Vor- und Nachname, hoechstens zwei Zeichen. Genommen wird
- * der erste und der letzte Namensteil, damit Namenszusaetze wie „vom" oder
- * „von" den Nachnamen nicht verdraengen.
- */
-function initials(name: string): string {
-  const parts = name.split(/\s+/).filter((part) => /^\p{L}/u.test(part));
-  if (parts.length === 0) return "";
-
-  const first = parts[0][0].toUpperCase();
-  if (parts.length === 1) return first;
-
-  return first + parts[parts.length - 1][0].toUpperCase();
-}
 
 /** Eine noch offene Stelle aus copy.ts erscheint nicht auf der Seite. */
 function published(text: string | undefined): string | null {
@@ -48,17 +44,16 @@ export default function TeamBlock() {
           />
         </Reveal>
 
-        <RevealGroup as="ul" className="team-grid">
+        <Reveal delay={0.08}>
+          <p className="t-body-lg team-note">{aboutPage.team.note}</p>
+        </Reveal>
+
+        <RevealGroup as="ul" className="team-row">
           {aboutPage.team.members.map((member) => {
             const profile = published(member.body);
 
             return (
               <RevealItem as="li" key={member.name} className="team-member">
-                <div className="team-mark" aria-hidden="true">
-                  <span className="team-glow" />
-                  <span className="team-initials">{initials(member.name)}</span>
-                </div>
-
                 <h3 className="team-name">{member.name}</h3>
                 <p className="t-label team-role">{member.role}</p>
                 {profile ? <p className="t-body team-profile">{profile}</p> : null}
@@ -66,10 +61,6 @@ export default function TeamBlock() {
             );
           })}
         </RevealGroup>
-
-        <Reveal delay={0.16}>
-          <p className="t-body-lg team-note">{aboutPage.team.note}</p>
-        </Reveal>
       </div>
 
       {/*
@@ -80,73 +71,25 @@ export default function TeamBlock() {
       <style jsx global>{`
         .about-team .team-title {
           max-width: 14ch;
-          margin-bottom: clamp(44px, 5vw, 72px);
         }
 
-        /* Zwei Namen ohne Kurzprofil fuellen keine Schale von 2240
-           Bildpunkten. Die Gruppe bleibt deshalb schmal und steht als
-           Block links, statt sich ueber die ganze Breite zu verlieren. */
-        .about-team .team-grid {
+        .about-team .team-note {
+          margin-top: clamp(24px, 3vw, 36px);
+          max-width: var(--measure);
+        }
+
+        /* Zwei Namen fuellen keine Schale von 2240 Bildpunkten. Die Reihe
+           bleibt deshalb schmal und steht als Block links, statt sich
+           ueber die ganze Breite zu verlieren. */
+        .about-team .team-row {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: clamp(32px, 5vw, 72px);
           max-width: 840px;
-          list-style: none;
-          margin: 0;
-          padding: 0;
-        }
-
-        .about-team .team-member {
+          margin: clamp(40px, 5vw, 64px) 0 0;
+          padding: 30px 0 0;
           border-top: 1px solid var(--line);
-          padding-top: 30px;
-        }
-
-        .about-team .team-mark {
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: clamp(112px, 11vw, 148px);
-          aspect-ratio: 1;
-          border: 1px solid var(--line);
-          border-radius: 18px;
-          overflow: hidden;
-          transition: border-color 0.5s var(--ease-out-expo);
-        }
-
-        .about-team .team-member:hover .team-mark {
-          border-color: var(--ink-2);
-        }
-
-        /* Der Schimmer sitzt hinter den Initialen und zieht bei Beruehrung
-           an. Das ist die einzige Zustandsaenderung des Blocks. */
-        .about-team .team-glow {
-          position: absolute;
-          left: 50%;
-          top: 62%;
-          width: 150%;
-          height: 120%;
-          transform: translate(-50%, -50%);
-          border-radius: 9999px;
-          background: var(--grad);
-          opacity: 0.12;
-          filter: blur(34px);
-          pointer-events: none;
-          transition: opacity 0.5s var(--ease-out-expo);
-        }
-
-        .about-team .team-member:hover .team-glow {
-          opacity: 0.24;
-        }
-
-        .about-team .team-initials {
-          position: relative;
-          font-family: var(--font-display);
-          font-size: clamp(44px, 4.4vw, 58px);
-          font-weight: 300;
-          line-height: 1;
-          letter-spacing: -0.03em;
-          color: var(--ink);
+          list-style: none;
         }
 
         .about-team .team-name {
@@ -156,7 +99,7 @@ export default function TeamBlock() {
           line-height: 1.1;
           letter-spacing: -0.018em;
           color: var(--ink);
-          margin: 30px 0 0;
+          margin: 0;
         }
 
         .about-team .team-role {
@@ -169,22 +112,17 @@ export default function TeamBlock() {
           max-width: 40ch;
         }
 
-        .about-team .team-note {
-          margin-top: clamp(40px, 4.5vw, 64px);
-          max-width: var(--measure);
-        }
-
+        /* Auf dem Telefon stehen die Namen untereinander, und jeder ab
+           dem zweiten bekommt seine eigene Haarlinie darueber. */
         @media (max-width: 720px) {
-          .about-team .team-grid {
+          .about-team .team-row {
             grid-template-columns: minmax(0, 1fr);
-            gap: 34px;
+            gap: 26px;
           }
-        }
 
-        @media (prefers-reduced-motion: reduce) {
-          .about-team .team-glow,
-          .about-team .team-mark {
-            transition: none;
+          .about-team .team-member + .team-member {
+            padding-top: 26px;
+            border-top: 1px solid var(--line);
           }
         }
       `}</style>

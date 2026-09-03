@@ -11,43 +11,52 @@ const { direct } = contactPage;
  * 02.09.2026 das Kontaktformular stand. Der Auftraggeber hat entschieden,
  * das Formular vorerst nicht zu zeigen, weil kein Empfaenger feststeht.
  * Hier stehen deshalb die beiden Wege, die sicher ankommen, gross genug,
- * um vom Knopf der Wege-Karte darueber ohne Suchen erreicht zu werden.
+ * um vom Knopf der Wege-Karte ohne Suchen erreicht zu werden.
+ *
+ * Der Block bringt keine eigene Sektion mehr mit. Seine Lage bestimmt das
+ * Raster in ContactCards, das ihn ab 1280 Bildpunkten links neben die
+ * Wege stellt und darunter zwischen Wege und Angaben.
  */
 export default function ContactDirect() {
   return (
-    <section className="section contact-direct" id="anfrage">
-      <div className="shell">
-        <Reveal>
-          <div className="direct-card">
-            <h2 className="t-h2">{direct.title}</h2>
-            <p className="t-body-lg direct-body">{direct.body}</p>
+    <div className="contact-direct" id="anfrage">
+      <Reveal>
+        <div className="direct-card">
+          <h2 className="t-h2">{direct.title}</h2>
+          <p className="t-body-lg direct-body">{direct.body}</p>
 
-            <div className="direct-ways">
-              <a href={`tel:${company.phoneHref}`} className="direct-way">
-                <span className="t-label">{contactPage.detailLabels.phone}</span>
-                <span className="direct-value">{company.phone}</span>
-              </a>
+          <div className="direct-ways">
+            <a href={`tel:${company.phoneHref}`} className="direct-way">
+              <span className="t-label">{contactPage.detailLabels.phone}</span>
+              <span className="direct-value">{company.phone}</span>
+            </a>
 
-              <a href={`mailto:${company.email}`} className="direct-way">
-                <span className="t-label">{contactPage.detailLabels.email}</span>
-                <span className="direct-value">{company.email}</span>
-              </a>
-            </div>
+            <a href={`mailto:${company.email}`} className="direct-way">
+              <span className="t-label">{contactPage.detailLabels.email}</span>
+              <span className="direct-value">{company.email}</span>
+            </a>
           </div>
-        </Reveal>
-      </div>
+        </div>
+      </Reveal>
 
       {/*
-        Global deklariert, aber durchgehend unter `.contact-direct` gehängt.
-        Nötig, weil styled-jsx seine Scope-Klasse nicht an eigene
+        Global deklariert, aber durchgehend unter `.contact-direct` gehaengt.
+        Noetig, weil styled-jsx seine Scope-Klasse nicht an eigene
         Komponenten wie Reveal weiterreicht.
       */}
       <style jsx global>{`
+        /* Der Sprung vom Knopf der Wege-Karte landet unter der Leiste und
+           nicht dahinter. */
+        .contact-direct {
+          scroll-margin-top: calc(var(--nav-h) + 24px);
+        }
+
         .contact-direct .direct-card {
           max-width: 940px;
           border: 1px solid var(--line);
           border-radius: 20px;
           padding: 40px;
+          background: linear-gradient(180deg, rgba(244, 244, 246, 0.03), transparent 60%);
         }
 
         .contact-direct .direct-body {
@@ -95,6 +104,23 @@ export default function ContactDirect() {
           overflow-wrap: anywhere;
         }
 
+        /* In der linken Spalte des zweispaltigen Rasters fuellt die Karte
+           die Spalte. Zwischen 1280 und 1800 Bildpunkten ist die Spalte
+           zu schmal fuer zwei Kaesten nebeneinander, die Adresse braeche
+           dann mitten im Wort; die Wege stehen dort untereinander. */
+        @media (min-width: 1280px) {
+          .contact-direct .direct-card {
+            max-width: none;
+            padding: clamp(40px, 3vw, 56px);
+          }
+        }
+
+        @media (min-width: 1280px) and (max-width: 1799px) {
+          .contact-direct .direct-ways {
+            grid-template-columns: minmax(0, 1fr);
+          }
+        }
+
         @media (max-width: 720px) {
           .contact-direct .direct-card {
             padding: 28px 22px 32px;
@@ -111,6 +137,6 @@ export default function ContactDirect() {
           }
         }
       `}</style>
-    </section>
+    </div>
   );
 }

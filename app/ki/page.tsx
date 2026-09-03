@@ -8,9 +8,13 @@
  * Farbnebel. Acht Zeichen tragen die Seite, jedes gehoert zu genau einer
  * Aufgabe und kehrt in jeder Sektion wieder.
  *
- * GESCHICHTE. Erst die acht Aufgaben, die ab sofort von allein laufen.
- * Dann dieselben acht als Ablauf in drei Schritten, die aufeinander
- * aufbauen. Zuletzt das Gespraech, das nichts kostet.
+ * GESCHICHTE. Erst die acht Aufgaben in den Kacheln, jede mit ihrem Satz,
+ * die ab sofort von allein laufen. Dann der Aufbau, aus dem alles waechst,
+ * unten das Fundament Corporate LLM und darueber die drei Ebenen
+ * Automatisierungen, Voice Agents und Operating System, in die
+ * Lichtpunkte aus dem Fundament aufsteigen. Dann der Ablauf in drei
+ * Schritten, die aufeinander aufbauen. Zuletzt das Gespraech, das nichts
+ * kostet.
  *
  * ERSTER BILDSCHIRM. Zwei kurze Zeilen, ein Satz, ein Knopf und darunter
  * die erste Reihe lebender Kacheln.
@@ -25,7 +29,7 @@ import Navbar from "../components/system/Navbar";
 import Footer from "../components/system/Footer";
 import FinalCta from "../components/landing/FinalCta";
 import KiHero from "../components/ki/Hero";
-import KiServices from "../components/ki/Services";
+import KiStack from "../components/ki/Stack";
 import KiFlow from "../components/ki/Flow";
 import { meta } from "../copy";
 
@@ -41,7 +45,7 @@ export default function KiPage() {
 
       <main>
         <KiHero />
-        <KiServices />
+        <KiStack />
         <KiFlow />
         <FinalCta />
       </main>

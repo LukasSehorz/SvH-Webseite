@@ -26,9 +26,12 @@ const TILES = kiPage.services.items;
  * Der Seitenkopf von /ki.
  *
  * Links steht die Aussage in zwei kurzen Zeilen, rechts der Satz dazu und
- * der Knopf. Darunter liegt das Feld aus acht Kacheln, und jede Kachel
- * zeigt eine Dienstleistung als kleine bewegte Szene. Faehrt der Zeiger
- * ueber eine Kachel, laeuft ihre Szene noch einmal von vorn.
+ * der Knopf. Darunter, hinter einer Haarlinie, eine ruhige Zeile zu den
+ * acht Aufgaben, und dann das Feld aus acht Kacheln. Jede Kachel zeigt
+ * eine Aufgabe als kleine bewegte Szene und traegt unter dem Namen den
+ * Satz dazu. Die acht Saetze stehen seit dem 03.09.2026 nur noch hier,
+ * die Liste darunter ist entfallen. Faehrt der Zeiger ueber eine Kachel,
+ * laeuft ihre Szene noch einmal von vorn.
  */
 export default function KiHero() {
   const fieldRef = useRef<HTMLUListElement>(null);
@@ -82,6 +85,11 @@ export default function KiHero() {
           </div>
         </div>
 
+        <motion.div className="ki-hero-field-head" {...rise(0.3)}>
+          <hr className="hairline" />
+          <p className="t-body ki-hero-field-intro">{kiPage.services.intro}</p>
+        </motion.div>
+
         <ul className="ki-hero-field" ref={fieldRef}>
           {TILES.map((tile, index) => (
             <motion.li
@@ -118,7 +126,10 @@ export default function KiHero() {
                 <span className="ki-tile-mark">
                   <Mark id={tile.id as MarkId} size={19} />
                 </span>
-                <span className="ki-tile-name">{tile.name}</span>
+                <span className="ki-tile-text">
+                  <span className="ki-tile-name">{tile.name}</span>
+                  <span className="ki-tile-body">{tile.body}</span>
+                </span>
               </span>
             </motion.li>
           ))}
@@ -167,12 +178,24 @@ export default function KiHero() {
           margin-top: 30px;
         }
 
+        /* Die Zeile ueber dem Kachelfeld sagt, was die acht Kacheln sind.
+           Die Haarlinie trennt sie vom Kopf, der Abstand darunter bleibt
+           knapp, damit Zeile und Feld als ein Stueck gelesen werden. */
+        .ki-hero-field-head {
+          margin-top: clamp(56px, 6vw, 88px);
+        }
+
+        .ki-hero-field-intro {
+          margin-top: 18px;
+          max-width: var(--measure);
+        }
+
         .ki-hero-field {
           display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
           gap: 14px;
           list-style: none;
-          margin: clamp(56px, 6vw, 88px) 0 0;
+          margin: 26px 0 0;
           padding: 0;
         }
 
@@ -238,23 +261,34 @@ export default function KiHero() {
           height: 100%;
         }
 
+        /* Der Fusz sitzt direkt unter der Szene. Weil die Saetze
+           unterschiedlich lang sind, bleibt freier Raum unten in der
+           Kachel und nicht zwischen Szene und Name; so stehen alle Namen
+           einer Reihe auf derselben Hoehe. */
         .ki-tile-foot {
           position: relative;
           display: flex;
           align-items: flex-start;
           gap: 9px;
-          margin-top: auto;
         }
 
         .ki-tile-mark {
           display: inline-flex;
           flex: 0 0 auto;
+          padding-top: 1px;
           color: var(--ink-3);
           transition: color 0.5s var(--ease-out-expo);
         }
 
         .ki-tile:hover .ki-tile-mark {
           color: var(--acc-lav);
+        }
+
+        .ki-tile-text {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          min-width: 0;
         }
 
         .ki-tile-name {
@@ -264,6 +298,16 @@ export default function KiHero() {
           line-height: 1.32;
           letter-spacing: -0.004em;
           color: var(--ink);
+        }
+
+        /* Der Satz zur Aufgabe, klein und in der zweiten Schriftstufe. Er
+           darf umbrechen, so oft er muss, die Kachel waechst mit. */
+        .ki-tile-body {
+          font-family: var(--font-sans);
+          font-size: 13px;
+          font-weight: 400;
+          line-height: 1.4;
+          color: var(--ink-2);
         }
 
         @media (min-width: 1800px) {
@@ -297,7 +341,26 @@ export default function KiHero() {
             border-radius: 14px;
           }
 
+          /* In der schmalen Kachel steht der Satz unter Zeichen und Name
+             ueber die ganze Breite. Neben dem Zeichen eingerueckt haette
+             er nur rund 120 Bildpunkte und braeche in fuenf Zeilen. */
+          .ki-tile-foot {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            gap: 5px 8px;
+            align-items: start;
+          }
+
+          .ki-tile-text {
+            display: contents;
+          }
+
           .ki-tile-name {
+            font-size: 12.5px;
+          }
+
+          .ki-tile-body {
+            grid-column: 1 / -1;
             font-size: 12.5px;
           }
         }
