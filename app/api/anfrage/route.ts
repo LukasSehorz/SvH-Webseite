@@ -2,7 +2,7 @@
  * Versand des Kontaktformulars.
  *
  * Der Auftraggeber hat am 03.09.2026 festgelegt, dass jede Anfrage aus dem
- * Formular an lukas.sehorz@schconsult.de geht. Die Adresse steht in
+ * Formular an lukas.sehorz@svhconsult.de geht. Die Adresse steht in
  * content.ts und laesst sich beim Hoster ueber ANFRAGE_EMPFAENGER
  * uebersteuern. Verschickt wird ueber Resend, dessen Schluessel NUR als
  * Umgebungsvariable RESEND_API_KEY existiert und nie im Quelltext steht.
@@ -92,10 +92,14 @@ export async function POST(request: Request) {
       console.error("Resend hat den Versand abgelehnt", antwort.status, await antwort.text());
       return NextResponse.json({ ok: false, grund: "versand" }, { status: 502 });
     }
+
+    /* Die Kennung der Mail bei Resend. Sie verraet nichts ueber den Inhalt
+       und erlaubt es, den Zustellstatus bei Resend nachzusehen, wenn eine
+       Anfrage einmal nicht ankommt. */
+    const daten = (await antwort.json().catch(() => null)) as { id?: string } | null;
+    return NextResponse.json({ ok: true, id: daten?.id ?? null });
   } catch (fehler) {
     console.error("Versand fehlgeschlagen", fehler);
     return NextResponse.json({ ok: false, grund: "versand" }, { status: 502 });
   }
-
-  return NextResponse.json({ ok: true });
 }
