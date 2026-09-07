@@ -26,8 +26,10 @@ import { Reveal } from "../system/ui";
 
 const { form } = contactPage;
 
-/** Pflichtfelder in der Reihenfolge, in der sie im Formular stehen. */
-const REQUIRED = ["name", "email", "message"] as const;
+/** Pflichtfelder in der Reihenfolge, in der sie im Formular stehen. Das
+ *  Thema gehoert seit dem 08.09.2026 dazu, denn der Auftraggeber will vor
+ *  dem Gespraech wissen, um welche der vier Leistungen es geht. */
+const REQUIRED = ["name", "email", "topic", "message"] as const;
 type RequiredKey = (typeof REQUIRED)[number];
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -152,6 +154,8 @@ export default function ContactForm() {
     const email = read("email");
     if (!email) next.email = form.errors.email;
     else if (!EMAIL.test(email)) next.email = form.errors.emailInvalid;
+
+    if (!read("topic")) next.topic = form.errors.topic;
 
     if (!read("message")) next.message = form.errors.message;
 
@@ -334,7 +338,7 @@ export default function ContactForm() {
                   <label className="t-label" htmlFor="anfrage-topic">
                     {form.fields.topic}
                   </label>
-                  <select id="anfrage-topic" name="topic" defaultValue="">
+                  <select defaultValue="" {...fieldProps("topic")}>
                     <option value="">{form.selectPlaceholder}</option>
                     {form.topics.map((topic) => (
                       <option key={topic} value={topic}>
@@ -342,6 +346,13 @@ export default function ContactForm() {
                       </option>
                     ))}
                   </select>
+                  {errors.topic ? (
+                    <p className="svhError" id="anfrage-topic-fehler">
+                      {errors.topic}
+                    </p>
+                  ) : (
+                    <p className="anfrage-hinweis">{form.fields.topicNote}</p>
+                  )}
                 </div>
 
                 <div className="anfrage-field">
@@ -502,6 +513,16 @@ export default function ContactForm() {
           font-size: 13px;
           line-height: 1.45;
           color: rgba(255, 138, 138, 0.9);
+        }
+
+        /* Der Hinweis unter dem Auswahlfeld steht an derselben Stelle wie
+           eine Fehlermeldung, damit das Feld beim Wechsel zwischen beiden
+           nicht springt. */
+        .contact-form .anfrage-hinweis {
+          margin: 0;
+          font-size: 13px;
+          line-height: 1.45;
+          color: var(--ink-3);
         }
 
         /* Die Falle liegt ausserhalb des Bildes und nicht auf display none,

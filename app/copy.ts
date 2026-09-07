@@ -762,15 +762,21 @@ export const contactPage = {
       phone: "Telefon (optional)",
       topic: "Worum geht es?",
       message: "Ihre Nachricht",
+      /* Steht klein unter dem Auswahlfeld und sagt, dass eine Wahl
+         noetig ist, bevor jemand vergeblich auf Senden drueckt. */
+      topicNote: "Eine Auswahl genügt, den Rest klären wir im Gespräch.",
     },
     employeeOptions: ["1 bis 5", "6 bis 20", "21 bis 50", "51 bis 200", "Mehr als 200"],
-    /* Dieselben Worte wie in Leiste und Fusszeile, damit der Besucher
-       seine Leistung im Auswahlfeld sofort wiederfindet. */
+    /* Genau vier Moeglichkeiten, und eine davon musz gewaehlt werden. Der
+       Auftraggeber hat das am 08.09.2026 verlangt, damit er vor dem
+       Gespraech weisz, worum es geht. Die frueheren Eintraege liessen
+       auch "Etwas anderes" zu und waren freiwillig, sodass viele Anfragen
+       ohne Thema ankamen. */
     topics: [
-      "KI-Automatisierung",
-      "Webseiten",
-      "Social Media",
-      "Etwas anderes",
+      "Neue Webseite",
+      "Social-Media-Marketing",
+      "KI-Optimierung",
+      "Alles zusammen",
     ],
     consent:
       "Mit dem Absenden stimmen Sie zu, dass wir Ihre Angaben zur Bearbeitung Ihrer Anfrage verwenden. Einzelheiten stehen in der Datenschutzerklärung.",
@@ -792,6 +798,7 @@ export const contactPage = {
       email: "Bitte geben Sie Ihre E-Mail-Adresse an.",
       emailInvalid: "Diese E-Mail-Adresse sieht unvollständig aus.",
       message: "Bitte schreiben Sie uns kurz Ihr Anliegen.",
+      topic: "Bitte wählen Sie, worum es geht.",
     },
   },
   detailLabels: {

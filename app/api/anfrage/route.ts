@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  if (!eingabe.name || !eingabe.message || !EMAIL.test(eingabe.email)) {
+  if (!eingabe.name || !eingabe.message || !eingabe.topic || !EMAIL.test(eingabe.email)) {
     return NextResponse.json({ ok: false, grund: "eingabe" }, { status: 400 });
   }
 
