@@ -117,6 +117,71 @@ export function totalOf(steps: readonly number[]): number {
  * Szene wird verworfen, damit ein schneller Zeiger ueber dem Raster
  * keine abgehackte Kette aus Neustarts ausloest.
  */
+/**
+ * Wiederholt eine Szene auf Geraeten ohne Zeiger.
+ *
+ * Am Schreibtisch startet ein Besucher eine Kachel neu, indem er mit dem
+ * Zeiger darueberfaehrt. Auf einem Telefon gibt es das nicht, und die
+ * Szenen liefen dort genau einmal und standen danach fuer immer still.
+ * Der Auftraggeber hat am 08.09.2026 beanstandet, dass die Animationen
+ * auf dem Handy teilweise gar nicht laufen; gemessen bewegte sich in den
+ * Kacheln der Startseite nach dem ersten Durchlauf nichts mehr.
+ *
+ * Auf Beruehrgeraeten laeuft die Szene deshalb weiter, solange sie im
+ * Bild steht, mit einer Ruhe von RUHE_MS zwischen zwei Durchlaeufen.
+ * Verlaesst sie das Bild, steht der Takt; das spart Rechenzeit und haelt
+ * die Bildrate frei. Am Schreibtisch aendert sich nichts, denn dort
+ * meldet die Abfrage hover none nicht.
+ */
+const RUHE_MS = 2600;
+
+export function useTouchSchleife(
+  ref: React.RefObject<HTMLElement | null>,
+  play: () => void,
+  total: number,
+  reduced: boolean,
+) {
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || reduced) return;
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    /* Ein Geraet ohne Zeiger, also Telefon oder Tafel. */
+    if (!window.matchMedia("(hover: none)").matches) return;
+
+    let takt: ReturnType<typeof setInterval> | undefined;
+    const anhalten = () => {
+      if (takt !== undefined) {
+        clearInterval(takt);
+        takt = undefined;
+      }
+    };
+    const anlaufen = () => {
+      if (takt !== undefined) return;
+      takt = setInterval(play, Math.max(1200, total + RUHE_MS));
+    };
+
+    const beobachter = new IntersectionObserver(
+      ([eintrag]) => {
+        if (eintrag.isIntersecting && !document.hidden) anlaufen();
+        else anhalten();
+      },
+      { threshold: 0.35 },
+    );
+    beobachter.observe(node);
+
+    const beiSicht = () => {
+      if (document.hidden) anhalten();
+    };
+    document.addEventListener("visibilitychange", beiSicht);
+
+    return () => {
+      anhalten();
+      beobachter.disconnect();
+      document.removeEventListener("visibilitychange", beiSicht);
+    };
+  }, [ref, play, total, reduced]);
+}
+
 export function useReplay(total: number) {
   const [playKey, setPlayKey] = useState(0);
   const lastRun = useRef(Number.NEGATIVE_INFINITY);

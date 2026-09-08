@@ -11,6 +11,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import Fade from "./Fade";
 import { Art, Window } from "./Mockups";
 import s from "./webseiten.module.css";
 
@@ -50,10 +51,16 @@ export default function Steps({ items }: Readonly<{ items: readonly Schritt[] }>
   });
 
   if (schmal) {
+    /* JEDER BLOCK BAUT SICH BEIM EINTRITT AUF. Die vier Schritte standen
+       auf dem Telefon als stille Stapelung da, weil das Umschalten der
+       breiten Ansicht dort nicht greift; gemessen bewegte sich beim
+       Eintritt nichts. Fade setzt dieselben Merkmale wie bei den
+       Vorteilen, und die gezeichnete Oberflaeche im Fenster wird darueber
+       Stueck fuer Stueck gebaut. */
     return (
       <div className={s.stepStack}>
         {items.map((it, i) => (
-          <div className={s.stepStackItem} key={it.head}>
+          <Fade className={s.stepStackItem} key={it.head}>
             <div style={{ position: "relative", paddingLeft: 34 }}>
               <span className={s.stepDot} style={{ transform: "scale(1)", top: 10 }} />
               <span className={s.stepNum} style={{ top: 2 }}>
@@ -67,7 +74,7 @@ export default function Steps({ items }: Readonly<{ items: readonly Schritt[] }>
                 <Art name={it.art} />
               </Window>
             </div>
-          </div>
+          </Fade>
         ))}
       </div>
     );

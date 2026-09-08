@@ -27,7 +27,7 @@ import { useEffect, useRef } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
 import { kiTiles } from "../../copy";
 import { Reveal, RevealGroup, useSafeReducedMotion } from "../system/ui";
-import { TileScene, tileTotal, useReplay, type TileId } from "./tiles/Vignettes";
+import { TileScene, tileTotal, useReplay, useTouchSchleife, type TileId } from "./tiles/Vignettes";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -62,6 +62,11 @@ function TileCard({ tile, reduced }: Readonly<{ tile: Tile; reduced: boolean }>)
   useEffect(() => {
     if (inView) play();
   }, [inView, play]);
+
+  /* Auf dem Telefon fehlt der Zeiger, mit dem man eine Kachel am
+     Schreibtisch neu startet. Dort laeuft sie deshalb weiter, solange sie
+     im Bild steht. */
+  useTouchSchleife(ref, play, tileTotal(id), reduced);
 
   return (
     <motion.li

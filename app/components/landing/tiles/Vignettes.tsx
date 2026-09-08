@@ -9,4 +9,4 @@
  */
 export { TileScene, tileTotal, type TileId } from "./TileScenes";
 export { StepScene, stepTotal, STEP_IDS, type StepId } from "./StepScenes";
-export { useReplay } from "./kit";
+export { useReplay, useTouchSchleife } from "./kit";

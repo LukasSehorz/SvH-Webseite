@@ -11,7 +11,7 @@ import {
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { process as processCopy } from "../../copy";
 import { useSafeReducedMotion } from "../system/ui";
-import { StepScene, stepTotal, STEP_IDS, useReplay } from "./tiles/Vignettes";
+import { StepScene, stepTotal, STEP_IDS, useReplay, useTouchSchleife } from "./tiles/Vignettes";
 
 /**
  * Der Ablauf als Folge von drei Schritten.
@@ -169,15 +169,24 @@ function StepCard({
   const { playKey, play } = useReplay(stepTotal(sceneId));
   const awake = state === "active";
   const reached = state !== "todo";
+  const karte = useRef<HTMLElement | null>(null);
 
   /* Die Szene laeuft jedes Mal an, wenn ihr Schritt wach wird. */
   useEffect(() => {
     if (awake) play();
   }, [awake, play]);
 
+  /* Auf dem Telefon weckt kein Zeiger einen Schritt. Wer bei einem Schritt
+     stehen bleibt, sah seine Szene deshalb genau einmal. Der wache Schritt
+     wiederholt sie dort, solange er im Bild steht. */
+  useTouchSchleife(karte, play, stepTotal(sceneId), reduced || !awake);
+
   return (
     <motion.article
-      ref={register}
+      ref={(node) => {
+        karte.current = node;
+        register(node);
+      }}
       className="pp-card"
       data-state={state}
       tabIndex={0}

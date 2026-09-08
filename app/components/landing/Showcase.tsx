@@ -171,8 +171,87 @@ export default function Showcase({
       };
     });
 
-    // Ruhige Reihe mit Scrollbalken.
-    media.add("(max-width: 899px), (prefers-reduced-motion: reduce)", () => {
+    /* Auf dem Telefon wandert die Reihe MIT DEM SCROLLEN DER SEITE.
+       Bis zum 08.09.2026 war sie dort eine ruhige Reihe mit
+       Scrollbalken, die sich nur bewegte, wenn jemand seitlich wischte.
+       Gemessen bei 390 Bildpunkten stand sie ueber drei Sekunden bei
+       scrollLeft null, und der Auftraggeber hat zu Recht beanstandet,
+       dass die Animation dort gar nicht laeuft. Ein Besucher sieht einer
+       Reihe nicht an, dass man an ihr wischen kann.
+
+       Der Weg der Seite durch die Sektion wird deshalb auf die
+       waagerechte Lage der Reihe uebertragen, genau wie am Schreibtisch,
+       nur ohne die Sektion festzuhalten. Wischen bleibt moeglich und hat
+       Vorrang: Sobald jemand die Reihe selbst anfasst, gibt die Kopplung
+       sie frei und ruehrt sie bis zum naechsten Aufruf der Seite nicht
+       mehr an. */
+    media.add("(max-width: 899px) and (prefers-reduced-motion: no-preference)", () => {
+      let inHand = false;
+      let laeuft = 0;
+
+      const messen = () => {
+        pad();
+        zeichnen();
+      };
+
+      /* Der Fortschritt der Sektion, bezogen auf den Weg, den ihr Kasten
+         durch das Bild nimmt. Null steht am Anfang, eins am Ende. */
+      const fortschritt = () => {
+        const kasten = sectionEl.getBoundingClientRect();
+        const weg = kasten.height + window.innerHeight;
+        if (weg <= 0) return 0;
+        const roh = (window.innerHeight - kasten.top) / weg;
+        return Math.min(1, Math.max(0, roh));
+      };
+
+      const zeichnen = () => {
+        const spanne = viewEl.scrollWidth - viewEl.clientWidth;
+        if (inHand || spanne <= 0) {
+          paint(-viewEl.scrollLeft, spanne > 0 ? viewEl.scrollLeft / spanne : 0);
+          return;
+        }
+        /* Die aeuszeren Viertel des Weges bleiben ruhig, damit die Reihe
+           nicht schon wandert, waehrend die Ueberschrift noch einlaeuft. */
+        const p = Math.min(1, Math.max(0, (fortschritt() - 0.22) / 0.5));
+        viewEl.scrollLeft = spanne * p;
+        paint(-viewEl.scrollLeft, p);
+      };
+
+      const beiScroll = () => {
+        if (laeuft) return;
+        laeuft = window.requestAnimationFrame(() => {
+          laeuft = 0;
+          zeichnen();
+        });
+      };
+
+      /* Ein Griff an die Reihe schaltet die Kopplung ab. Ohne das wuerde
+         die Seite gegen den Finger arbeiten. */
+      const griff = () => {
+        inHand = true;
+      };
+
+      messen();
+      window.addEventListener("scroll", beiScroll, { passive: true });
+      viewEl.addEventListener("scroll", zeichnen, { passive: true });
+      viewEl.addEventListener("pointerdown", griff, { passive: true });
+      viewEl.addEventListener("touchstart", griff, { passive: true });
+      window.addEventListener("resize", messen);
+
+      return () => {
+        if (laeuft) window.cancelAnimationFrame(laeuft);
+        window.removeEventListener("scroll", beiScroll);
+        viewEl.removeEventListener("scroll", zeichnen);
+        viewEl.removeEventListener("pointerdown", griff);
+        viewEl.removeEventListener("touchstart", griff);
+        window.removeEventListener("resize", messen);
+        leadEl.style.width = "";
+        tailEl.style.width = "";
+      };
+    });
+
+    /* Ohne Bewegung bleibt es bei der ruhigen Reihe mit Scrollbalken. */
+    media.add("(prefers-reduced-motion: reduce)", () => {
       const update = () => {
         const span = viewEl.scrollWidth - viewEl.clientWidth;
         paint(-viewEl.scrollLeft, span > 0 ? viewEl.scrollLeft / span : 0);
