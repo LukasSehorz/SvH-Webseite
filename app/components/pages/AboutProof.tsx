@@ -234,6 +234,23 @@ export default function AboutProof() {
           }
         }
 
+        /* Auf dem Telefon stand unter der letzten Zeile der Liste erst
+           deren Haarlinie und 42 Bildpunkte darunter die Haarlinie des
+           Feldes. Zwei Linien so dicht uebereinander lasen sich als
+           angefangene, leere Zeile. Die Liste gibt ihre letzte Linie
+           deshalb ab, und die Beschriftung der Zahl steigt von gemessenen
+           11 auf 12,5 Bildpunkte. */
+        @media (max-width: 768px) {
+          .about-proof .proof-area:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+          }
+
+          .about-proof .proof-label {
+            font-size: 12.5px;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .about-proof .proof-rule {
             transform: scaleX(1);

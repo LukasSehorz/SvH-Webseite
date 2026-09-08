@@ -365,6 +365,64 @@ export default function KiHero() {
           }
         }
 
+        /* Auf dem Telefon steht das Feld einspaltig. Zweispaltig blieben
+           bei 390 Bildpunkten je Kachel 140 Bildpunkte Auszenbreite und
+           112 Bildpunkte fuer die Szene, und der Satz zur Aufgabe fiel in
+           fuenf Zeilen mit drei Woertern. Einspaltig sind es 310 und 278,
+           die Szene wird damit rund doppelt so grosz und der Satz steht in
+           zwei Zeilen. Die Szene liegt dafuer flacher, sonst wuechse die
+           Bahn aus acht Kacheln ins Uferlose. */
+        @media (max-width: 560px) {
+          .ki-hero-field {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 12px;
+          }
+
+          .ki-tile {
+            padding: 14px 16px 16px;
+            border-radius: 16px;
+          }
+
+          /* Die Zeichnung bringt aus ihrem viewBox das Verhaeltnis 200 zu
+             108 mit und wuerde bei 316 Bildpunkten Breite 171 hoch. Das
+             Verhaeltnis der Buehne bleibt wirkungslos, solange die
+             Zeichnung im Flusz steht, deshalb liegt sie hier auf der
+             Buehne auf. Sie wird auf 135 eingepasst und steht mittig; das
+             ist immer noch mehr als doppelt so grosz wie die 112 mal 60
+             der zweispaltigen Fassung, und die acht Kacheln bleiben
+             zusammen rund 300 Bildpunkte kuerzer. */
+          .ki-tile-stage {
+            aspect-ratio: 300 / 128;
+          }
+
+          .ki-tile-stage svg {
+            position: absolute;
+            inset: 0;
+          }
+
+          .ki-tile-foot {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+          }
+
+          .ki-tile-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+          }
+
+          .ki-tile-name {
+            font-size: 14px;
+          }
+
+          .ki-tile-body {
+            grid-column: auto;
+            font-size: 13.5px;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .ki-tile,
           .ki-tile-mist,

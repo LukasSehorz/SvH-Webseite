@@ -69,8 +69,23 @@ export default function SocialHero() {
 
       const cx = rect.left - base.left + rect.width / 2;
       const cy = rect.top - base.top + rect.height / 2;
-      const radius = Math.min(rect.width * ORB_OF_WIDTH, ORB_MAX);
       const away = 1 + MOON.r + MOON_GAP;
+
+      /* Die Begleiterin sitzt oben links und reicht um das 1,574fache des
+         Kugelradius ueber die Mitte hinaus nach links. Der Seitenkopf
+         schneidet alles ab, was ueber die Bildkante hinausragt, und auf
+         dem Telefon stand die Begleiterin dadurch als halber Kreis in der
+         Ecke. Gemessen waren es bei 390 Bildpunkten ein Radius von 133
+         und eine Reichweite von 209 bei einer Mitte von 195. Der Radius
+         wird deshalb zusaetzlich durch den Abstand der Kugelmitte zur
+         linken Bildkante begrenzt, damit die Begleiterin ganz im Bild
+         steht; auf breiten Schirmen greift die Grenze nicht. */
+      const spanne = Math.abs(MOON.dx) * away + MOON.r;
+      const platz = (rect.left + rect.width / 2 - 12) / spanne;
+      const radius = Math.max(
+        72,
+        Math.min(rect.width * ORB_OF_WIDTH, ORB_MAX, platz)
+      );
 
       const next: OrbLayout[] = [
         {

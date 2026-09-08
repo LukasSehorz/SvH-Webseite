@@ -136,15 +136,21 @@ export default function FlatStack() {
           padding: 4px 0;
         }
 
+        /* Diese Fassung steht nur auf schmalen Schirmen, deshalb gelten
+           hier die Masze des Telefons. Die Werkzeugnamen standen auf
+           elfeinhalb Bildpunkten, gemessen bei 390, und lagen damit unter
+           der Marke von zwoelf. Sie tragen jetzt dreizehn. Die Kachel
+           waechst dafuer von zweiunddreissig auf sechsunddreissig
+           Bildpunkte Hoehe, sonst saesse die Schrift zu eng im Rahmen. */
         .kl-flat-tile {
           display: inline-flex;
           align-items: center;
-          height: 32px;
+          height: 36px;
           padding: 0 12px;
           border: 1px dashed rgba(var(--tint), 0.7);
           border-radius: 4px;
           background: rgba(var(--tint), 0.19);
-          font-size: 11.5px;
+          font-size: 13px;
           letter-spacing: 0.02em;
           color: rgba(230, 232, 255, 0.9);
           white-space: nowrap;

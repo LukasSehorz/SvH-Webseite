@@ -110,6 +110,22 @@ const LEGAL_CSS = `
   .legal-dark .legal-body{margin-top:38px}
   .legal-dark .legal-body > * + h2{margin-top:34px}
 }
+
+/* Auf Telefon und Tafel wird mit dem Finger bedient und aus kurzer
+   Entfernung gelesen, deshalb gelten die folgenden Masze bis 768. */
+@media (max-width:768px){
+  /* Beschriftung ueber dem Titel und die Angaben in den Listen standen mit
+     gemessenen 11 Bildpunkten und gesperrten Buchstaben. Beide tragen
+     hier 12,5. */
+  .legal-dark > .shell > .t-label{font-size:12.5px}
+  .legal-dark .legal-body .legal-dl dt{font-size:12.5px}
+
+  /* Telefon, E-Mail und die verwiesenen Adressen waren als Verweise im
+     Flieszsatz gemessen 19 Bildpunkte hoch. Innenabstand an einem Verweis
+     im Satz hebt die Trefferflaeche auf rund 41 Bildpunkte, ohne die
+     Zeilen auseinanderzuziehen. */
+  .legal-dark .legal-body a{padding-block:11px}
+}
 `;
 
 /**

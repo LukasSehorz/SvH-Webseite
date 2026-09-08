@@ -92,7 +92,12 @@
 
 @media (max-width: 640px) {
   :root {
-    --section-y: 88px;
+    /* Der Abstand stand bei 88 Bildpunkten. Zwischen zwei Sektionen
+       stehen damit 176 Bildpunkte, auf einem Telefon von 844 Bildpunkten
+       Hoehe also gut ein Fuenftel des Bildes als leere Flaeche. Mit 68
+       bleiben 136 Bildpunkte, die Trennung ist weiterhin deutlich, und
+       der Daumen kommt schneller zum naechsten Gedanken. */
+    --section-y: 68px;
   }
 }
 
@@ -253,6 +258,35 @@ textarea {
   .t-body-lg {
     font-size: 17px;
   }
+
+  /* Die Beschriftungsstufe steht auf elf Bildpunkten, und das ist auf
+     einem Telefon zu wenig. Gemessen bei 390 Bildpunkten trugen die
+     Sektionsnummern 01 mal Warum jetzt und 02 mal KI sowie die
+     Kartenmarken Die Idee, Das Fundament und Der Unterschied genau elf
+     Bildpunkte und lagen damit unter der Marke von zwoelf, ab der eine
+     gesperrte Versalzeile auf Armlaenge noch lesbar bleibt. Mit dreizehn
+     Bildpunkten liegen dieselben Zeilen sicher darueber. Die Sperrung
+     geht dabei von 0,1 auf 0,085 zurueck, weil eine breitere Schrift
+     dieselbe optische Weite schon bei geringerer Sperrung erreicht und
+     die laengste dieser Zeilen sonst umbraeche. Auf breiten Schirmen
+     bleibt es bei elf Bildpunkten. */
+  .t-label {
+    font-size: 13px;
+    letter-spacing: 0.085em;
+  }
+}
+
+/* Zwischen Telefon und Schreibtisch, also auf einem Tablett im
+   Hochformat, standen dieselben Zeilen weiterhin auf elf Bildpunkten.
+   Gemessen bei 768 traf das die Sektionsnummern, die Kartenmarken und
+   alle vier Spaltentitel der Fusszeile. Zwoelfeinhalb Bildpunkte heben
+   sie ueber dieselbe Marke, ohne die Ansicht auf dem Schreibtisch zu
+   beruehren. */
+@media (min-width: 641px) and (max-width: 900px) {
+  .t-label {
+    font-size: 12.5px;
+    letter-spacing: 0.09em;
+  }
 }
 
 /* Auf dem Telefon fiel die Hauptzeile mit 52 Bildpunkten in drei Zeilen
@@ -287,6 +321,25 @@ textarea {
 
 .section {
   padding-block: var(--section-y);
+}
+
+/* Die Leiste schwebt auf dem Telefon achtzehn Bildpunkte unter der
+   Oberkante und ist sechzig hoch, belegt also die obersten
+   achtundsiebzig Bildpunkte des Bildes. Springt ein Verweis auf eine
+   Sektion, hielt der Browser deren Oberkante bisher genau auf null, und
+   die Nummernzeile samt Haarlinie lag danach hinter der Leiste. Mit
+   hundert Bildpunkten Sprungabstand steht der Kopf der Sektion frei
+   unter der Leiste. Der Wert gilt fuer die Sektionen der Startseite, die
+   ueber die Navigation angesprungen werden. */
+@media (max-width: 1023px) {
+  #problem,
+  #ki,
+  #ablauf,
+  #marketing,
+  #referenzen,
+  #fragen {
+    scroll-margin-top: 100px;
+  }
 }
 
 .hairline {
@@ -587,9 +640,19 @@ textarea {
 
   /* Ohne die Kastenlabels bleibt im Bild rechts ein Fuenftel leer. Die
      Zeichnung wird darum breiter gezogen und der leere Rand beschnitten,
-     damit die Kurven die volle Breite des Geraets nutzen. */
+     damit die Kurven die volle Breite des Geraets nutzen.
+
+     Oben kommt Luft dazu. Die steigende Kurve endet im Bildkasten bei 65
+     von 470 Einheiten und stand damit auf dem Telefon nur zweiundvierzig
+     Bildpunkte unter der Oberkante der Grafik, waehrend die schwebende
+     Leiste die obersten achtundsiebzig belegt. Beim Scrollen wurde der
+     Scheitel der Kurve zusammen mit dem Anfang der senkrechten
+     Achsenbeschriftung von der Leiste angeschnitten. Mit
+     sechsunddreissig Bildpunkten Vorlauf steht der Scheitel frei, sobald
+     die Grafik in Bildmitte liegt. */
   .manifesto-chart {
     overflow: hidden;
+    padding-top: 36px;
   }
 
   .manifesto-svg {
@@ -1162,10 +1225,28 @@ textarea {
   .nav-bar {
     grid-template-columns: auto minmax(0, 1fr) auto;
     height: 60px;
+    /* Auf dem Telefon deckt die Pille den Grund fast vollstaendig. Die
+       Deckkraft von 0,86 laeszt vierzehn Prozent des Inhalts durch, und
+       bei einer Schrift von 244 Stufen auf einem Grund von 5 Stufen sind
+       das dreiunddreissig Stufen Unterschied. Auf den Aufnahmen bei 390
+       Bildpunkten las man dadurch die Ueberschriften Ihr Betrieb laeuft
+       von allein sowie Was diese Ebene fuer Sie erledigt und die Nummer
+       03 mal Ablauf mitten durch die Leiste hindurch, und das Bild wirkte
+       schmutzig. Mit 0,98 bleiben rechnerisch fuenf Stufen uebrig und
+       damit weniger, als das Auge auf dunklem Grund trennt. Die Pille
+       bleibt eine schwebende Pille, denn Form, Rahmen und Abstand zur
+       Kante aendern sich nicht. Die Unschaerfe steigt mit, damit ein
+       Browser ohne Deckkraftberechnung denselben ruhigen Grund zeigt. */
+    background: rgba(5, 5, 7, 0.98);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
   }
 
   .nav-scrolled .nav-bar {
     height: 56px;
+    background: rgba(5, 5, 7, 0.995);
+    backdrop-filter: blur(34px);
+    -webkit-backdrop-filter: blur(34px);
   }
 }
 
@@ -1482,6 +1563,34 @@ textarea {
 
   .footer-watermark {
     margin-top: 56px;
+  }
+
+  /* Die Verweise des Fuszes waren gemessen achtzehn Bildpunkte hoch,
+     also nur die reine Zeilenhoehe, und ein Daumen trifft das nur mit
+     Glueck. Sie tragen jetzt oben und unten elf Bildpunkte Innenabstand
+     und kommen damit auf rund fuenfundvierzig. Der Abstand der Liste
+     geht im Gegenzug von elf auf zwei Bildpunkte zurueck, sodass der
+     Rhythmus der Spalte erhalten bleibt und die Flaechen zweier Verweise
+     luecklos aneinander stehen, statt dass die Spalte auseinanderfaellt.
+     Die Zeilen ohne Verweis fuehren denselben Abstand in halber Hoehe
+     weiter, damit Anschrift und Zeiten nicht zusammenkleben.
+
+     Die Anschrift der Post ist ausserdem eine einzige lange
+     Zeichenkette ohne Leerraum und lief in der zweispaltigen Fassung bei
+     390 Bildpunkten ueber die rechte Kante hinaus, wo der Seitenrand sie
+     abschnitt. Sie darf jetzt an jeder Stelle umbrechen. */
+  .footer-list {
+    gap: 2px;
+    overflow-wrap: anywhere;
+  }
+
+  .footer-link {
+    display: block;
+    padding-block: 11px;
+  }
+
+  .footer-plain {
+    padding-block: 7px;
   }
 }
 

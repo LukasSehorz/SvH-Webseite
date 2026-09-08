@@ -480,10 +480,15 @@ export function StrandsFigure({ className }: Readonly<{ className?: string }>) {
           color: var(--ink);
         }
 
-        @media (max-width: 560px) {
+        /* Die drei Beschriftungen standen auf dem Telefon mit gemessenen
+           10 Bildpunkten und waren damit kaum zu lesen. Mit 12,5 und
+           enger gesperrten Buchstaben bleiben sie in je einer Zeile und
+           die mittlere von rund 103 Bildpunkten Breite ueberschneidet die
+           beiden auszeren nicht. */
+        @media (max-width: 768px) {
           .strands-figure .strands-cap {
-            font-size: 10px;
-            letter-spacing: 0.08em;
+            font-size: 12.5px;
+            letter-spacing: 0.06em;
           }
         }
 

@@ -622,6 +622,24 @@ export default function ContactForm() {
             margin-top: 28px;
           }
         }
+
+        @media (max-width: 768px) {
+          /* Die Feldbeschriftungen standen mit gemessenen 11 Bildpunkten
+             und gesperrten Buchstaben ueber jedem Feld. Wer ein Formular
+             auf dem Telefon ausfuellt, liest genau diese Zeilen, deshalb
+             stehen sie hier auf 12,5. */
+          .contact-form .anfrage-field > label {
+            font-size: 12.5px;
+          }
+
+          /* Der Verweis auf die Datenschutzerklaerung stand im Flieszsatz
+             und war gemessen 16 Bildpunkte hoch. Innenabstand an einem
+             Verweis im Satz vergroeszert die Trefferflaeche auf rund 40
+             Bildpunkte, ohne die Zeilen auseinanderzuziehen. */
+          .contact-form .anfrage-consent-link {
+            padding-block: 13px;
+          }
+        }
       `}</style>
     </div>
   );

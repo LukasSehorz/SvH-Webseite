@@ -100,6 +100,21 @@ export default function ContactDetails() {
             font-size: 20px;
           }
         }
+
+        /* Auf dem Telefon standen die Beschriftungen mit gemessenen 11
+           Bildpunkten, und Telefon und E-Mail waren als Verweise nur 27
+           Bildpunkte hoch. Beides steht hier hoeher, damit die Zeilen
+           lesbar sind und ein Daumen die beiden Wege sicher trifft. */
+        @media (max-width: 768px) {
+          .contact-details .details-grid .t-label {
+            font-size: 12.5px;
+          }
+
+          .contact-details .details-link {
+            padding-block: 7px;
+            margin-block: -7px;
+          }
+        }
       `}</style>
     </div>
   );

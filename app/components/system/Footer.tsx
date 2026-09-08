@@ -44,12 +44,19 @@ export default function Footer() {
                   {company.email}
                 </a>
               </li>
-              <li style={{ color: "var(--ink-2)" }}>
+              {/* Diese beiden Zeilen tragen keinen Verweis. Sie bekommen
+                  die Klasse, damit die schmale Fassung ihnen denselben
+                  Abstand in halber Hoehe geben kann wie den Verweisen
+                  darueber, deren Beruehrflaeche dort auf rund
+                  fuenfundvierzig Bildpunkte waechst. */}
+              <li className="footer-plain" style={{ color: "var(--ink-2)" }}>
                 {company.street}
                 <br />
                 {company.zipCity}
               </li>
-              <li style={{ color: "var(--ink-3)" }}>{company.hours}</li>
+              <li className="footer-plain" style={{ color: "var(--ink-3)" }}>
+                {company.hours}
+              </li>
             </ul>
           </div>
         </div>

@@ -273,6 +273,15 @@ export default function ContactCards() {
             margin-top: 24px;
           }
         }
+
+        /* Die Beschriftungen der drei Fakten standen mit gemessenen 11
+           Bildpunkten und gesperrten Buchstaben. Auf dem Telefon tragen
+           sie 12,5. */
+        @media (max-width: 768px) {
+          .contact-ways .fact .t-label {
+            font-size: 12.5px;
+          }
+        }
       `}</style>
     </div>
   );

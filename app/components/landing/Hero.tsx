@@ -227,17 +227,47 @@ export default function Hero() {
         }
 
         @media (max-width: 640px) {
+          /* Die drei Werte standen auf dem Telefon bei elfeinhalb
+             Bildpunkten und lagen damit unter der Marke von zwoelf, ab
+             der eine gesperrte Versalzeile auf Armlaenge noch lesbar
+             bleibt. Sie tragen jetzt dreizehn, so viel wie auf breiten
+             Schirmen.
+
+             Sperrung und Abstand haengen daran, denn die Reihe muss in
+             eine Zeile passen. Bricht sie um, fuehrt der Trennpunkt die
+             zweite Zeile an und die Reihe sieht zerrissen aus. Gemessen
+             bei 390 Bildpunkten in einer Spalte von 350 lief die Reihe
+             mit einer Sperrung von 0,04 und sieben Bildpunkten Abstand
+             359 Bildpunkte weit und brach damit um. Mit 0,01 und fuenf
+             Bildpunkten misst sie 339 und bleibt einzeilig. */
           .hero-value {
-            font-size: 11.5px;
-            letter-spacing: 0.07em;
+            font-size: 13px;
+            letter-spacing: 0.01em;
           }
 
           .hero-values {
-            gap: 4px 9px;
+            gap: 4px 5px;
           }
 
           .hero-value + .hero-value::before {
-            margin-right: 9px;
+            margin-right: 5px;
+          }
+        }
+
+        /* Auf den schmalsten Geraeten passt die Reihe nicht mehr in eine
+           Zeile. Gemessen bei 320 Bildpunkten misst sie 280 und fuellt
+           die Spalte damit genau aus, sodass Zuverlaessigkeit in eine
+           zweite Zeile rutscht und der Trennpunkt diese Zeile anfuehrt.
+           Ein Punkt am Zeilenanfang liest sich wie ein Fehler, deshalb
+           entfaellt die Trennung hier ganz und der Abstand zwischen den
+           Woertern traegt sie allein. */
+        @media (max-width: 360px) {
+          .hero-value + .hero-value::before {
+            content: none;
+          }
+
+          .hero-values {
+            gap: 4px 14px;
           }
         }
 

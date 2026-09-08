@@ -125,6 +125,15 @@ export default function TeamBlock() {
             border-top: 1px solid var(--line);
           }
         }
+
+        /* Die Rolle unter dem Namen stand mit gemessenen 11 Bildpunkten
+           und gesperrten Buchstaben auf dem Telefon an der Grenze des
+           Lesbaren. */
+        @media (max-width: 768px) {
+          .about-team .team-role {
+            font-size: 12.5px;
+          }
+        }
       `}</style>
     </section>
   );

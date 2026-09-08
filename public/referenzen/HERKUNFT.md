@@ -133,3 +133,30 @@ Die Wandlung nach WebP lief mit demselben Aufruf wie oben.
 Die Dateien wiegen jetzt zusammen rund 1,9 statt 0,7 Megabyte. Der
 Aufschlag ist der Inhalt, der vorher gefehlt hat, und er faellt erst
 an, wenn die Sektion in die Naehe kommt.
+
+## Drei weitere Seiten am 08.09.2026
+
+Der Auftraggeber hat verlangt, dass die Fensterwand im Kopf der Unterseite
+Webseiten nicht immer dieselben vier Kacheln zeigt, sondern die schoensten
+Seiten, die wir gebaut haben, auch solche, die noch nicht veroeffentlicht
+sind. Dazugekommen sind drei Entwuerfe, die als Dateien auf der Maschine
+des Auftraggebers liegen:
+
+| Datei | Projekt | Herkunft |
+| --- | --- | --- |
+| `kurmittelhaus-hero.webp` | Kurmittelhaus der Moderne, Bad Reichenhall | `Sales-Social Recruiting/Sales/Ladenhaut/Landing Page/index.html` |
+| `estera-hero.webp` | Estera Immobilien, helle Fassung | `Kunden/ESTERA/Webseiten/estera-repo/index.html` |
+| `estera-bild-hero.webp` | Estera Immobilien, Fassung mit Bildband | `Kunden/ESTERA/Webseiten/estera-repo/variante-a.html` |
+
+Aufgenommen mit `_ref2/mess/heroes/bilder.mjs` bei 1440 Bildpunkten Breite
+in doppelter Dichte, danach auf 1200 mal 750 beschnitten und nach WebP
+gewandelt. Das Skript blendet vor der Aufnahme alles aus, was fest am
+unteren Bildrand klebt; bei den beiden Estera-Entwuerfen ist das der
+Umschalter zwischen den Varianten, also ein Werkzeug aus dem Bau und kein
+Teil der Seite.
+
+Diese drei stehen ausschlieszlich in der Fensterwand des Kopfes, wo sie
+stark gedaempft und angeschnitten liegen. Sie erscheinen NICHT in der
+Sektion mit den vier Referenzprojekten, denn dort steht neben jeder
+Aufnahme die echte Adresse, und diese drei Seiten sind noch nicht
+veroeffentlicht.

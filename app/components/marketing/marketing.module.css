@@ -3592,6 +3592,16 @@
     height: 32px;
   }
 
+  /* Die Marke ueber der kleinen Kurve stand auf zehneinhalb Bildpunkten
+     und war damit die letzte Zeile der Startseite, die auf dem Telefon
+     unter der Marke von zwoelf lag. Sie traegt jetzt zwoelfeinhalb, und
+     die Sperrung geht von 0,09 auf 0,07 zurueck, damit die Marke im
+     Kaertchen dieselbe Breite behaelt. */
+  .soKurveMarke {
+    font-size: 12.5px;
+    letter-spacing: 0.07em;
+  }
+
   /* DAS BROWSERFENSTER WIRD AUF DEM TELEFON HOEHER STATT BREITER. Bei
      253 Bildpunkten Breite lieszen 16 zu 9 nur 104 Bildpunkte Inhalt
      uebrig, und darin war weder das Formular noch die Bestaetigung zu
@@ -3601,19 +3611,25 @@
     border-radius: 13px;
   }
 
+  /* Die Leiste des gezeichneten Browsers stand auf 32 Bildpunkten und
+     ihre Adresse auf 9,5. Das Wort ihr-betrieb.de ist die einzige Stelle
+     im Schaustueck, an der ein Besucher liest, dass es um SEINE eigene
+     Seite geht, und war auf dem Telefon kaum zu entziffern. Mit 38 und
+     11,5 bleibt das Maszverhaeltnis des Modells erhalten und die Adresse
+     ist lesbar. */
   .wbChrome {
-    height: 32px;
+    height: 38px;
     padding-inline: 11px;
   }
 
   .wbAddr {
-    height: 18px;
+    height: 22px;
     margin-left: 9px;
-    font-size: 9.5px;
+    font-size: 11.5px;
   }
 
   .wbView {
-    height: calc(100% - 32px);
+    height: calc(100% - 38px);
   }
 
   .wbSchirm {
@@ -3793,8 +3809,11 @@
     height: 13px;
   }
 
+  /* Die Adresse des ersten Treffers ist die Stelle, an der ein Besucher
+     liest, dass hier SEINE Seite gefunden wird. Sie stand auf zehn
+     Bildpunkten und war damit die kleinste Schrift der ganzen Seite. */
   .wbTrefferAdresse {
-    font-size: 10px;
+    font-size: 12.5px;
   }
 
   .wbSuchZeiger {
@@ -3866,6 +3885,18 @@
 
   .strandFoot {
     margin-top: 36px;
+  }
+
+  /* Die beiden Verweise Mehr zu Webseiten und Mehr zu Social Media waren
+     gemessen achtundzwanzig Bildpunkte hoch, also Zeilenhoehe plus zweimal
+     fuenf Bildpunkte Innenabstand, und ein Daumen trifft das nur mit
+     Glueck. Mit zwoelf Bildpunkten oben und unten kommen sie auf rund
+     einundvierzig und liegen damit ueber der Marke von vierzig. Der
+     Unterstrich rueckt dadurch weiter unter die Zeile und liest sich als
+     bewusst abgesetzte Linie, denn er spannt weiterhin ueber Wort und
+     Pfeil. */
+  .strandLink {
+    padding-block: 12px;
   }
 
   .dnaClosing {

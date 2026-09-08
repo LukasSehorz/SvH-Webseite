@@ -1263,6 +1263,41 @@ h1.heroTitle {
   .blockLink {
     padding-block: 44px;
   }
+
+  /* Der gezeichnete Beitrag und das kurze Video waren fuer die breite
+     Spalte gebaut und standen auf dem Telefon mit 355 und 348 Bildpunkten
+     Hoehe in einer Karte, die sonst nur zwei Zeilen Text traegt. Etwas
+     kleiner bleibt die Zeichnung klar und die Sektion kuerzer. */
+  .post {
+    width: 186px;
+  }
+
+  .reel {
+    width: 168px;
+  }
+
+  .platformStage {
+    min-height: 260px;
+  }
+}
+
+/* Auf Telefon und Tafel wird mit dem Finger bedient, deshalb gelten die
+   beiden folgenden Masze bis 768 Bildpunkte. */
+@media (max-width: 768px) {
+  /* Der Knopf war gemessen 27 Bildpunkte hoch und damit fuer einen Daumen
+     zu flach. Der Innenabstand hebt ihn auf 40, die Unterstreichung
+     rueckt dafuer an den unteren Rand der Flaeche. */
+  .replay {
+    padding-top: 9px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+  }
+
+  /* Die Ziffer im Knoten stand mit gemessenen 12 Bildpunkten an der
+     Grenze des Lesbaren. */
+  .stepNode {
+    font-size: 12.5px;
+  }
 }
 
 /* Bei reduzierter Bewegung steht alles still. Die Uebergaenge auf den

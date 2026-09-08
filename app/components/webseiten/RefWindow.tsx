@@ -39,8 +39,13 @@ import s from "./webseiten.module.css";
 
 const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-/** Hoechstens so viele Bildpunkte Aufnahme je Bildpunkt Scrollweg. */
-const MAX_VERHAELTNIS = 2.6;
+/** Hoechstens so viele Bildpunkte Aufnahme je Bildpunkt Scrollweg. Der
+ *  Wert stand am 03.09.2026 bei 2,6, und der Auftraggeber fand die Fahrt
+ *  danach immer noch zu schnell, weil man die einzelnen Abschnitte der
+ *  Kundenseite kaum erkennt. Mit 1,3 laeuft die Aufnahme nur noch gut
+ *  eine Bildhoehe je Bildhoehe Scrollweg, und jeder Abschnitt steht lange
+ *  genug im Fenster, um gelesen zu werden. */
+const MAX_VERHAELTNIS = 1.3;
 
 /** Anteil des Durchgangs, in dem das Fenster laeuft, siehe die Stuetzstellen unten. */
 const LAUF_ANTEIL = 0.72;

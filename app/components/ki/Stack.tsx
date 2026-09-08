@@ -1099,6 +1099,16 @@ export default function KiStack() {
           }
         }
 
+        /* Die Sektionsbeschriftung stand mit gemessenen 11 Bildpunkten und
+           gesperrten Buchstaben und war damit auf Telefon und Tafel an der
+           Grenze des Lesbaren. Mit 12,5 traegt sie dieselbe Form und
+           bleibt in einer Zeile. */
+        @media (max-width: 768px) {
+          .ki-stack .ki-stack-head .t-label {
+            font-size: 12.5px;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .ki-stack .ki-stack-module,
           .ki-stack .ki-stack-foundation {

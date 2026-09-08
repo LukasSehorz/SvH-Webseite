@@ -566,6 +566,26 @@ export default function KiFlow() {
           .ki-flow .ki-flow-stage {
             grid-column: 1 / -1;
           }
+
+          /* Auf dem Telefon steht jeder Schritt vollstaendig da. Das
+             Zurueckstellen des ruhenden Schritts lebt vom Zeiger, und den
+             gibt es hier nicht; gemessen stand die Buehne des ersten
+             Schritts bei 34 Prozent Deckkraft und las sich als leerer
+             Kasten von 310 mal 166 Bildpunkten. Der Fortschritt bleibt an
+             der Schiene und an der Ziffer sichtbar. */
+          .ki-flow .ki-flow-step-title,
+          .ki-flow .ki-flow-step-body,
+          .ki-flow .ki-flow-stage {
+            opacity: 1;
+          }
+
+          .ki-flow .ki-flow-stage {
+            border-color: rgba(244, 244, 246, 0.14);
+          }
+
+          .ki-flow .ki-flow-step[data-on="true"] .ki-flow-stage {
+            border-color: rgba(244, 244, 246, 0.2);
+          }
         }
 
         @media (prefers-reduced-motion: reduce) {

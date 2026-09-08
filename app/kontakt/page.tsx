@@ -17,8 +17,18 @@ export default function ContactPage() {
     <>
       <Navbar />
 
+      {/* Die Beschriftung ueber dem Titel stand mit gemessenen 11
+          Bildpunkten und gesperrten Buchstaben. Auf dem Telefon traegt sie
+          12,5, wie alle uebrigen Beschriftungen dieser Seite. Die Regel
+          steht als einfaches Blatt hier, damit die Seite eine
+          Serverkomponente bleibt. */}
+      <style>{`@media (max-width:768px){.kontakt-kopf .t-label{font-size:12.5px}}`}</style>
+
       <main>
-        <section className="subpage-head" style={{ paddingBottom: "clamp(56px, 7vw, 96px)" }}>
+        <section
+          className="subpage-head kontakt-kopf"
+          style={{ paddingBottom: "clamp(56px, 7vw, 96px)" }}
+        >
           <div className="shell">
             <p className="t-label">{contactPage.hero.label}</p>
 
