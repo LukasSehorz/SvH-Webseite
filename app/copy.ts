@@ -130,6 +130,9 @@ export const footer = {
            zur Uebersicht nicht mehr stehen. Die vier Projekte tragen auf
            der Webseiten-Unterseite den Abschnitt mit dieser Kennung. */
         { label: "Unsere Arbeiten", href: "/marketing/webseiten#referenzen" },
+        /* Die Sektion Aktuelles steht auf der Startseite und traegt den
+           Anker aktuelles. */
+        { label: "Aktuelles", href: "/#aktuelles" },
       ],
     },
     {
@@ -276,7 +279,7 @@ export const process = {
 /* ------------------------------------------------------------------ */
 
 export const faqLanding = {
-  label: "06 · Fragen",
+  label: "07 · Fragen",
   title: "Was Betriebe uns zuerst fragen.",
   intro: "Die Antworten aus vielen Erstgesprächen, offen aufgeschrieben.",
   items: [
@@ -299,6 +302,97 @@ export const faqLanding = {
     {
       q: "Sind wir danach von Ihnen abhängig?",
       a: "Alles, was wir bauen, schreiben wir auf und übergeben es an Ihr Team. Sie können jederzeit selbst weitermachen, und viele Kunden bleiben trotzdem bei uns.",
+    },
+  ],
+};
+
+/* ------------------------------------------------------------------ */
+/*  Landing · S6b Aktuelles                                            */
+/* ------------------------------------------------------------------ */
+
+/* Die Sektion zeigt, was Jannik vom Hofe auf seinem Kanal
+   veroeffentlicht. Der Auftraggeber hat sie am 08.09.2026 verlangt und
+   dabei angekuendigt, dass dort spaeter auch geschriebene Beitraege
+   stehen sollen; die Datenform traegt deshalb ein Feld `art`, und die
+   Sektion kommt mit beiden Sorten zurecht.
+
+   ES WIRD NICHTS EINGEBETTET. Ein Abspielfenster von YouTube setzt beim
+   ersten Aufruf Kennungen von Google, und die Seite muesste das in der
+   Datenschutzerklaerung fuehren und vorher eine Einwilligung einholen.
+   Gezeigt wird deshalb das Vorschaubild, das unter public/aktuelles
+   liegt, und ein Klick oeffnet das Video auf YouTube in einem neuen
+   Fenster. So wird beim blossen Aufruf der Seite nichts an Google
+   gesendet.
+
+   Titel und Datum sind unveraendert aus dem Kanal uebernommen, die
+   Beschreibung ist aus dem Text des jeweiligen Videos in die Sprache
+   dieser Seite gebracht. Erfunden ist an keiner Stelle etwas. */
+export const aktuelles = {
+  label: "06 · Aktuelles",
+  titleBefore: "Was sich gerade",
+  gradientWord: "bewegt.",
+  titleAfter: "",
+  intro:
+    "Jannik zeigt auf seinem Kanal, was in der KI gerade passiert und was davon für einen Betrieb wirklich zählt. Die neuesten Beiträge stehen hier.",
+  /* Der Verweis auf den Kanal. Er steht am Fusz der Sektion und traegt
+     dieselbe Form wie die uebrigen stillen Verweise der Startseite. */
+  kanal: {
+    label: "Alle Videos auf YouTube",
+    href: "https://www.youtube.com/@jannikvomhofe",
+  },
+  /* Steht klein unter den Beitraegen und sagt, was ein Klick tut. */
+  hinweis: "Ein Klick öffnet das Video auf YouTube in einem neuen Fenster.",
+  /* Der jeweils erste Beitrag steht grosz, die uebrigen als Reihe
+     darunter. `art` unterscheidet spaeter Video und geschriebenen
+     Beitrag, `bild` liegt unter public/aktuelles.
+
+     EINEN NEUEN BEITRAG AUFNEHMEN, in vier Schritten:
+     1. Das Vorschaubild des Videos holen, es liegt bei YouTube unter
+        https://i.ytimg.com/vi/<Kennung>/maxresdefault.jpg. Die Kennung
+        ist der Teil hinter watch?v= in der Adresse des Videos.
+     2. Das Bild auf 1280 mal 720 bringen, nach WebP wandeln und unter
+        public/aktuelles/<Kennung>.webp ablegen. Das Skript dafuer steht
+        in _ref2/mess/yt/, und die Datei gehoert ins Verzeichnis, damit
+        beim Aufruf der Seite nichts an Google gesendet wird.
+     3. Hier oben einen Eintrag ergaenzen, mit Kennung, Titel und Datum
+        genau so, wie sie auf dem Kanal stehen, und mit einem Satz in der
+        Sprache dieser Seite dazu.
+     4. Der neueste Beitrag steht immer an erster Stelle und wird
+        automatisch grosz gezeigt. Die Liste darf beliebig lang werden;
+        gezeigt werden der erste grosz und alle weiteren als Reihe. */
+  beitraege: [
+    {
+      art: "video" as const,
+      id: "FS5eb2cIzHE",
+      titel: "Ohne DIESE KI-Anwendung hat dein Unternehmen keine ZUKUNFT...",
+      datum: "2. September 2026",
+      datumIso: "2026-09-02",
+      body: "Was ein Corporate LLM ist, wie es das Wissen eines Betriebs an einen Ort holt und warum Betriebe ohne eigene KI-Strategie den Anschluss verlieren.",
+      href: "https://www.youtube.com/watch?v=FS5eb2cIzHE",
+      bild: "/aktuelles/FS5eb2cIzHE.webp",
+      alt: "Vorschaubild des Videos über Corporate LLM",
+    },
+    {
+      art: "video" as const,
+      id: "ATlHA9p3zXc",
+      titel: "Der TEUERSTE Fehler deutscher Firmen ...",
+      datum: "27. August 2026",
+      datumIso: "2026-08-27",
+      body: "Warum die meisten KI-Vorhaben im Mittelstand nicht am Modell scheitern, sondern an etwas ganz anderem.",
+      href: "https://www.youtube.com/watch?v=ATlHA9p3zXc",
+      bild: "/aktuelles/ATlHA9p3zXc.webp",
+      alt: "Vorschaubild des Videos über gescheiterte KI-Projekte",
+    },
+    {
+      art: "video" as const,
+      id: "e6zwbX6KXnU",
+      titel: "A Week in the Life of a 23 year old AI Agency Owner",
+      datum: "18. August 2026",
+      datumIso: "2026-08-18",
+      body: "Ein Blick hinter die Kulissen. Eine Woche im Alltag einer jungen KI-Agentur.",
+      href: "https://www.youtube.com/watch?v=e6zwbX6KXnU",
+      bild: "/aktuelles/e6zwbX6KXnU.webp",
+      alt: "Vorschaubild des Videos über eine Arbeitswoche in der Agentur",
     },
   ],
 };

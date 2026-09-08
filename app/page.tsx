@@ -7,6 +7,7 @@ import KiTiles from "./components/landing/KiTiles";
 import ProcessPanel from "./components/landing/ProcessPanel";
 import MarketingDna from "./components/landing/MarketingDna";
 import Showcase from "./components/landing/Showcase";
+import News from "./components/landing/News";
 import DnaZone from "./components/marketing/DnaZone";
 import Faq from "./components/landing/Faq";
 import FinalCta from "./components/landing/FinalCta";
@@ -31,6 +32,10 @@ export default function Home() {
             wieder hierher zurueckverlangt. Der zweite Knopf im Kopf
             springt weiterhin hierher. */}
         <Showcase />
+        {/* Aktuelles steht hinter den Arbeiten und vor den Fragen. Wer die
+            fertigen Projekte gesehen hat, sieht hier, woran gerade
+            gearbeitet und worueber gerade gesprochen wird. */}
+        <News />
         <Faq />
         <FinalCta />
       </main>
