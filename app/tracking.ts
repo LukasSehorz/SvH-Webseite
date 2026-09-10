@@ -27,6 +27,30 @@ if (!istGueltigeGtmId(GTM_ID)) {
   );
 }
 
+/**
+ * Das Kennzeichen fuer die Google Search Console.
+ *
+ * Es beantwortet eine andere Frage als der Tag Manager. Der Tag Manager
+ * misst Besucher und laeuft deshalb erst nach der Einwilligung. Dieses
+ * Kennzeichen beweist Google nur, dass die Seite uns gehoert, damit wir
+ * sehen, ueber welche Suchanfragen Kunden kommen. Es speichert nichts
+ * auf dem Geraet und sendet nichts an Google, sondern steht still im
+ * Kopf der Seite. Deshalb darf und musz es dauerhaft dort stehen, auch
+ * ohne Zustimmung.
+ *
+ * Der Wert kommt aus der Search Console, wenn man dort die Seite
+ * hinzufuegt und den Weg ueber den HTML-Tag waehlt. Google zeigt dann
+ * eine Zeile wie
+ *   <meta name="google-site-verification" content="abc123..." />
+ * und hier gehoert allein der Inhalt von content hinein, ohne die
+ * Anfuehrungszeichen und ohne den Rest der Zeile.
+ *
+ * Solange die Zeichenkette leer ist, setzt layout.tsx das Kennzeichen
+ * gar nicht. Ein leeres Kennzeichen waere schlimmer als keines, denn
+ * Google wertet es als falsche Angabe.
+ */
+export const SEARCH_CONSOLE_ID = "";
+
 /** Der Schluessel, unter dem die Entscheidung im Browser liegt. */
 export const CONSENT_KEY = "svh-einwilligung";
 
