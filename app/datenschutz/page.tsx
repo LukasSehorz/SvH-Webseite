@@ -114,7 +114,29 @@ export default function DatenschutzPage() {
         nur im Einzelfall erlauben oder generell ausschließen.
       </p>
 
-      <h2>8. Empfänger und Auftragsverarbeiter</h2>
+      <h2>8. Reichweitenmessung mit dem Google Tag Manager</h2>
+      <p>
+        Wir möchten wissen, welche Seiten gelesen werden und über welchen Weg Besucher zu uns
+        finden. Dafür setzen wir den Google Tag Manager der Google Ireland Limited, Gordon House,
+        Barrow Street, Dublin 4, Irland ein. Über ihn werden Analysewerkzeuge geladen, die
+        Informationen auf Ihrem Gerät speichern und Ihre IP-Adresse an Google übermitteln. Eine
+        Übermittlung in die Vereinigten Staaten ist dabei nicht ausgeschlossen; Google ist unter dem
+        EU-US Data Privacy Framework zertifiziert.
+      </p>
+      <p>
+        Der Tag Manager wird erst geladen, nachdem Sie im Hinweisfeld auf „Einverstanden“ geklickt
+        haben. Rechtsgrundlage ist Ihre Einwilligung nach § 25 Abs. 1 TDDDG und Art. 6 Abs. 1 lit. a
+        DSGVO. Ohne Ihre Einwilligung wird nichts an Google gesendet und nichts auf Ihrem Gerät
+        gespeichert, und die Website funktioniert vollständig.
+      </p>
+      <p>
+        Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen. Am Ende jeder
+        Seite finden Sie dafür den Punkt „Messung ändern“. Ihre Entscheidung selbst speichern wir im
+        Speicher Ihres Browsers, damit wir Sie nicht bei jedem Aufruf erneut fragen müssen; diese
+        Angabe verlässt Ihr Gerät nicht.
+      </p>
+
+      <h2>9. Empfänger und Auftragsverarbeiter</h2>
       <p>
         Personenbezogene Daten geben wir nur weiter, wenn dies zur Vertragserfüllung erforderlich ist,
         eine gesetzliche Verpflichtung besteht oder Sie eingewilligt haben. Setzen wir Dienstleister
@@ -122,7 +144,7 @@ export default function DatenschutzPage() {
         Auftragsverarbeitung nach Art. 28 DSGVO.
       </p>
 
-      <h2>9. Rechte der betroffenen Personen</h2>
+      <h2>10. Rechte der betroffenen Personen</h2>
       <p>
         Hinsichtlich Ihrer personenbezogenen Daten stehen Ihnen uns gegenüber die folgenden Rechte
         zu.
@@ -141,14 +163,14 @@ export default function DatenschutzPage() {
         <a href={`mailto:${company.email}`}>{company.email}</a>.
       </p>
 
-      <h2>10. Beschwerderecht bei der Aufsichtsbehörde</h2>
+      <h2>11. Beschwerderecht bei der Aufsichtsbehörde</h2>
       <p>
         Unbeschadet anderweitiger Rechtsbehelfe steht Ihnen nach Art. 77 DSGVO ein Beschwerderecht bei
         einer Datenschutz-Aufsichtsbehörde zu, insbesondere in dem Mitgliedstaat Ihres gewöhnlichen
         Aufenthalts, Ihres Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes.
       </p>
 
-      <h2>11. Datensicherheit</h2>
+      <h2>12. Datensicherheit</h2>
       <p>
         Wir setzen im Rahmen des Website-Besuchs eine Transportverschlüsselung (TLS) ein und treffen
         geeignete technische und organisatorische Maßnahmen, um Ihre Daten gegen zufällige oder
@@ -157,7 +179,7 @@ export default function DatenschutzPage() {
         fortlaufend angepasst.
       </p>
 
-      <h2>12. Änderungen dieser Datenschutzerklärung</h2>
+      <h2>13. Änderungen dieser Datenschutzerklärung</h2>
       <p>
         Wir behalten uns vor, diese Datenschutzerklärung anzupassen, damit sie stets den aktuellen
         rechtlichen Anforderungen entspricht oder um Änderungen unserer Leistungen umzusetzen. Für

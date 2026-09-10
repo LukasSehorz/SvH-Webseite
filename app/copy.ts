@@ -1674,6 +1674,32 @@ export const werbetafelnPage = {
 };
 
 /* ------------------------------------------------------------------ */
+/*  Einwilligung in die Messung                                        */
+/* ------------------------------------------------------------------ */
+
+/* Der Auftraggeber misst seit dem 10.09.2026 mit dem Google Tag Manager.
+   Dessen Tags legen Kennungen auf dem Geraet ab und senden die Adresse
+   des Besuchers an Google, und beides braucht nach Paragraf 25 TDDDG
+   eine Einwilligung, bevor es geschieht. Die Seite laedt den Tag Manager
+   deshalb erst nach einem Klick auf Einverstanden.
+
+   Der Text sagt in ganzen Saetzen, was gemessen wird und wozu. Wer nur
+   das Notwendige erlaubt, bekommt dieselbe Seite ohne jede Messung. */
+export const einwilligung = {
+  titel: "Dürfen wir mitzählen?",
+  body: "Wir würden gern sehen, welche Seiten gelesen werden und über welchen Weg Sie zu uns gefunden haben. Dafür setzt Google Analysewerkzeuge ein, die etwas auf Ihrem Gerät speichern. Ohne Ihre Zustimmung passiert davon nichts.",
+  /* Steht klein unter den beiden Knoepfen. */
+  mehr: "Einzelheiten stehen in der Datenschutzerklärung.",
+  mehrHref: "/datenschutz",
+  alle: "Einverstanden",
+  notwendig: "Nur das Nötige",
+  /* Der Widerruf in der Fusszeile. Er steht dort dauerhaft, denn eine
+     Einwilligung musz so leicht zurueckzunehmen sein, wie sie gegeben
+     wurde. */
+  widerruf: "Messung ändern",
+};
+
+/* ------------------------------------------------------------------ */
 /*  Seite nicht gefunden                                                */
 /* ------------------------------------------------------------------ */
 

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Inter_Tight } from "next/font/google";
 import { meta } from "./copy";
 import SmoothScroll from "./components/system/SmoothScroll";
+import Consent from "./components/system/Consent";
 import "./globals.css";
 
 const inter = Inter({
@@ -60,7 +61,18 @@ export default function RootLayout({
   return (
     <html lang="de" className={`${inter.variable} ${interTight.variable}`}>
       <body>
+        {/* WARUM HIER KEIN noscript-RAHMEN STEHT. Google liefert zum
+            Schnipsel einen Rahmen auf ns.html fuer Browser ohne
+            JavaScript. Dieser Rahmen laedt sofort beim Aufruf der Seite,
+            und ohne JavaScript gibt es kein Einwilligungsfeld, also auch
+            keine Zustimmung, die er abwarten koennte. Er wuerde die
+            Adresse jedes solchen Besuchers an Google geben und damit
+            genau das tun, was Paragraf 25 TDDDG ohne Einwilligung
+            verbietet. Ohne JavaScript wird auf dieser Seite deshalb gar
+            nicht gemessen. Das Nachladen nach der Zustimmung steht in
+            Consent.tsx, die Kennung in tracking.ts. */}
         <SmoothScroll>{children}</SmoothScroll>
+        <Consent />
       </body>
     </html>
   );

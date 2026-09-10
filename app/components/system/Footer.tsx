@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { footer, nav } from "../../copy";
+import { footer, nav, einwilligung } from "../../copy";
+import ConsentWiderruf from "./ConsentWiderruf";
 import { company } from "../../content";
 
 export default function Footer() {
@@ -83,6 +84,12 @@ export default function Footer() {
               einem Blickfeld lassen den Leser suchen, welcher der richtige
               ist. Die Spalte bleibt, denn sie steht in copy.ts neben den
               anderen Spalten. */}
+          {/* Der Widerruf der Einwilligung. Er musz so leicht zu finden
+              sein wie die Zustimmung selbst, deshalb steht er dauerhaft in
+              der Fusszeile und nicht in der Datenschutzerklaerung
+              versteckt. */}
+          <ConsentWiderruf label={einwilligung.widerruf} />
+
           <p className="t-label" style={{ textTransform: "none", letterSpacing: "0.02em" }}>
             {footer.claim}
           </p>

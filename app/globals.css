@@ -1779,3 +1779,34 @@ textarea {
   gap: 12px;
   margin-top: 42px;
 }
+
+/* ------------------------------------------- Widerruf der Einwilligung */
+
+/* Der Knopf in der Fusszeile sieht aus wie die Zeilen daneben und ist
+   doch ein Knopf. Er traegt deshalb keine Knopfform, aber eine
+   Beruehrflaeche von vierzig Bildpunkten Hoehe, damit ihn ein Daumen auf
+   dem Telefon trifft. */
+.footer-consent {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-3);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--line);
+  transition: color 0.3s var(--ease-out-expo);
+}
+
+.footer-consent:hover {
+  color: var(--ink);
+}
+
+.footer-consent:focus-visible {
+  outline: 2px solid var(--acc-violet);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
