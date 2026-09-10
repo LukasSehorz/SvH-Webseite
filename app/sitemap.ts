@@ -1,6 +1,12 @@
 import type { MetadataRoute } from "next";
 
-const BASE = "https://svh-consulting.de"; // ❗TODO: finale Domain eintragen
+/* Die Adresse der veroeffentlichten Seite. Sie traegt einen Bindestrich
+   zwischen svh und consult, und genau diese Schreibweise antwortet auf
+   Netlify. Ohne Bindestrich liegt eine fremde Platzhalterseite, mit der
+   Endung consulting antwortet gar nichts. Die Mailadressen laufen
+   dagegen ueber svhconsult.de ohne Bindestrich, das ist kein Versehen
+   und steht in content.ts erklaert. */
+const BASE = "https://svh-consult.de";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [

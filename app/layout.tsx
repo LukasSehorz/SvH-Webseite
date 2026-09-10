@@ -20,7 +20,12 @@ const interTight = Inter_Tight({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://svh-consulting.de"),
+  /* Aus dieser Adresse baut Next jeden kanonischen Verweis und jede
+     Bildadresse fuer die Vorschau in Chats und Netzwerken. Stimmt sie
+     nicht, zeigt jede geteilte Verknuepfung auf eine Seite, die es nicht
+     gibt, und das Vorschaubild bleibt leer. Sie traegt einen Bindestrich
+     zwischen svh und consult, wie in sitemap.ts und robots.ts. */
+  metadataBase: new URL("https://svh-consult.de"),
   title: {
     default: meta.home.title,
     template: "%s — SVH Consulting",
