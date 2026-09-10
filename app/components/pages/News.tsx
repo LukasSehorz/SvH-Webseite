@@ -1,25 +1,21 @@
 "use client";
 
 /* ------------------------------------------------------------------
-   BAUVERTRAG
+   Die Liste der Beitraege auf der Seite /aktuelles.
 
    THESE. Eine Agentur, die vom KI-Zeitalter spricht, musz zeigen, dass
-   sie mittendrin steht. Diese Sektion belegt das mit dem, was gerade
+   sie mittendrin steht. Diese Liste belegt das mit dem, was gerade
    veroeffentlicht wurde, statt es zu behaupten.
 
-   EIGENE WELT. Dieselbe dunkle Flaeche wie die uebrige Startseite,
-   Haarlinien als Taktstriche, ein Farbnebel in der Rampe hinter dem
-   ersten Vorschaubild. Neu ist allein das Abspielzeichen, und das ist
-   ein Kreis mit einem Dreieck, gezeichnet wie alle anderen Zeichen der
-   Seite mit der Strichstaerke der Marke.
+   FORM. Jeder Beitrag steht in einer eigenen Zeile, alle gleich grosz,
+   eine unter der anderen. Links das Vorschaubild, rechts Datum, Titel,
+   ein Satz und der Verweis. Darueber eine Haarlinie mit der Nummer, wie
+   die Leistungsreihen der Unterseite Webseiten sie tragen.
 
-   GESCHICHTE. Der neueste Beitrag steht grosz und quer, die aelteren
-   folgen als Reihe darunter. So liest die Sektion wie eine Redaktion und
-   nicht wie ein Raster gleicher Kacheln.
-
-   FORM. Ein breiter Block, darunter zwei schmale. Ab tausend Bildpunkten
-   steht der grosze Block zweispaltig mit Bild links und Text rechts,
-   darunter stapelt alles.
+   Der erste Entwurf zeigte den neuesten Beitrag grosz und die aelteren
+   klein darunter. Der Auftraggeber hat am 08.09.2026 verlangt, dass alle
+   Beitraege dieselbe Groesze tragen, denn ein aelteres Video ist deshalb
+   nicht weniger wert.
 
    ES WIRD NICHTS EINGEBETTET, und das ist eine Entscheidung ueber
    Datenschutz und nicht ueber Gestaltung. Ein Abspielfenster von YouTube
@@ -31,7 +27,7 @@
 import { useRef } from "react";
 import { useInView } from "framer-motion";
 import { aktuelles } from "../../copy";
-import { CircleLink, GradientWord, Reveal, SectionLabel } from "../system/ui";
+import { CircleLink } from "../system/ui";
 
 type Beitrag = (typeof aktuelles.beitraege)[number];
 
@@ -54,30 +50,43 @@ function PlayMark() {
   );
 }
 
+/** Der Pfeil am stillen Verweis. Er rueckt beim Zeigen ein Stueck weiter. */
+function ArrowMark() {
+  return (
+    <svg viewBox="0 0 20 12" fill="none" aria-hidden="true">
+      <path
+        d="M1 6h17M13.4 1.2 18.2 6l-4.8 4.8"
+        stroke="currentColor"
+        strokeWidth={1.4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 /**
- * Ein Beitrag. Die ganze Flaeche ist der Verweis, denn wer auf ein
- * Vorschaubild zeigt, will das Video sehen und nicht erst eine Zeile
+ * Ein Beitrag als Zeile. Die ganze Flaeche ist der Verweis, denn wer auf
+ * ein Vorschaubild zeigt, will das Video sehen und nicht erst eine Zeile
  * darunter suchen.
- *
- * `gross` steht fuer den neuesten Beitrag. Er traegt ein breiteres Bild,
- * eine groeszere Zeile und den Farbnebel.
  */
-function Karte({
+function Zeile({
   beitrag,
-  gross,
-  index,
-}: Readonly<{ beitrag: Beitrag; gross?: boolean; index: number }>) {
+  nummer,
+}: Readonly<{ beitrag: Beitrag; nummer: number }>) {
   const box = useRef<HTMLElement>(null);
   const drin = useInView(box, { once: true, margin: "0px 0px -14% 0px" });
 
   return (
     <article
       ref={box}
-      className="nw-card"
-      data-gross={gross ? "" : undefined}
+      className="nw-row"
       data-in={drin ? "" : undefined}
-      style={{ "--k": index } as React.CSSProperties}
     >
+      <div className="nw-rule" aria-hidden="true">
+        <span className="nw-num">{String(nummer).padStart(2, "0")}</span>
+      </div>
+
       <a
         className="nw-link"
         href={beitrag.href}
@@ -85,7 +94,7 @@ function Karte({
         rel="noopener noreferrer"
       >
         <span className="nw-shot">
-          {gross ? <span className="nw-mist" aria-hidden="true" /> : null}
+          <span className="nw-mist" aria-hidden="true" />
           <img
             src={beitrag.bild}
             alt={beitrag.alt}
@@ -104,6 +113,10 @@ function Karte({
           </time>
           <span className="nw-title">{beitrag.titel}</span>
           <span className="t-body nw-body">{beitrag.body}</span>
+          <span className="nw-go">
+            {aktuelles.ansehen}
+            <ArrowMark />
+          </span>
         </span>
       </a>
     </article>
@@ -111,35 +124,12 @@ function Karte({
 }
 
 export default function News() {
-  const [neuester, ...weitere] = aktuelles.beitraege;
-
   return (
-    <section className="section news" id="aktuelles">
+    <section className="news" id="beitraege">
       <div className="shell">
-        <SectionLabel>{aktuelles.label}</SectionLabel>
-
-        <div className="nw-head">
-          <Reveal>
-            <h2 className="t-h1 nw-title-main">
-              {aktuelles.titleBefore}{" "}
-              <GradientWord>{aktuelles.gradientWord}</GradientWord>
-              {aktuelles.titleAfter ? <> {aktuelles.titleAfter}</> : null}
-            </h2>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <p className="t-body-lg nw-intro">{aktuelles.intro}</p>
-          </Reveal>
-        </div>
-
-        <div className="nw-lead">
-          <Karte beitrag={neuester} gross index={0} />
-        </div>
-
-        <div className="nw-rest">
-          {weitere.map((beitrag, i) => (
-            <Karte key={beitrag.id} beitrag={beitrag} index={i + 1} />
-          ))}
-        </div>
+        {aktuelles.beitraege.map((beitrag, i) => (
+          <Zeile key={beitrag.id} beitrag={beitrag} nummer={i + 1} />
+        ))}
 
         <div className="nw-foot">
           <p className="nw-note">{aktuelles.hinweis}</p>
@@ -150,64 +140,52 @@ export default function News() {
       {/*
         Global deklariert, aber durchgehend unter `.news` gehaengt.
         Noetig, weil styled-jsx seine Scope-Klasse nicht an eigene
-        Komponenten wie `Reveal` weiterreicht.
+        Komponenten wie `CircleLink` weiterreicht.
       */}
       <style jsx global>{`
-        .news .nw-head {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-          gap: 24px 64px;
-          align-items: start;
-          margin-bottom: clamp(40px, 5vw, 68px);
+        .news {
+          /* Der Kopf der Seite bringt seinen eigenen Abstand mit, deshalb
+             steht hier nur der Abstand nach unten. */
+          padding-bottom: var(--section-y);
         }
 
-        .news .nw-title-main {
-          max-width: 14ch;
-          text-wrap: balance;
-        }
-
-        .news .nw-intro {
-          padding-top: 8px;
-          max-width: var(--measure);
-        }
-
-        /* Der neueste Beitrag steht quer ueber die ganze Schale, die
-           beiden aelteren darunter nebeneinander. Drei gleich grosze
-           Kacheln haetten sich als Raster gelesen, und die Startseite
-           vermeidet das an jeder Stelle. */
-        .news .nw-rest {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: clamp(22px, 2.4vw, 40px);
-          margin-top: clamp(22px, 2.4vw, 40px);
-        }
-
-        .news .nw-card {
-          position: relative;
-        }
-
-        .news .nw-link {
+        /* Die Haarlinie mit der Nummer ist der Taktstrich zwischen zwei
+           Beitraegen, so wie auf der Unterseite Webseiten. */
+        .news .nw-rule {
           display: flex;
-          flex-direction: column;
+          align-items: center;
           gap: 20px;
-          border-radius: 20px;
+        }
+
+        .news .nw-rule::after {
+          content: "";
+          flex: 1 1 auto;
+          height: 1px;
+          background: var(--line);
+        }
+
+        .news .nw-num {
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          color: var(--ink-3);
+          font-variant-numeric: tabular-nums;
+        }
+
+        /* ALLE BEITRAEGE TRAGEN DIESELBE GROESZE. Das Bild nimmt gut die
+           Haelfte der Breite, der Text steht rechts daneben und ist
+           mittig zu ihm ausgerichtet. */
+        .news .nw-link {
+          display: grid;
+          grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+          align-items: center;
+          gap: clamp(32px, 4vw, 72px);
+          padding-block: clamp(30px, 3.4vw, 56px);
           color: var(--ink);
         }
 
-        .news .nw-card[data-gross] .nw-link {
-          gap: clamp(24px, 3vw, 48px);
-        }
-
-        @media (min-width: 1000px) {
-          .news .nw-card[data-gross] .nw-link {
-            display: grid;
-            grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-            align-items: center;
-          }
-        }
-
-        /* Das Vorschaubild. Der Rahmen traegt eine Haarlinie und beschneidet
-           das Bild, damit alle drei dasselbe Verhaeltnis zeigen. */
+        /* Das Vorschaubild. Der Rahmen traegt eine Haarlinie und
+           beschneidet das Bild, damit alle dasselbe Verhaeltnis zeigen. */
         .news .nw-shot {
           position: relative;
           display: block;
@@ -229,7 +207,7 @@ export default function News() {
           /* Die Vorschaubilder sind von YouTube und tragen ihre eigene
              Bildsprache. Etwas zurueckgenommen ordnen sie sich dem dunklen
              Grund unter, ohne unkenntlich zu werden. */
-          opacity: 0.86;
+          opacity: 0.88;
           transition:
             opacity 0.5s var(--ease-out-expo),
             transform 0.7s var(--ease-out-expo);
@@ -249,11 +227,12 @@ export default function News() {
           );
         }
 
-        /* Der Farbnebel hinter dem groszen Bild. Er liegt hinter dem
-           Rahmen und leuchtet ueber seine Kanten hinaus. */
+        /* Der Farbnebel liegt hinter dem Rahmen und leuchtet ueber seine
+           Kanten hinaus. Jeder Beitrag traegt ihn, denn alle sind gleich
+           viel wert. */
         .news .nw-mist {
           position: absolute;
-          inset: -14% -8%;
+          inset: -12% -7%;
           z-index: -1;
           border-radius: 9999px;
           background: radial-gradient(
@@ -262,8 +241,8 @@ export default function News() {
             var(--acc-blue) 46%,
             transparent 72%
           );
-          opacity: 0.18;
-          filter: blur(56px);
+          opacity: 0.16;
+          filter: blur(52px);
           pointer-events: none;
         }
 
@@ -271,14 +250,14 @@ export default function News() {
           position: absolute;
           left: 50%;
           top: 50%;
-          width: clamp(48px, 5vw, 64px);
-          height: clamp(48px, 5vw, 64px);
+          width: clamp(52px, 4.6vw, 68px);
+          height: clamp(52px, 4.6vw, 68px);
           transform: translate(-50%, -50%);
           display: grid;
           place-items: center;
           border-radius: 9999px;
           color: var(--ink);
-          background: rgba(5, 5, 7, 0.42);
+          background: rgba(5, 5, 7, 0.44);
           backdrop-filter: blur(6px);
           transition:
             background-color 0.5s var(--ease-out-expo),
@@ -293,7 +272,8 @@ export default function News() {
         .news .nw-text {
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 14px;
+          max-width: 44ch;
         }
 
         .news .nw-date {
@@ -301,44 +281,52 @@ export default function News() {
         }
 
         /* Die Titel kommen unveraendert vom Kanal und tragen dort Versalien
-           und drei Punkte am Ende. Sie stehen deshalb in der Sansschrift
-           und nicht in der Displayschrift; gesetzt in Inter Tight wirkten
-           sie wie eine Ueberschrift dieser Seite, und das sind sie nicht. */
+           und drei Punkte am Ende. Sie stehen trotzdem in der
+           Displayschrift, denn auf dieser Seite sind sie die Ueberschrift
+           ihres Beitrags. */
         .news .nw-title {
-          font-family: var(--font-sans);
-          font-size: 17px;
-          font-weight: 500;
-          line-height: 1.35;
-          letter-spacing: -0.008em;
+          font-family: var(--font-display);
+          font-size: clamp(23px, 2vw, 32px);
+          font-weight: 300;
+          line-height: 1.18;
+          letter-spacing: -0.018em;
           color: var(--ink);
           transition: color 0.4s var(--ease-out-expo);
         }
 
-        .news .nw-card[data-gross] .nw-title {
-          font-family: var(--font-display);
-          font-size: clamp(24px, 2.3vw, 34px);
-          font-weight: 300;
-          line-height: 1.16;
-          letter-spacing: -0.018em;
-        }
-
         .news .nw-body {
           color: var(--ink-2);
-          max-width: 46ch;
         }
 
-        /* Beim Eintritt steigt jede Karte einmal auf. Der Versatz je Karte
-           haelt die Reihe im Takt der uebrigen Sektionen. */
-        .news .nw-card {
+        /* Der stille Verweis am Fusz der Zeile. Er ist kein Knopf und
+           bekommt deshalb keinen Rahmen. */
+        .news .nw-go {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          margin-top: 4px;
+          font-size: 14.5px;
+          font-weight: 500;
+          color: var(--ink-2);
+          transition: color 0.4s var(--ease-out-expo);
+        }
+
+        .news .nw-go svg {
+          width: 20px;
+          height: 12px;
+          transition: transform 0.45s var(--ease-out-expo);
+        }
+
+        /* Beim Eintritt steigt jede Zeile einmal auf. */
+        .news .nw-row {
           opacity: 0;
           transform: translate3d(0, 22px, 0);
           transition:
             opacity 0.8s var(--ease-out-expo),
             transform 0.8s var(--ease-out-expo);
-          transition-delay: calc(var(--k, 0) * 110ms);
         }
 
-        .news .nw-card[data-in] {
+        .news .nw-row[data-in] {
           opacity: 1;
           transform: none;
         }
@@ -362,6 +350,14 @@ export default function News() {
           .news .nw-link:hover .nw-title {
             color: var(--acc-lav);
           }
+
+          .news .nw-link:hover .nw-go {
+            color: var(--ink);
+          }
+
+          .news .nw-link:hover .nw-go svg {
+            transform: translateX(5px);
+          }
         }
 
         .news .nw-link:focus-visible .nw-shot {
@@ -375,7 +371,7 @@ export default function News() {
           align-items: center;
           justify-content: space-between;
           gap: 20px;
-          margin-top: clamp(34px, 4vw, 56px);
+          margin-top: clamp(20px, 2.4vw, 36px);
           padding-top: 24px;
           border-top: 1px solid var(--line-2);
         }
@@ -387,31 +383,29 @@ export default function News() {
         }
 
         @media (max-width: 900px) {
-          .news .nw-head {
+          /* Auf dem Telefon steht der Text unter dem Bild. Nebeneinander
+             waere das Bild rund 170 Bildpunkte breit, und darauf ist von
+             der Aufnahme nichts mehr zu erkennen. */
+          .news .nw-link {
             grid-template-columns: minmax(0, 1fr);
-            gap: 18px;
+            gap: 22px;
+            padding-block: 24px 34px;
           }
 
-          .news .nw-intro {
-            padding-top: 0;
+          .news .nw-text {
+            max-width: none;
           }
 
-          /* Auf dem Telefon stehen die beiden aelteren Beitraege
-             untereinander. Nebeneinander waere jedes Vorschaubild rund 170
-             Bildpunkte breit, und darauf ist von der Aufnahme nichts mehr
-             zu erkennen. */
-          .news .nw-rest {
-            grid-template-columns: minmax(0, 1fr);
+          .news .nw-num {
+            font-size: 12.5px;
           }
 
-          .news .nw-title {
-            font-size: 16.5px;
-          }
-
-          /* Die Zeile mit dem Datum steht in der Beschriftungsstufe und
-             folgt deren Anhebung auf dem Telefon. */
           .news .nw-note {
             font-size: 13px;
+          }
+
+          .news .nw-go {
+            min-height: 40px;
           }
 
           .news .nw-foot {
@@ -421,15 +415,17 @@ export default function News() {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .news .nw-card,
+          .news .nw-row,
           .news .nw-shot,
           .news .nw-shot img,
           .news .nw-play,
-          .news .nw-title {
+          .news .nw-title,
+          .news .nw-go,
+          .news .nw-go svg {
             transition: none;
           }
 
-          .news .nw-card {
+          .news .nw-row {
             opacity: 1;
             transform: none;
           }

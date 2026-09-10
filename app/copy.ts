@@ -91,6 +91,10 @@ export const nav: {
       ],
     },
     { label: "Über uns", href: "/ueber-uns" },
+    /* Aktuelles steht seit dem 08.09.2026 als eigene Seite in der Leiste.
+       Die Beitraege standen kurz auf der Startseite, und der Auftraggeber
+       hat sie noch am selben Tag auf eine eigene Seite verlangt. */
+    { label: "Aktuelles", href: "/aktuelles" },
   ],
   contact: { label: "Kontakt", href: "/kontakt" },
   /* Die eine Handlung heiszt ueberall gleich. In der Leiste stand ein
@@ -130,9 +134,7 @@ export const footer = {
            zur Uebersicht nicht mehr stehen. Die vier Projekte tragen auf
            der Webseiten-Unterseite den Abschnitt mit dieser Kennung. */
         { label: "Unsere Arbeiten", href: "/marketing/webseiten#referenzen" },
-        /* Die Sektion Aktuelles steht auf der Startseite und traegt den
-           Anker aktuelles. */
-        { label: "Aktuelles", href: "/#aktuelles" },
+        { label: "Aktuelles", href: "/aktuelles" },
       ],
     },
     {
@@ -279,7 +281,7 @@ export const process = {
 /* ------------------------------------------------------------------ */
 
 export const faqLanding = {
-  label: "07 · Fragen",
+  label: "06 · Fragen",
   title: "Was Betriebe uns zuerst fragen.",
   intro: "Die Antworten aus vielen Erstgesprächen, offen aufgeschrieben.",
   items: [
@@ -307,7 +309,7 @@ export const faqLanding = {
 };
 
 /* ------------------------------------------------------------------ */
-/*  Landing · S6b Aktuelles                                            */
+/*  Unterseite /aktuelles                                              */
 /* ------------------------------------------------------------------ */
 
 /* Die Sektion zeigt, was Jannik vom Hofe auf seinem Kanal
@@ -328,7 +330,12 @@ export const faqLanding = {
    Beschreibung ist aus dem Text des jeweiligen Videos in die Sprache
    dieser Seite gebracht. Erfunden ist an keiner Stelle etwas. */
 export const aktuelles = {
-  label: "06 · Aktuelles",
+  meta: {
+    title: "Aktuelles",
+    description:
+      "Was sich in der KI gerade bewegt und was davon für einen Betrieb wirklich zählt. Die neuesten Videos von Jannik vom Hofe.",
+  },
+  label: "Aktuelles",
   titleBefore: "Was sich gerade",
   gradientWord: "bewegt.",
   titleAfter: "",
@@ -342,6 +349,8 @@ export const aktuelles = {
   },
   /* Steht klein unter den Beitraegen und sagt, was ein Klick tut. */
   hinweis: "Ein Klick öffnet das Video auf YouTube in einem neuen Fenster.",
+  /* Der stille Verweis am Fusz jeder Zeile. */
+  ansehen: "Video ansehen",
   /* Der jeweils erste Beitrag steht grosz, die uebrigen als Reihe
      darunter. `art` unterscheidet spaeter Video und geschriebenen
      Beitrag, `bild` liegt unter public/aktuelles.

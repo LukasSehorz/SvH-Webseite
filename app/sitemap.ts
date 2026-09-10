@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     /* /marketing/werbetafeln fehlt hier seit dem 03.09.2026 mit Absicht.
        Die Tafeln werden vorerst nicht angeboten, die Seite ist aus allen
        Verweisen genommen und traegt selbst die Anweisung noindex. */
+    { path: "/aktuelles", priority: 0.7 },
     { path: "/ueber-uns", priority: 0.7 },
     { path: "/kontakt", priority: 0.8 },
     { path: "/impressum", priority: 0.2 },
