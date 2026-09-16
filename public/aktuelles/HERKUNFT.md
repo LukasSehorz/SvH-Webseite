@@ -2,12 +2,13 @@
 
 Die Bilder sind die Vorschaubilder der Videos auf dem Kanal
 `https://www.youtube.com/@jannikvomhofe` (Kanalkennung
-UCqKQMC8cr_4gUzKx6FAQP6g). Sie wurden am 08.09.2026 von
+UCqKQMC8cr_4gUzKx6FAQP6g). Sie wurden am 08.09.2026 und am 16.09.2026 von
 `https://i.ytimg.com/vi/<Kennung>/maxresdefault.jpg` geholt, auf 1280 mal
 720 Bildpunkte gebracht und nach WebP gewandelt.
 
 | Datei | Video | Titel |
 | --- | --- | --- |
+| `neS8seYIg10.webp` | youtube.com/watch?v=neS8seYIg10 | Das einzige KI-Video, das DU als CEO sehen musst |
 | `FS5eb2cIzHE.webp` | youtube.com/watch?v=FS5eb2cIzHE | Ohne DIESE KI-Anwendung hat dein Unternehmen keine ZUKUNFT... |
 | `ATlHA9p3zXc.webp` | youtube.com/watch?v=ATlHA9p3zXc | Der TEUERSTE Fehler deutscher Firmen ... |
 | `e6zwbX6KXnU.webp` | youtube.com/watch?v=e6zwbX6KXnU | A Week in the Life of a 23 year old AI Agency Owner |

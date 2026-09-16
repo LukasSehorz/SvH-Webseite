@@ -372,6 +372,17 @@ export const aktuelles = {
   beitraege: [
     {
       art: "video" as const,
+      id: "neS8seYIg10",
+      titel: "Das einzige KI-Video, das DU als CEO sehen musst | Top 9 aktuelle Praxis-Use Cases",
+      datum: "16. September 2026",
+      datumIso: "2026-09-16",
+      body: "Neun KI-Anwendungen aus echten Projekten, von der Buchhaltung bis zum Angebot. Welche davon bringt einem Betrieb am meisten?",
+      href: "https://www.youtube.com/watch?v=neS8seYIg10",
+      bild: "/aktuelles/neS8seYIg10.webp",
+      alt: "Vorschaubild des Videos über neun KI-Anwendungen aus der Praxis",
+    },
+    {
+      art: "video" as const,
       id: "FS5eb2cIzHE",
       titel: "Ohne DIESE KI-Anwendung hat dein Unternehmen keine ZUKUNFT...",
       datum: "2. September 2026",
