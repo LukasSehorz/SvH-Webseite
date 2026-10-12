@@ -39,17 +39,9 @@ export default function Hero() {
         </div>
 
         <div className="hb-grid">
-          {/* Platzhalter, bis das Erklärvideo da ist */}
-          <figure className="hb-video" aria-label={`${heroB.video.titel} (${heroB.video.platzhalter})`}>
-            <div className="hb-play" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="26" height="26">
-                <path d="M8 5.5v13l11-6.5z" fill="currentColor" />
-              </svg>
-            </div>
-            <figcaption className="hb-video-cap">
-              <span className="hb-video-titel">{heroB.video.titel}</span>
-              <span className="hb-video-tag">{heroB.video.platzhalter}</span>
-            </figcaption>
+          {/* Bild der Gründer (ersetzt das Video-Fenster), freigestellt auf dem weißen Grund */}
+          <figure className="hb-bild">
+            <Image src={heroB.bild.src} alt={heroB.bild.alt} width={heroB.bild.w} height={heroB.bild.h} priority sizes="(max-width: 999px) 100vw, 640px" />
           </figure>
 
           <div className="hb-text">

@@ -69,6 +69,8 @@ export const heroB = {
     "Bekomme einen fertigen Plan mit den 3 Automatisierungen, die sich für dich am meisten lohnen",
     "Verstehe, warum KI in deinem Unternehmen noch nicht richtig funktioniert – und wie sich das ändert",
   ],
+  // Bild der Gründer statt Video (transparenter Hintergrund, steht direkt auf Weiß)
+  bild: { src: "/b/hero-gruender.webp", w: 1353, h: 1069, alt: "Jannik vom Hofe und Lukas Sehorz, die Gründer von SvH Consulting" },
   video: {
     titel: "Kurz erklärt: So gewinnst du Zeit mit KI",
     platzhalter: "Video folgt",
@@ -270,9 +272,9 @@ export const loesungenB = {
   text: "Aus den fünf Stufen entstehen konkrete Helfer, verbunden mit den Programmen, die du schon hast.",
   ctaZeile: "Welche davon lohnt sich bei dir? Das finden wir im Workshop heraus.",
   ctaText: "Im kostenlosen Workshop sitzt du direkt mit uns beiden zusammen. Wir schauen uns deinen Betrieb an und sagen dir ehrlich, welche Helfer sich für dich lohnen.",
-  // OFFEN: Foto von Lukas und Jannik (Querformat, z. B. im Gespräch am Tisch), "/b/gruender-loesungen.jpg"
-  foto: "",
-  fotoAlt: "Lukas Sehorz und Jannik vom Hofe im Gespräch",
+  // Foto von Jannik (12.10.2026), vollständig und unbeschnitten (Seitenverhältnis 1122 × 2407)
+  foto: "/b/jannik-schreibtisch-ganz.webp",
+  fotoAlt: "Jannik vom Hofe, Gründer von SvH Consulting, an seinem Schreibtisch",
   fotoFolgt: "Foto folgt",
   // Schild je Karte: „Stufe 1 · Wissen“ (Kurzname wie im Unendlichkeitszeichen darüber)
   stufe: (nr: number) => `Stufe ${nr} · ${leistungenB.teile.find((t) => t.nr === nr)?.kurz ?? ""}`,
@@ -458,12 +460,12 @@ export const teamB = {
   label: "Wer dahintersteckt",
   titel: "Wer das für dich _baut_",
   people: [
-    // OFFEN: Fotos ("/b/lukas.jpg", "/b/jannik.jpg"); Texte sind Entwürfe, bitte prüfen und ergänzen
+    // Porträts seit 12.10.2026 (auf Kopf und Oberkörper zugeschnitten); Texte sind Entwürfe, bitte prüfen und ergänzen
     {
       name: "Lukas Sehorz",
       rolle: "Gründer · Digitalisierung und Prozessoptimierung",
       initials: "LS",
-      foto: "",
+      foto: "/b/portraet-lukas-kopf.webp",
       linkedin: "https://www.linkedin.com/in/lukas-sehorz-324870242/",
       text: [
         "Lukas hat Digitalisierung und Prozessoptimierung studiert. Er findet die Stellen, an denen in deinem Betrieb jeden Tag Zeit verloren geht, und macht daraus Abläufe, die wie von selbst laufen.",
@@ -473,7 +475,7 @@ export const teamB = {
       name: "Jannik vom Hofe",
       rolle: "Gründer · KI und Kommunikation",
       initials: "JvH",
-      foto: "",
+      foto: "/b/portraet-jannik-kopf.webp",
       linkedin: "https://www.linkedin.com/in/jannik-vom-hofe-b525b53b4/",
       text: [
         "Jannik verfolgt jeden Tag, was sich bei KI tut, und zeigt auf YouTube, was davon für Betriebe wirklich zählt. Er übersetzt Technik in Alltagssprache, damit dein ganzes Team mitkommt.",

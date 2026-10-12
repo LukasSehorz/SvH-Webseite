@@ -7,3 +7,6 @@ next-env.d.ts
 !.env.example
 dev.log
 .DS_Store
+
+# Originalfotos (groß, nur Arbeitsordner; die Webversionen liegen in public/b/)
+Bilder/

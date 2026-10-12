@@ -301,3 +301,16 @@
   position: relative;
   z-index: 1;
 }
+
+/* Hero: Bild der Gründer statt Video (12.10.2026) */
+.hb-bild {
+  margin: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.hb-bild img {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+}

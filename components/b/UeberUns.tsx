@@ -24,7 +24,7 @@ export function UeberUns() {
             <li key={p.name} className="uu-karte" data-rv="" style={stufe(i)}>
               <div className="uu-foto">
                 {p.foto ? (
-                  <Image src={p.foto} alt={p.name} fill sizes="(max-width: 1099px) 96px, 160px" />
+                  <Image src={p.foto} alt={p.name} fill sizes="(max-width: 699px) 240px, 160px" />
                 ) : (
                   <div className="uu-foto-platzhalter" aria-hidden="true">
                     <span className="uu-foto-initialen">{p.initials}</span>

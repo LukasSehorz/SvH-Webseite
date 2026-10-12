@@ -1811,3 +1811,21 @@
     white-space: nowrap;
   }
 }
+/* Foto von Jannik vollständig (12.10.2026): Rahmen exakt im Seitenverhältnis des Originals, nichts abgeschnitten */
+html .lo-foto {
+  aspect-ratio: 1122 / 2407;
+  width: 100%;
+  max-width: 340px;
+  justify-self: center;
+}
+html .lo-ende--foto {
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+}
+@media (max-width: 899px) {
+  html .lo-ende--foto {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  html .lo-foto {
+    max-width: 300px;
+  }
+}
