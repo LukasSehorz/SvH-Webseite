@@ -1,0 +1,876 @@
+/* =====================================================================
+   Variante B · Leiste (Header)
+   Kopie der Leiste aus der früheren Variante A (dort system.css „Menü“ und die Knöpfe
+   aus base.css). Die Leiste trägt den einen Dunkelton der Seite (--b-dunkel, Marken-Navy);
+   nur der Auslauf dahinter ist weiß, passend zur hellen Seite. Die dunklen Farbwerte gelten nur
+   innerhalb der Leiste.
+   ===================================================================== */
+
+.nav,
+.nav-sheet {
+  --bg: var(--b-dunkel);
+  --ink: #f4f4f6;
+  --ink-2: rgba(244, 244, 246, 0.652);
+  --ink-3: rgba(244, 244, 246, 0.5);
+  --line: rgba(244, 244, 246, 0.12);
+  --line-2: rgba(244, 244, 246, 0.06);
+  color: var(--ink);
+  color-scheme: dark;
+}
+
+/* ============================================================ Menü */
+
+.nav {
+  position: fixed;
+  top: 14px;
+  left: 0;
+  right: 0;
+  z-index: 80;
+  padding-inline: var(--gutter);
+  pointer-events: none;
+  transition:
+    transform 0.6s var(--ease),
+    opacity 0.45s var(--ease),
+    visibility 0.6s;
+}
+/* Die Leiste blendet nie aus (Runde 2): am Handy bleibt der Knopf erreichbar. */
+/* Handy/Tablet: deckender Grund hinter der ganzen Kapsel (auch neben den runden Enden),
+   darunter ein weicher Auslauf. So schaut keine große Überschrift über oder unter der
+   Leiste hervor, sobald gescrollt ist.
+   Zwei Ebenen in derselben Form: ::before weiß (helle Seite), ::after Marken-Navy (--b-dunkel), solange
+   eine dunkle Bühne unter der Leiste liegt (#leistungen, Fußzeile; data-dunkel aus Navbar.tsx).
+   Gewechselt wird per Kreuzblende (nur opacity, kein Layout). */
+.nav::before,
+.nav::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 124px; /* 14 Rand + 64 Leiste + 46 Auslauf */
+  background: linear-gradient(
+    180deg,
+    rgb(var(--auslauf)) 0px,
+    rgb(var(--auslauf)) 82px,
+    rgba(var(--auslauf), 0.82) 94px,
+    rgba(var(--auslauf), 0.4) 108px,
+    rgba(var(--auslauf), 0) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+  pointer-events: none;
+}
+.nav::before {
+  --auslauf: 255, 255, 255;
+}
+.nav::after {
+  --auslauf: var(--b-dunkel-rgb);
+}
+.nav[data-scrolled="true"]:not([data-dunkel="true"])::before,
+.nav[data-scrolled="true"][data-dunkel="true"]::after {
+  opacity: 1;
+}
+/* auf der dunklen Bühne: die Kapsel hebt sich mit einer etwas helleren Fläche vom Navy ab
+   (eine hellere Kante ginge nicht: clip-path schneidet sie an den Enden der kompakten Pille ab) */
+.nav[data-dunkel="true"] .nav-bar::before {
+  background: #171a33;
+}
+@media (max-width: 699px) {
+  .nav::before,
+  .nav::after {
+    top: -8px;
+    height: 104px; /* 8 Rand + 56 Leiste + 40 Auslauf */
+    background: linear-gradient(
+      180deg,
+      rgb(var(--auslauf)) 0px,
+      rgb(var(--auslauf)) 66px,
+      rgba(var(--auslauf), 0.82) 78px,
+      rgba(var(--auslauf), 0.4) 90px,
+      rgba(var(--auslauf), 0) 100%
+    );
+  }
+}
+/* ab 900 px: beim Runterscrollen kompakte Pille (Marke + Knopf), weicht der Knopf, nur die Marke.
+   Die Leiste verwandelt sich weich: erst gehen die Links (schnell, ohne Verzögerung),
+   dann zieht sich die Kapsel zur Mitte zusammen. Zurück umgekehrt.
+   Ohne Layout-Sprung (CLS 0): Die Leiste behält immer ihre volle Breite. Es ändern sich nur
+   transform (Marke und Knopf rücken zur Mitte), clip-path (schwarze Fläche) und opacity (Links).
+   Die Wege rechnet Navbar.tsx aus den gemessenen Breiten (--nav-dx, --nav-dx2). */
+.nav {
+  --nav-x: 0px;
+}
+.nav[data-compact="true"]:not(:focus-within) {
+  --nav-x: var(--nav-dx, 0px);
+}
+.nav[data-compact="true"][data-at-form="true"]:not(:focus-within) {
+  --nav-x: var(--nav-dx2, 0px);
+}
+.nav-mark,
+.nav-end {
+  transition: transform 0.6s var(--ease) 0.08s;
+}
+.nav-mark {
+  transform: translateX(var(--nav-x));
+}
+.nav-end {
+  transform: translateX(calc(var(--nav-x) * -1));
+}
+.nav[data-compact="true"] .nav-links {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s linear;
+}
+.nav[data-compact="true"]:focus-within .nav-links {
+  opacity: 1;
+  pointer-events: auto;
+}
+/* ab 900 px wie auf dem Handy: deckender Grund über die ganze Breite bis zur Unterkante
+   der Pille, darunter ein weicher Auslauf. Keine halben Buchstaben großer Überschriften
+   über oder neben der kompakten Pille. */
+@media (min-width: 900px) {
+  .nav::before,
+  .nav::after {
+    top: -14px;
+    height: 116px; /* 14 Rand + 64 Pille + 38 Auslauf */
+    background: linear-gradient(
+      180deg,
+      rgb(var(--auslauf)) 0px,
+      rgb(var(--auslauf)) 78px,
+      rgba(var(--auslauf), 0.82) 88px,
+      rgba(var(--auslauf), 0.4) 100px,
+      rgba(var(--auslauf), 0) 100%
+    );
+  }
+}
+
+/* Die Leiste selbst ist unsichtbar und fängt keine Klicks; sichtbar und klickbar sind nur die
+   schwarze Fläche (::before, per clip-path auf die Pille zugeschnitten, auch für Klicks) und die
+   Inhalte. So greift man in der kompakten Pille links und rechts daneben auf die Seite durch. */
+.nav-bar {
+  pointer-events: none;
+  position: relative;
+  z-index: 1; /* über den beiden Ausläufen (::before, ::after der Leiste) */
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  max-width: min(var(--shell), 100%);
+  margin-inline: auto;
+  height: 64px;
+  padding-inline: 10px 8px;
+  border-radius: 999px;
+}
+.nav-bar > * {
+  pointer-events: auto;
+}
+/* dunkle Fläche: immer deckend (auf Weiß würde eine halbdurchsichtige Kapsel grau wirken) */
+.nav-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  border: 1px solid var(--line);
+  background: var(--b-dunkel);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  clip-path: inset(0 var(--nav-x) round 999px);
+  pointer-events: auto;
+  transition:
+    clip-path 0.6s var(--ease) 0.08s,
+    background-color 0.4s var(--ease);
+}
+/* weicher Schatten der vollen Leiste: eigene Ebene. In der kompakten Pille blendet er aus
+   (mitgestaucht wirkte er wie ein grauer Kasten) und kommt erst nach dem Aufziehen zurück. */
+.nav-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  border-radius: inherit;
+  box-shadow: 0 14px 36px -18px rgba(8, 8, 12, 0.45);
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease) 0.45s;
+}
+.nav[data-compact="true"]:not(:focus-within) .nav-bar::after {
+  opacity: 0;
+  transition: opacity 0.15s linear;
+}
+/* Sektionsknopf (oder ab 900 px „Überzeuge dich selbst“) im Bild: kein zweiter gleicher Knopf.
+   Der Leisten-Knopf blendet weich aus, sein Platz bleibt (kein Springen von Marke, Links, Menü);
+   in der kompakten Pille schrumpft die Fläche zusätzlich auf die Marke (siehe oben). */
+.nav-end .btn-sm {
+  transition:
+    transform 0.5s var(--ease),
+    box-shadow 0.5s var(--ease),
+    opacity 0.3s var(--ease) 0.2s,
+    visibility 0s;
+}
+.nav[data-at-form="true"] .nav-end .btn-sm {
+  opacity: 0;
+  transform: scale(0.96);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.2s var(--ease),
+    transform 0.25s var(--ease),
+    visibility 0s 0.25s;
+}
+
+/* Leisten-Knopf: ab 900 px derselbe Wortlaut wie in den Sektionen („… sichern“),
+   darunter die kurze Fassung (dort stehen nie beide Knöpfe gleichzeitig im Bild) */
+.nav-cta-kurz {
+  display: none;
+}
+@media (max-width: 899px) {
+  .nav-cta-lang {
+    display: none;
+  }
+  .nav-cta-kurz {
+    display: inline;
+  }
+}
+
+.nav-mark {
+  display: inline-flex;
+  align-items: center;
+  height: 46px;
+  min-width: 46px;
+  justify-content: center;
+  padding-inline: 14px 10px;
+  border-radius: 999px;
+}
+.nav-mark .wort {
+  width: 169px;
+  height: 22px;
+}
+.nav-mark .mono {
+  display: none;
+  width: 18px;
+  height: 30px;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+  /* beim Aufziehen erst einblenden, wenn die Kapsel fast ihre volle Breite hat */
+  transition: opacity 0.35s var(--ease) 0.28s;
+}
+
+.nav-link {
+  position: relative;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  padding-inline: 14px;
+  border-radius: 999px;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink-2);
+  transition: color 0.3s var(--ease), background-color 0.3s var(--ease);
+}
+.nav-link:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.04);
+}
+.nav-link[data-active="true"] {
+  color: var(--ink);
+}
+.nav-link[data-active="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 16px;
+  height: 2px;
+  margin-left: -8px;
+  border-radius: 2px;
+  background: var(--grad);
+  box-shadow: 0 0 10px rgba(124, 106, 255, 0.9);
+}
+.nav-caret {
+  width: 10px;
+  height: 10px;
+  transition: transform 0.35s var(--ease);
+}
+.nav-link[aria-expanded="true"] .nav-caret {
+  transform: rotate(180deg);
+}
+
+.nav-end {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-burger {
+  display: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+}
+.nav-burger span {
+  width: 16px;
+  height: 1.5px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform 0.4s var(--ease);
+}
+.nav-burger[aria-expanded="true"] span:first-child {
+  transform: translateY(3.25px) rotate(45deg);
+}
+.nav-burger[aria-expanded="true"] span:last-child {
+  transform: translateY(-3.25px) rotate(-45deg);
+}
+
+/* Aufklapper „Aktuelles“ */
+.nav-drop {
+  position: relative;
+}
+.nav-panel {
+  position: absolute;
+  top: calc(100% + 16px);
+  left: 50%;
+  width: min(560px, calc(100vw - 2 * var(--gutter)));
+  translate: -50% 0;
+  padding: 22px;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: rgba(10, 10, 15, 0.96);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transform-origin: 50% 0;
+  transition:
+    opacity 0.35s var(--ease),
+    transform 0.45s var(--ease),
+    visibility 0.35s;
+}
+.nav-panel[data-open="false"] {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.985);
+  pointer-events: none;
+}
+.nav-panel-title {
+  margin-bottom: 14px;
+}
+.nav-video {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  padding: 10px;
+  margin-inline: -10px;
+  border-radius: 16px;
+  transition: background-color 0.3s var(--ease);
+}
+.nav-video:hover,
+.nav-video:focus-visible {
+  background: rgba(255, 255, 255, 0.045);
+}
+.nav-video-thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+}
+.nav-video-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.nav-video-title {
+  font-size: 14.5px;
+  line-height: 1.35;
+  font-weight: 500;
+  color: var(--ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.nav-video-date {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.nav-panel-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 20px;
+  margin-top: 14px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-2);
+  font-size: 14.5px;
+}
+.nav-panel-foot a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--ink);
+  font-weight: 500;
+}
+.nav-panel-foot a:hover {
+  color: var(--lav);
+}
+
+/* Vollbild-Menü mobil */
+.nav-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 79;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--nav-offset) + 8px) var(--gutter) 28px;
+  background: var(--bg);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition: opacity 0.35s var(--ease), visibility 0.35s;
+}
+.nav-sheet[data-open="false"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.nav-sheet-list > li {
+  transition: opacity 0.5s var(--ease), transform 0.6s var(--ease);
+  transition-delay: calc(0.04s + var(--i, 0) * 0.04s);
+}
+.nav-sheet[data-open="false"] .nav-sheet-list > li {
+  opacity: 0;
+  transform: translateY(12px);
+  transition-delay: 0s;
+}
+@media (min-width: 1020px) {
+  .nav-sheet {
+    display: none;
+  }
+}
+.nav-sheet-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line-2);
+}
+.nav-sheet-list > li {
+  border-bottom: 1px solid var(--line-2);
+}
+.nav-sheet-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 64px;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  text-align: left;
+}
+.nav-sheet-link svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.35s var(--ease);
+}
+.nav-sheet-link[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.nav-sheet-sub {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.45s var(--ease), opacity 0.35s var(--ease);
+}
+.nav-sheet-sub > * {
+  overflow: hidden;
+  min-height: 0;
+}
+.nav-sheet-sub[data-open="false"] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+.nav-sheet-sub-inner {
+  display: grid;
+  gap: 4px;
+  padding-bottom: 18px;
+}
+.nav-sheet-sub .nav-video {
+  grid-template-columns: 112px minmax(0, 1fr);
+  margin-inline: 0;
+  padding: 8px 0;
+}
+.nav-sheet-cta {
+  margin-top: auto;
+  padding-top: 28px;
+}
+.nav-sheet-cta .btn {
+  width: 100%;
+}
+
+/* Menüpunkte in der Leiste ab 1020 px (iPad quer), darunter das Vollbild-Menü */
+@media (max-width: 1019px) {
+  .nav-links {
+    display: none;
+  }
+  .nav-burger {
+    display: inline-flex;
+  }
+}
+/* 1020–1179 px: alle fünf Hauptpunkte passen nur mit engeren Punkten und dem kurzen Knopftext */
+@media (min-width: 1020px) and (max-width: 1179px) {
+  .nav-links {
+    gap: 0;
+  }
+  .nav-link {
+    padding-inline: 10px;
+  }
+  .nav-cta-lang {
+    display: none;
+  }
+  .nav-cta-kurz {
+    display: inline;
+  }
+}
+
+@media (max-width: 699px) {
+  .nav {
+    top: 8px;
+  }
+  .nav-bar {
+    height: 56px;
+    padding-inline: 5px 5px;
+    gap: 8px;
+  }
+  .nav-burger {
+    width: 44px;
+    height: 44px;
+  }
+  .nav-mark {
+    padding-inline: 10px 4px;
+  }
+  .nav-mark .wort {
+    display: none;
+  }
+  .nav-mark .mono {
+    display: block;
+  }
+  .nav-end {
+    gap: 6px;
+  }
+  .nav-end .btn-sm {
+    height: 44px;
+    padding-inline: 16px 14px;
+    font-size: 14px;
+    gap: 8px;
+  }
+}
+
+/* Der Leisten-Knopf steht schon im HTML (vorher erst nach dem Laden per Skript: die Leiste sprang
+   am Handy um die Knopfbreite, CLS 0,01). Nur bei offenem Vollbild-Menü weicht er dessen Knopf. */
+@media (max-width: 899px) {
+  html[data-menu-open] .nav-end .btn-sm {
+    display: none;
+  }
+}
+
+@media (max-width: 374px) {
+  .nav-end .btn-sm {
+    padding-inline: 12px 12px;
+    font-size: 13.5px;
+  }
+  .nav-end .btn-sm .btn-arrow {
+    display: none;
+  }
+}
+/* 320 px: Marke, Knopf und Menü passen nur enger nebeneinander (sonst ragt das Menü über den Rand) */
+@media (max-width: 359px) {
+  .nav-bar {
+    gap: 4px;
+    padding-inline: 4px;
+  }
+  .nav-mark {
+    min-width: 44px; /* Trefferfläche mindestens 44 × 44 px */
+    padding-inline: 8px 2px;
+  }
+  .nav-end {
+    gap: 4px;
+  }
+  .nav-end .btn-sm {
+    padding-inline: 10px;
+    font-size: 12.5px;
+  }
+}
+
+/* ------------------------------------------------------------ Label (Aufklapper) */
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--lav);
+}
+.label::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: var(--grad);
+  flex: 0 0 auto;
+}
+
+@media (max-width: 699px) {
+  .label {
+    font-size: 12.5px;
+    letter-spacing: 0.14em;
+  }
+}
+
+/* --------------------------------------------------------- Knöpfe */
+
+.btn {
+  --mx: 0px;
+  --my: 0px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 60px;
+  padding-inline: 30px 26px;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  isolation: isolate;
+  transform: translate3d(var(--mx), var(--my), 0);
+  transition:
+    transform 0.5s var(--ease),
+    box-shadow 0.5s var(--ease),
+    background-color 0.4s var(--ease),
+    border-color 0.4s var(--ease),
+    color 0.4s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-primary {
+  color: #07060f;
+  background: var(--grad);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(20, 10, 60, 0.25),
+    0 10px 30px -12px rgba(124, 106, 255, 0.6),
+    0 0 0 1px rgba(185, 165, 255, 0.25);
+}
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--grad);
+  filter: blur(16px);
+  opacity: 0.2;
+  z-index: -1;
+  transition: opacity 0.5s var(--ease);
+}
+.btn-primary::after {
+  /* Lichtkante, die beim Überfahren durchläuft */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.55) 48%, transparent 62%);
+  background-size: 250% 100%;
+  background-position: 130% 0;
+  mix-blend-mode: soft-light;
+  transition: background-position 0.9s var(--ease);
+  pointer-events: none;
+}
+.btn-primary:hover::before {
+  opacity: 0.4;
+}
+.btn-primary:hover::after {
+  background-position: -40% 0;
+}
+.btn-primary:active {
+  transform: translate3d(var(--mx), var(--my), 0) scale(0.975);
+}
+
+.btn-ghost {
+  color: var(--ink);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  padding-inline: 26px 22px;
+}
+.btn-ghost:hover {
+  border-color: rgba(185, 165, 255, 0.45);
+  background: rgba(124, 106, 255, 0.08);
+}
+
+.btn-arrow {
+  position: relative;
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  overflow: hidden;
+  flex: 0 0 18px;
+}
+.btn-arrow svg {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.55s var(--ease);
+}
+.btn-arrow svg + svg {
+  transform: translateX(-120%);
+}
+.btn:hover .btn-arrow svg:first-child {
+  transform: translateX(120%);
+}
+.btn:hover .btn-arrow svg + svg {
+  transform: none;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--lav);
+  outline-offset: 4px;
+  border-radius: 999px;
+}
+
+.btn-sm {
+  height: 46px;
+  padding-inline: 20px 18px;
+  font-size: 14.5px;
+  gap: 10px;
+}
+
+@media (max-width: 699px) {
+  .btn {
+    height: 56px;
+    font-size: 16px;
+    padding-inline: 24px 22px;
+  }
+  .btn-block-m {
+    width: 100%;
+  }
+}
+@media (max-width: 389px) {
+  .btn {
+    font-size: 15px;
+    padding-inline: 18px 16px;
+    gap: 10px;
+  }
+}
+/* 320 px (iPhone SE 1. Gen.): „Kostenlosen KI-Workshop sichern“ passt nur ohne Pfeil
+   vollständig in jede Knopfbreite (auch in die Spielzug-Tafel) */
+@media (max-width: 359px) {
+  .btn {
+    font-size: 14px;
+    padding-inline: 14px;
+  }
+  .btn .btn-arrow {
+    display: none;
+  }
+}
+@media (max-width: 699px) {
+  .btn-sm {
+    height: 44px;
+    font-size: 14px;
+    padding-inline: 16px 14px;
+  }
+  .btn-block-m {
+    width: 100%;
+  }
+}
+
+/* ------------------------------------------------ Anpassung an die helle Seite */
+
+/* Fläche immer deckend schwarz, Schatten weich: steht seit Runde 2 direkt bei .nav-bar::before/::after */
+
+/* ------------------------------------------------ Aufklapper (Variante B) */
+
+/* In A schneidet .nav-links (overflow: hidden) das Feld ab. In B darf es herausragen;
+   in der kompakten Pille sind die Links ohnehin ausgeblendet. */
+.nav-links {
+  overflow: visible;
+}
+.navb-panel {
+  width: 360px;
+  padding: 10px;
+  border-radius: 20px;
+}
+.navb-sub {
+  display: grid;
+  gap: 2px;
+}
+.navb-sub-link,
+.navb-sheet-sub-link {
+  display: grid;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  transition: background-color 0.25s var(--ease);
+}
+.navb-sub-link:hover,
+.navb-sub-link:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+}
+.navb-sub-titel {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.navb-sub-text {
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+.navb-panel .nav-panel-foot {
+  margin: 6px 4px 0;
+  padding: 8px 10px 0;
+}
+.navb-sheet-sub-link {
+  padding: 12px 0;
+}
+.navb-sheet-sub-link .navb-sub-titel {
+  font-size: 17px;
+}
+
+/* ------------------------------------------------ Knöpfe in B: besser lesbar */
+
+/* Weiße, kräftige Schrift auf einem tieferen Verlauf (Kontrast überall ≥ 5,3 : 1),
+   gleiche Markenfarben Blau → Lila wie A, nur satter. */
+.btn-primary {
+  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(92deg, #2f5fe8 0%, #4f45e4 50%, #6a3fd8 100%);
+  text-shadow: 0 1px 1px rgba(20, 10, 60, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 10px 30px -12px rgba(79, 69, 228, 0.7),
+    0 0 0 1px rgba(106, 63, 216, 0.3);
+}
+.btn-primary::before {
+  background: linear-gradient(92deg, #2f5fe8 0%, #4f45e4 50%, #6a3fd8 100%);
+}

@@ -1,0 +1,218 @@
+/* =====================================================================
+   Handy-Ansicht nach dem Vorbild andreasbaulig.de (mobil), Stand 12.10.2026
+   Gilt nur bis 699 px, der Desktop bleibt unverändert.
+   Muster: Überschriften, Unterzeilen, Labels und Knöpfe mittig; Knöpfe breit.
+   Listen mit Haken und längere Fließtexte bleiben linksbündig (wie bei Baulig),
+   weil sie sich so leichter lesen.
+   ===================================================================== */
+
+@media (max-width: 699px) {
+  /* ---------- Köpfe aller Sektionen mittig */
+  html .b-kopf,
+  html .b-kopf .b-lead {
+    margin-inline: auto;
+    text-align: center;
+  }
+  html .b-kopf .b-label {
+    justify-content: center;
+  }
+
+  /* ---------- Knöpfe: breit und mittig, Text darf umbrechen */
+  html main .btn-primary,
+  html .fd .btn-primary {
+    display: flex;
+    width: 100%;
+    max-width: 420px;
+    margin-inline: auto;
+    white-space: normal;
+    text-align: center;
+  }
+
+  /* ---------- Hero */
+  html .hb-kopf {
+    text-align: center;
+  }
+  html .hb-ziel,
+  html .hb-h1,
+  html .hb-sub {
+    margin-inline: auto;
+    text-align: center;
+  }
+  html .hb-google {
+    margin-inline: auto;
+  }
+  html .hb-kopf {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  html .hb-cta {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ---------- Problem: Kästen einen Ticken kleiner und mittig */
+  html .pv-boxen {
+    max-width: 340px;
+    margin-inline: auto;
+    gap: 16px;
+  }
+  html .pv-box {
+    padding: 18px 18px 12px;
+    border-radius: 18px;
+  }
+  html .pv-box-titel,
+  html .pv-box-unter {
+    text-align: center;
+  }
+  html .pv-box-titel {
+    font-size: 17px;
+  }
+  html .pv-box-unter {
+    font-size: 14.5px;
+  }
+  html .pv-vergleich {
+    font-size: 30px;
+  }
+  html .pv-chart-saeulen {
+    height: 150px;
+  }
+  html .pv-saeule-spalte {
+    width: 50px;
+  }
+  html .pv-saeule-label {
+    font-size: 12.5px;
+  }
+  html .pv-chart + .pv-quelle {
+    padding-top: 34px;
+  }
+  html .pv-quelle {
+    text-align: center;
+  }
+  html .pv-figuren {
+    margin-top: 12px;
+  }
+  html .pv-figur svg {
+    width: 40px;
+  }
+  html .pv-box-fazit {
+    margin-top: 12px;
+    padding: 10px 12px;
+    font-size: 14.5px;
+  }
+  html .pv-folgen {
+    max-width: 340px;
+    margin-inline: auto;
+    padding: 18px 18px 16px;
+    border-radius: 18px;
+  }
+  html .pv-kasten-titel {
+    font-size: 17.5px;
+    text-align: center;
+  }
+  html .pv-folgen li {
+    font-size: 15px;
+  }
+
+  /* ---------- Lösung (Zahnräder): Zwischentitel und Weiter-Link mittig */
+  html .zr-gewinne-titel {
+    text-align: center;
+  }
+  html .zr-gewinne {
+    text-align: center;
+  }
+  html .zr-liste {
+    text-align: left;
+  }
+
+  /* ---------- Lösungen: Abschluss unter dem Foto mittig */
+  html .lo-ende-text {
+    justify-items: center;
+    text-align: center;
+  }
+
+  /* ---------- Gründer: Foto, Name, Rolle und LinkedIn mittig, Text darunter linksbündig */
+  html .uu-karte {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "foto"
+      "kopf"
+      "text";
+    justify-items: center;
+  }
+  html .uu-foto {
+    width: 120px;
+  }
+  html .uu-text {
+    justify-self: stretch;
+  }
+  html .uu-kopf {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* ---------- Workshop: Hinweis und Knopf mittig */
+  html .wf-ende {
+    justify-items: center;
+    text-align: center;
+  }
+
+  /* ---------- Nächster Schritt: alles mittig */
+  html .nx-kasten {
+    text-align: center;
+  }
+  html .nx-titel {
+    justify-items: center;
+  }
+  html .nx-direkt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  html .nx-tel {
+    justify-content: center;
+  }
+
+  /* ---------- Fragen: Kopf und Telefon mittig, die Fragen selbst bleiben linksbündig */
+  html .fr-noch {
+    text-align: center;
+  }
+  html .fr-tel {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ---------- Aktuelles: Kopf mittig */
+  html .ak-kopf,
+  html .ak-h2,
+  html .ak-lead {
+    margin-inline: auto;
+    text-align: center;
+  }
+  html .ak-mehr-link,
+  html .ak-link {
+    margin-inline: auto;
+  }
+
+  /* ---------- Fußzeile mittig */
+  html .fb-grid,
+  html .fb-copy {
+    text-align: center;
+  }
+  html .fb-marke {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  html .fb-marke p {
+    margin-inline: auto;
+  }
+  html .fb-liste {
+    justify-items: center;
+  }
+  html .fb-copy {
+    padding-right: var(--gutter);
+  }
+}

@@ -1,0 +1,26 @@
+// Einwilligung: Anzeige, „Nur das Nötige“, Wiederkehr, Widerruf, „Einverstanden“ lädt GTM
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
+const p = await ctx.newPage();
+const google = [];
+p.on("request", (r) => { if (/google/.test(r.url())) google.push(r.url()); });
+await p.goto("http://localhost:3200/", { waitUntil: "networkidle" });
+await p.waitForTimeout(800);
+const vis = () => p.evaluate(() => !!document.querySelector(".cons"));
+console.log("1 Feld sichtbar:", await vis(), "Google-Anfragen:", google.length);
+await p.click("text=Nur das Nötige");
+await p.waitForTimeout(300);
+console.log("2 nach Nötige:", await vis(), "gespeichert:", await p.evaluate(() => localStorage.getItem("svh-einwilligung")));
+await p.reload({ waitUntil: "networkidle" });
+await p.waitForTimeout(800);
+console.log("3 nach Neuladen:", await vis(), "Google:", google.length);
+await p.evaluate(() => document.querySelector("footer").scrollIntoView());
+await p.waitForTimeout(600);
+await p.click("footer >> text=Cookie-Einstellungen");
+await p.waitForTimeout(400);
+console.log("4 nach Widerruf:", await vis());
+await p.click("text=Einverstanden");
+await p.waitForTimeout(1500);
+console.log("5 nach Einverstanden:", await vis(), "GTM angefragt:", google.some((u) => u.includes("gtm.js")));
+await b.close();
