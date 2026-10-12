@@ -1,0 +1,4 @@
+/** Strukturierte Daten als JSON-LD (serverseitig). */
+export default function JsonLd({ data }: Readonly<{ data: object }>) {
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
+}

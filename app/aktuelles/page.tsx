@@ -1,75 +1,68 @@
+import type { Metadata } from "next";
+import { aktuelles } from "@/app/copy";
+import { company } from "@/app/content";
+import PageHead from "@/components/pages/PageHead";
+import Videos from "@/components/pages/Videos";
+import Naechster from "@/components/b/Naechster";
+import JsonLd from "@/components/system/JsonLd";
+import { pageMeta } from "@/components/pages/meta";
+
 /*
- * BAUVERTRAG /aktuelles
- *
- * THESE. Wer vom KI-Zeitalter spricht, musz zeigen, dass er mittendrin
- * steht. Diese Seite belegt das mit dem, was gerade veroeffentlicht
- * wurde, statt es zu behaupten.
- *
- * EIGENE WELT. Dieselbe dunkle Flaeche wie die uebrigen Seiten,
- * Haarlinien als Taktstriche, ein Farbnebel in der Rampe hinter dem
- * ersten Vorschaubild. Neu ist allein das Abspielzeichen, gezeichnet mit
- * der Strichstaerke der Marke.
- *
- * GESCHICHTE. Ein kurzer Kopf, danach der neueste Beitrag grosz und quer,
- * die aelteren als Reihe darunter, zuletzt das Gespraech.
- *
- * ERSTER BILDSCHIRM. Beschriftung, zwei Zeilen mit Verlaufswort, ein Satz
- * und die Oberkante des neuesten Beitrags.
- *
- * FORM. Ein breiter Block, darunter zwei schmale. Kein Raster gleicher
- * Kacheln, denn der neueste Beitrag traegt mehr Gewicht als die aelteren.
- *
- * ES WIRD NICHTS EINGEBETTET, und das ist eine Entscheidung ueber
- * Datenschutz. Ein Abspielfenster von YouTube holt beim ersten Aufruf
- * Kennungen von Google, ohne dass der Besucher etwas angeklickt haette.
- * Gezeigt wird deshalb das Vorschaubild aus public/aktuelles, und erst
- * der Klick fuehrt zu YouTube.
+ * /aktuelles: Kopf, neuestes Video groß, übrige als Raster, Hinweis und
+ * Kanal-Link, zum Schluss derselbe Kasten „Überzeuge dich selbst“ wie auf der
+ * Startseite (der Knopf öffnet die Anmeldung im Fenster).
+ * Nichts wird eingebettet, erst ein Klick öffnet YouTube.
  */
 
-import type { Metadata } from "next";
-import Navbar from "../components/system/Navbar";
-import Footer from "../components/system/Footer";
-import FinalCta from "../components/landing/FinalCta";
-import News from "../components/pages/News";
-import { SplitHeadline } from "../components/system/ui";
-import { aktuelles } from "../copy";
+const title = `${aktuelles.meta.title} | ${company.name}`;
 
-export const metadata: Metadata = {
-  title: aktuelles.meta.title,
-  description: aktuelles.meta.description,
+export const metadata: Metadata = pageMeta({ title: aktuelles.meta.title, description: aktuelles.meta.description, path: "/aktuelles" });
+
+/**
+ * Veröffentlichungsdatum als ISO 8601 mit Uhrzeit und Zeitzone (Empfehlung von Google).
+ * Die genaue Uhrzeit steht nicht in der Liste; 12 Uhr deutscher Zeit hält den Tag
+ * in allen Zeitzonen stabil. Sommer- und Winterzeit werden je Datum berechnet.
+ */
+function uploadDate(isoDay: string): string {
+  const noonUtc = new Date(`${isoDay}T12:00:00Z`);
+  const name = new Intl.DateTimeFormat("en-US", { timeZone: "Europe/Berlin", timeZoneName: "longOffset" })
+    .formatToParts(noonUtc)
+    .find((p) => p.type === "timeZoneName")?.value; // z. B. "GMT+02:00"
+  const offset = name && name !== "GMT" ? name.replace("GMT", "") : "+00:00";
+  return `${isoDay}T12:00:00${offset}`;
+}
+
+// Strukturierte Daten: Liste der Videos (nur Angaben, die auch sichtbar sind)
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: title,
+  url: `${company.url}/aktuelles`,
+  inLanguage: "de-DE",
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: aktuelles.videos.map((v, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "VideoObject",
+        name: v.titel,
+        description: v.body,
+        uploadDate: uploadDate(v.datumIso),
+        thumbnailUrl: `${company.url}${v.bild}`,
+        url: v.href,
+      },
+    })),
+  },
 };
 
 export default function AktuellesPage() {
   return (
-    <>
-      <Navbar />
-
-      <main>
-        <section
-          className="subpage-head"
-          style={{ paddingBottom: "clamp(48px, 6vw, 84px)" }}
-        >
-          <div className="shell">
-            <p className="t-label">{aktuelles.label}</p>
-
-            <SplitHeadline
-              as="h1"
-              className="t-h1 subpage-title"
-              before={aktuelles.titleBefore}
-              word={aktuelles.gradientWord}
-              after={aktuelles.titleAfter}
-            />
-
-            <p className="t-body-lg subpage-lead">{aktuelles.intro}</p>
-          </div>
-        </section>
-
-        <News />
-
-        <FinalCta />
-      </main>
-
-      <Footer />
-    </>
+    <main id="inhalt" className="ak-seite">
+      <JsonLd data={jsonLd} />
+      <PageHead label={aktuelles.label} title={aktuelles.title} lead={aktuelles.text} center />
+      <Videos />
+      <Naechster />
+    </main>
   );
 }

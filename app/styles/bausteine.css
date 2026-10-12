@@ -1,0 +1,2760 @@
+/* =====================================================================
+   Variante B · Bausteine (Runde 2)
+   Logo-Kasten, Problem-Schaubild, Unendlichkeitszeichen, Workshop-Ablauf,
+   klickbare Leistungen mit Beispielen, Wissensmanagement, Bewertungen, Gründer.
+   ===================================================================== */
+
+/* ------------------------------------------------------------ Trust-Bar (Lila früher) */
+
+.tb {
+  background: linear-gradient(92deg, #3f74ff 0%, #6a55ff 32%, #7c5cf6 62%, #8c6dff 100%);
+}
+/* Jede Zelle oben bündig (sonst verteilt das Raster die Resthöhe zwischen Zahl und Text) */
+.tb-punkt {
+  align-content: start;
+  padding-inline: 12px;
+}
+/* „Geld-zurück-Garantie“ ist der längste Wert: ab 1000 px in einer Zeile, darunter 2 × 2 */
+.tb-big {
+  font-size: clamp(20px, 2vw, 28px);
+  text-wrap: balance;
+}
+.tb-small {
+  text-wrap: balance;
+}
+/* mit Logo normal umbrechen: „im Monat gespart“ / „bei ESTERA“ statt „im Monat“ / „gespart bei ESTERA“ */
+.tb-small:has(.tb-mit-logo) {
+  text-wrap: wrap;
+}
+/* „bei“ + Logo bleiben zusammen */
+.tb-mit-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+/* Estera-Logo weiß auf dem Verlauf */
+.tb-logo {
+  height: 15px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+@media (min-width: 900px) and (max-width: 999px) {
+  .tb-liste {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 0;
+  }
+  .tb-punkt:nth-child(3) {
+    border-left: 0;
+  }
+}
+@media (max-width: 999px) {
+  .tb-small {
+    max-width: 260px;
+  }
+}
+@media (max-width: 699px) {
+  .tb-liste {
+    padding-block: 24px;
+  }
+  .tb-punkt {
+    padding-inline: 10px;
+  }
+}
+@media (max-width: 374px) {
+  .tb-big {
+    font-size: 19px;
+  }
+  .tb-small {
+    font-size: 14px;
+  }
+  .tb-punkt {
+    padding-inline: 8px;
+  }
+}
+
+/* ------------------------------------------------------------ Logo-Kasten */
+
+.kl {
+  padding: clamp(36px, 4vw, 56px) clamp(12px, 2vw, 32px) 0;
+}
+/* helle Karte wie die Lösungen (Comic-Rahmen gibt es nur noch im Problem-Abschnitt) */
+.kl-kasten {
+  max-width: 1360px;
+  margin-inline: auto;
+  padding: clamp(24px, 3vw, 36px) clamp(20px, 3vw, 44px);
+  border: 1px solid #dde6fb;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #f6f8ff 0%, #fcfdff 52%, #fff 100%);
+  box-shadow:
+    0 1px 2px rgba(20, 40, 120, 0.04),
+    0 22px 44px -32px rgba(40, 60, 170, 0.32);
+}
+.kl-titel {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--page-ink);
+}
+.kl-liste {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  align-items: center;
+  gap: 18px 24px;
+  margin-top: 24px;
+}
+.kl-logo {
+  display: grid;
+  place-items: center;
+  height: 72px;
+  padding: 6px;
+  border-radius: 12px;
+  transition:
+    background-color 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+.kl-logo img {
+  max-width: 100%;
+  max-height: 56px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.kl-logo:hover {
+  background: rgba(63, 116, 255, 0.06);
+  transform: translateY(-2px);
+}
+.kl-mehr {
+  display: grid;
+  place-items: center;
+  height: 72px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #dde6fb;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--page-ink);
+}
+@media (max-width: 1099px) {
+  .kl-liste {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 599px) {
+  .kl-liste {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+/* ------------------------------------------------------------ Problem (die graue Welt) */
+
+/* Einziger Abschnitt im Comic-Stil: dicke schwarze Rahmen, gemalte Linien, Strichmännchen.
+   Lesart von oben nach unten: zwei Studien nebeneinander → Linien laufen zusammen → Folgen → Knopf. */
+
+.pv-wrap {
+  width: 100%;
+  max-width: calc(1360px + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.pv-kopf {
+  max-width: 860px;
+  margin-inline: auto;
+  text-align: center;
+}
+/* unten knapp: die Zahnräder darunter setzen den Faden fort (Linie zeigt auf „Die Lösung“) */
+.sb.pv {
+  padding-bottom: clamp(28px, 3.4vw, 48px);
+}
+.pv-kopf .b-h2 {
+  font-size: clamp(34px, 3.8vw, 56px);
+}
+.pv-kopf .b-lead {
+  max-width: 780px;
+  margin-inline: auto;
+}
+/* Desktop: Subline in zwei ruhigen Zeilen (in einer Zeile lief sie bei 1440 px über den Rand) */
+@media (min-width: 1200px) {
+  .pv-kopf {
+    max-width: 980px;
+  }
+  .pv-kopf .b-lead {
+    max-width: 900px;
+    text-wrap: balance;
+  }
+}
+/* eine Spalte, alles mittig: das Schaubild steht ausgewogen statt links gedrängt */
+.pv-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  margin-top: clamp(36px, 4vw, 56px);
+}
+
+/* Alle drei Kästen: weiß mit einem zarten Schimmer, Rahmen im Markenverlauf (Blau → Lila), deutliche Tiefe */
+.pv-box,
+.pv-kasten {
+  position: relative;
+  border-radius: 22px;
+  border: 2px solid transparent;
+  background:
+    radial-gradient(120% 70% at 0% 0%, rgba(63, 116, 255, 0.06), rgba(255, 255, 255, 0) 60%) padding-box,
+    radial-gradient(120% 70% at 100% 100%, rgba(140, 109, 255, 0.07), rgba(255, 255, 255, 0) 60%) padding-box,
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, #3f74ff 0%, #6a55ff 50%, #a855f7 100%) border-box;
+  box-shadow:
+    0 2px 0 rgba(106, 85, 255, 0.35),
+    0 18px 40px -18px rgba(60, 40, 180, 0.35);
+}
+.pv-boxen {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 2.4vw, 32px);
+  width: 100%;
+  max-width: 1040px;
+}
+.pv-box {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 26px 16px;
+}
+.pv-box-titel {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--page-ink);
+}
+.pv-box-unter {
+  margin-top: 4px;
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: var(--page-ink-2);
+}
+.pv-quelle {
+  margin-top: auto;
+  padding-top: 12px;
+  font-size: 12.5px;
+  color: var(--page-ink-3);
+}
+/* Tippfläche 44 px hoch, ohne die Zeile zu verschieben */
+.pv-quelle a {
+  display: inline-block;
+  padding-block: 15px;
+  margin-block: -15px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--linie);
+}
+
+/* Säulen: nur zwei, schlank und hoch, darüber „88 % ≠ 7 %“ */
+.pv-chart {
+  display: grid;
+  gap: 12px;
+}
+.pv-vergleich {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 14px;
+  font-family: var(--font-display);
+  font-size: clamp(34px, 3vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.pv-vergleich-rot {
+  color: #d9262f;
+}
+.pv-vergleich-gruen {
+  color: #16a34a;
+}
+.pv-vergleich-zeichen {
+  font-weight: 500;
+  color: var(--page-ink);
+}
+.pv-chart-saeulen {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: clamp(36px, 5vw, 72px);
+  height: 210px;
+  border-bottom: 2px solid #0b0b0e;
+}
+.pv-saeule-spalte {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  width: 64px;
+  height: 100%;
+}
+.pv-saeule {
+  width: 100%;
+  height: var(--h);
+  border-radius: 10px 10px 0 0;
+  transform-origin: bottom;
+  transition: transform 1.1s var(--ease);
+  transition-delay: calc(var(--d, 0) * 200ms + 200ms);
+}
+.pv-saeule--rot {
+  background: linear-gradient(90deg, #f04a52 0%, #d9262f 55%, #b91c25 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.pv-saeule--gruen {
+  min-height: 12px;
+  background: linear-gradient(90deg, #34d17a 0%, #16a34a 55%, #12873d 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+html.rv-an .pv-box:not([data-rv="in"]) .pv-saeule {
+  transform: scaleY(0);
+}
+.pv-saeule-label {
+  position: absolute;
+  top: calc(100% + 8px);
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--page-ink);
+}
+.pv-chart + .pv-quelle {
+  padding-top: 40px;
+}
+
+/* vier Männchen, schwarz-weiß, eines rot durchgestrichen */
+.pv-figuren {
+  display: flex;
+  justify-content: center;
+  gap: clamp(10px, 1.8vw, 24px);
+  margin-top: 18px;
+}
+.pv-figur {
+  position: relative;
+  display: inline-block;
+}
+.pv-figur svg {
+  display: block;
+  width: clamp(42px, 4vw, 56px);
+  height: auto;
+}
+.pv-figur-x {
+  position: absolute;
+  inset: 8% -6% auto;
+  width: 112% !important;
+}
+/* Fazit: hell mit leichtem Verlauf in den Akzentfarben statt Schwarz */
+.pv-box-fazit {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: linear-gradient(110deg, rgba(63, 116, 255, 0.1) 0%, rgba(106, 85, 255, 0.12) 50%, rgba(168, 85, 247, 0.12) 100%);
+  border: 1px solid rgba(106, 85, 255, 0.25);
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  color: #2a1f7a;
+}
+
+/* geschwungene Linien: laufen aus der Mitte beider Studien zusammen und zeigen auf die Folgen */
+.pv-verbinder {
+  position: relative;
+  width: 100%;
+  max-width: 1040px;
+  height: clamp(72px, 7vw, 104px);
+}
+.pv-verbinder svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: #0b0b0e;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+.pv-verbinder svg path {
+  vector-effect: non-scaling-stroke;
+}
+.pv-pfeilspitze {
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  width: 12px;
+  height: 12px;
+  border-top: 2.5px solid #0b0b0e;
+  border-right: 2.5px solid #0b0b0e;
+  transform: translate(-50%, -1px) rotate(135deg);
+}
+
+.pv-folgen {
+  width: 100%;
+  max-width: 560px;
+  padding: 24px 26px 22px;
+}
+.pv-kasten-titel {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--page-ink);
+}
+.pv-folgen ul {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+.pv-folgen li {
+  display: flex;
+  gap: 10px;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--page-ink);
+}
+/* nur das rote X, ohne Kreis (wie die grünen Haken bei den Vorteilen) */
+.pv-folgen-x {
+  display: grid;
+  place-items: center;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 22px;
+  color: #e5262f;
+}
+.pv-folgen-x svg path {
+  stroke-width: 2.8;
+}
+
+/* Knopf mittig unter dem Schaubild: wer das Problem erkennt, kann direkt einsteigen */
+.pv-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(32px, 4vw, 52px);
+}
+
+/* Handy: Studien untereinander, Knopf über die ganze Breite (wie im Hero) */
+@media (max-width: 699px) {
+  .pv-boxen {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pv-cta .btn {
+    width: 100%;
+  }
+}
+
+/* ------------------------------------------------------------ Unendlichkeitszeichen */
+
+/* Kapitelmarke: dunkle, ruhige Bühne im einen Dunkelton der Seite (--b-dunkel). Davor (Zahnräder) und
+   danach (Kunden) ist die Seite hell. Gerade Kanten über die volle Breite, dahinter nur ein leiser
+   Lichtkegel wie bei einem Produktbild (Runde 3: kein Neon-Leuchten mehr ums Band). */
+.sb--kompakt {
+  padding-block: clamp(56px, 5.5vw, 80px);
+}
+.sb.um {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--b-dunkel);
+  color: #fff;
+}
+.um .b-label {
+  color: #aab5ff;
+}
+.um .b-h2 {
+  color: #fff;
+}
+.um .b-lead {
+  color: rgba(226, 230, 255, 0.76);
+}
+.um-wrap {
+  max-width: calc(1360px + var(--gutter) * 2);
+}
+.um-kopf,
+.um-kopf .b-lead {
+  max-width: none;
+}
+.um-zeichen {
+  --knopf: 80px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 640px;
+  margin: clamp(20px, 2.4vw, 32px) auto 0;
+}
+/* Lichtkegel hinter dem Zeichen: leise, ganz weich auslaufend (hebt das Band vom Grund, ohne zu leuchten) */
+.um-zeichen::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -24% -20%;
+  background: radial-gradient(closest-side, rgba(106, 85, 255, 0.13) 0%, rgba(63, 116, 255, 0.05) 55%, rgba(63, 116, 255, 0) 100%);
+  pointer-events: none;
+}
+.um-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.um-band-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  fill: #fff;
+}
+.um-nummer {
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+.um-lbl--klein {
+  display: none;
+}
+
+/* Start-Knopf auf der Kreuzung: weißer Kreis mit 0 und „Start“ */
+.um-start {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  width: var(--knopf);
+  height: var(--knopf);
+  margin: calc(var(--knopf) / -2) 0 0 calc(var(--knopf) / -2);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.16),
+    0 10px 24px -8px rgba(0, 0, 0, 0.6);
+}
+.um-start-nr {
+  font-family: var(--font-display);
+  font-size: calc(var(--knopf) * 0.38);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #2f6bff, #a855f7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.um-start-wort {
+  margin-top: 3px;
+  font-size: max(10.5px, calc(var(--knopf) * 0.145));
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--akzent);
+}
+/* Linie vom Start-Knopf (durch die freie Mitte unten) zur Karte 0 */
+.um-stiel {
+  position: absolute;
+  left: 50%;
+  top: 69%;
+  bottom: -18px;
+  width: 2px;
+  margin-left: -1px;
+  background: linear-gradient(180deg, rgba(185, 173, 255, 0), rgba(185, 173, 255, 0.75));
+}
+.um-stiel::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 999px;
+  background: #c4b9ff;
+  box-shadow: 0 0 0 4px rgba(196, 185, 255, 0.2);
+}
+
+/* Karten: hell wie die Lösungs-Karten (feiner Rand, großer Radius, leichter Schatten),
+   oben links ein zarter Schimmer in der Farbe der Stufe. Text linksbündig. */
+.um-karten {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+  padding: 0;
+  list-style: none;
+}
+.um-karte {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 18px 20px 20px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background:
+    radial-gradient(90% 60% at 0% 0%, var(--f-weich, rgba(106, 85, 255, 0.16)) 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, #f6f8ff 0%, #fcfdff 52%, #fff 100%);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 1px 2px rgba(0, 0, 0, 0.18),
+    0 24px 48px -28px rgba(0, 0, 0, 0.7);
+  text-align: left;
+  color: var(--page-ink);
+}
+/* Start: feiner heller Ring statt farbigem Rand (ohne Leuchten) */
+.um-karte--start {
+  padding-bottom: 8px;
+  border-color: #fff;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 0 0 3px rgba(150, 132, 255, 0.38),
+    0 24px 48px -28px rgba(0, 0, 0, 0.7);
+}
+.um-karte-kopf {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--page-ink);
+}
+.um-karte-nr {
+  display: grid;
+  place-items: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--f, var(--grad-tief));
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+}
+.um-karte--start .um-karte-nr {
+  background: var(--grad-tief);
+}
+.um-karte-titel {
+  min-width: 0;
+}
+.um-karte-marke {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(90, 67, 230, 0.2);
+  background: rgba(90, 67, 230, 0.07);
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--akzent);
+}
+.um-karte-text {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--page-ink-2);
+  text-wrap: pretty;
+}
+.um-einfach {
+  width: 100%;
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(11, 11, 14, 0.07);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--page-ink);
+  text-wrap: pretty;
+}
+.um-einfach strong {
+  font-weight: 700;
+  color: var(--f-text, var(--akzent));
+}
+.um-mehr {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin-top: 2px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--akzent);
+}
+.um-mehr svg {
+  transition: transform 0.3s var(--ease);
+}
+.um-mehr:hover svg {
+  transform: translateX(4px);
+}
+@media (hover: hover) {
+  .um .um-karte:hover {
+    box-shadow:
+      inset 0 1px 0 #fff,
+      0 1px 2px rgba(0, 0, 0, 0.18),
+      0 30px 56px -26px rgba(0, 0, 0, 0.8);
+  }
+  .um .um-karte--start:hover {
+    box-shadow:
+      inset 0 1px 0 #fff,
+      0 0 0 3px rgba(150, 132, 255, 0.5),
+      0 30px 56px -26px rgba(0, 0, 0, 0.8);
+  }
+}
+.um-ende {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(28px, 3vw, 40px);
+}
+/* weniger Bewegung: der Lichtimpuls bleibt ganz weg statt still am Rand zu stehen */
+@media (prefers-reduced-motion: reduce) {
+  .um-impuls {
+    display: none;
+  }
+}
+
+/* Handy: dickeres Band und größere Schrift, damit das Zeichen lesbar bleibt; Karten straffer */
+@media (max-width: 559px) {
+  .um-zeichen {
+    --knopf: clamp(56px, 16.5vw, 66px);
+    width: calc(100% + 16px);
+    max-width: none;
+    margin-inline: -8px;
+  }
+  .um-band path {
+    stroke-width: 112px;
+  }
+  .um-glanz {
+    stroke-width: 20px;
+    transform: translateY(-25px);
+  }
+  .um-impuls path {
+    stroke-width: 52px;
+  }
+  .um-impuls .um-impuls-kern {
+    stroke-width: 22px;
+  }
+  .um-lbl--gross {
+    display: none;
+  }
+  .um-lbl--klein {
+    display: inline;
+  }
+  .um-karte {
+    padding: 16px 18px 17px;
+    border-radius: 20px;
+  }
+  .um-karte--start {
+    padding-bottom: 6px;
+  }
+  .um-karte-kopf {
+    font-size: clamp(16.5px, 4.7vw, 18px);
+  }
+  .um-karte-text {
+    margin-top: 8px;
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  .um-einfach {
+    margin-top: 10px;
+    padding-top: 9px;
+    font-size: 14px;
+  }
+  .um-stiel {
+    bottom: -18px;
+  }
+}
+
+/* Tablet: Start mittig unter dem Zeichen (die Linie trifft sie), darunter 1 2 / 3 4.
+   Die Teile jeder Karte (Kopf, Text, „Einfach erklärt“, Link) liegen in gemeinsamen Zeilen (subgrid),
+   damit die Trennlinien nebeneinander auf einer Höhe stehen. */
+@media (min-width: 700px) {
+  .um-zeichen {
+    max-width: 600px;
+  }
+  .um-karten {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+    row-gap: 0;
+  }
+  .um-karte {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+    align-content: start;
+    justify-items: start;
+    margin-bottom: 16px;
+  }
+  .um-karte--start {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 100%;
+    max-width: 600px;
+  }  /* die letzte Kartenreihe bringt 16 px Abstand schon mit */
+  .um-ende {
+    margin-top: clamp(14px, 1.6vw, 24px);
+  }
+}
+
+/* Breiter: 1 2 3 4 in einer Reihe, Nummer über dem Titel */
+@media (min-width: 1100px) {
+  .um-zeichen {
+    max-width: 640px;
+  }
+  .um-karten {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .um-karte:not(.um-karte--start) .um-karte-kopf {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+  .um-karte:not(.um-karte--start) .um-karte-titel {
+    flex-basis: 100%;
+  }
+}
+
+/* Computer: alle fünf in einer Reihe, 0 → 4 von links nach rechts. Die Start-Karte ist durch Lichtring
+   und Schild markiert; die Linie aus der Mitte entfällt (sie würde auf die mittlere Karte zeigen). */
+@media (min-width: 1360px) {
+  .um-zeichen {
+    --knopf: 84px;
+  }
+  .um-stiel {
+    display: none;
+  }
+  .um-karten {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin-top: clamp(24px, 2.2vw, 32px);
+  }
+  .um-karte {
+    margin-bottom: 0;
+  }
+  .um-ende {
+    margin-top: clamp(28px, 3vw, 40px);
+  }
+  .um-karte--start {
+    grid-column: auto;
+    justify-self: stretch;
+    max-width: none;
+  }
+  .um-karte--start .um-karte-kopf {
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+  .um-karte--start .um-karte-titel {
+    order: 3;
+    flex-basis: 100%;
+  }
+  .um-karte-kopf {
+    font-size: 17.5px;
+  }
+}
+
+/* ------------------------------------------------------------ Workshop-Ablauf */
+
+/* Fahrplan mit Garantie (Leistungen.tsx): oben Kopf + Schritte | Bild, darunter die Garantie
+   über die ganze Breite (styles/garantie-b.css), zuletzt Hinweis und Knopf mittig.
+   Am Handy in der Reihenfolge des HTML: Kopf, Schritte, Bild, Garantie, Knopf. */
+.sb--workshop {
+  padding-block: clamp(60px, 6vw, 96px);
+  background:
+    radial-gradient(70% 60% at 100% 0%, rgba(140, 109, 255, 0.12), transparent 70%),
+    radial-gradient(60% 50% at 0% 100%, rgba(63, 116, 255, 0.08), transparent 70%),
+    var(--tint);
+}
+.ws-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  grid-template-areas:
+    "links bild"
+    "garantie garantie"
+    "ende ende";
+  gap: clamp(40px, 4vw, 56px) clamp(32px, 4vw, 64px);
+  align-items: stretch;
+}
+.ws-links {
+  grid-area: links;
+}
+.ws-grid > .gb {
+  grid-area: garantie;
+}
+.ws-links .b-kopf {
+  max-width: 620px;
+}
+.ws-bild {
+  grid-area: bild;
+  position: relative;
+  min-height: 520px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #0b0b10;
+  box-shadow: 0 30px 60px -30px rgba(11, 11, 14, 0.5);
+}
+.ws-bild img {
+  object-fit: cover;
+}
+.ws-bild-platzhalter {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 16px;
+  background:
+    radial-gradient(80% 60% at 50% 35%, rgba(106, 85, 255, 0.45), transparent 70%),
+    linear-gradient(180deg, #14142a, var(--b-dunkel, #080a1d));
+}
+.ws-bild-platzhalter img {
+  width: 72px;
+  height: auto;
+  opacity: 0.85;
+}
+.ws-bild-platzhalter span {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.wf {
+  display: grid;
+  justify-items: stretch;
+  margin-top: 28px;
+  padding: 0;
+  list-style: none;
+}
+.wf-schritt {
+  display: grid;
+  justify-items: center;
+}
+.wf-pfeil {
+  display: block;
+  margin: 4px 0;
+  color: rgba(90, 67, 230, 0.55);
+}
+/* Schritt-Karten im Kartenstil der Lösungen: hell, feiner Rand, weicher Schatten.
+   Farbe nur an der Zeitmarke (Verlauf) und am Preis; der Knopf darunter bleibt das Lauteste. */
+.wf-karte {
+  width: 100%;
+  padding: 18px 22px 20px;
+  border-radius: 22px;
+  border: 1px solid #dde6fb;
+  background:
+    radial-gradient(90% 70% at 0% 0%, rgba(214, 228, 255, 0.55) 0%, rgba(214, 228, 255, 0) 70%),
+    linear-gradient(180deg, #f8f9ff 0%, #fff 100%);
+  box-shadow:
+    0 1px 2px rgba(20, 40, 120, 0.04),
+    0 22px 44px -32px rgba(40, 60, 170, 0.32);
+}
+.wf-karte--haupt {
+  border-color: #cdd9fa;
+  box-shadow:
+    0 1px 2px rgba(20, 40, 120, 0.05),
+    0 26px 48px -30px rgba(40, 60, 190, 0.4);
+}
+.wf-kopf {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 28px;
+}
+/* Zeitmarke statt Ziffer: kleine Verlaufs-Kapsel */
+.wf-wann {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding-inline: 11px;
+  border-radius: 999px;
+  background: var(--grad-tief);
+  box-shadow: 0 6px 14px -8px rgba(79, 69, 228, 0.7);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  color: #fff;
+}
+.wf-tag {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--page-ink-3);
+}
+.wf-preis {
+  margin-left: auto;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(22, 163, 74, 0.22);
+  background: rgba(22, 163, 74, 0.08);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  color: #15803d;
+}
+.wf-titel {
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--page-ink);
+}
+.wf-karte--haupt .wf-titel {
+  font-size: 22px;
+}
+.wf-text {
+  margin-top: 4px;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--page-ink-2);
+}
+.wf-punkte {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+.wf-punkte li {
+  display: flex;
+  gap: 9px;
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: var(--page-ink);
+}
+.wf-punkte .b-haken {
+  margin-top: 2px;
+}
+/* Hinweis und Knopf mittig unter allem */
+.wf-ende {
+  grid-area: ende;
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  font-size: 15px;
+  line-height: 1.5;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--page-ink-2);
+}
+@media (max-width: 999px) {
+  .ws-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "links"
+      "bild"
+      "garantie"
+      "ende";
+    row-gap: 32px;
+  }
+  .ws-bild {
+    align-self: start; /* WebKit: bei „stretch“ gilt das Seitenverhältnis nicht, das Bild hätte die Höhe 0 */
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+}
+@media (max-width: 599px) {
+  .ws-grid {
+    row-gap: 24px;
+  }
+  .wf {
+    margin-top: 24px;
+  }
+  .wf-karte {
+    padding: 16px 18px 18px;
+  }
+  .wf-titel,
+  .wf-karte--haupt .wf-titel {
+    margin-top: 8px;
+    font-size: 19px;
+  }
+  .wf-text,
+  .wf-punkte li {
+    font-size: 15px;
+  }
+}
+
+/* ------------------------------------------------------------ Kunden: Ergebnisse und Bewertungen */
+
+/* Ergebnis-Karten (Kartenstil der Lösungen): große Zahl im Markenverlauf, Einheit und Firma in einer Zeile,
+   unten klein, was wir gebaut haben. Desktop drei nebeneinander, darunter gestapelt. */
+.kd-erg-liste {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: clamp(32px, 4vw, 52px);
+  padding: 0;
+  list-style: none;
+}
+.kd-erg {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 26px 26px 24px;
+  border-radius: 24px;
+  border: 1px solid #dde6fb;
+  background:
+    radial-gradient(90% 60% at 0% 0%, rgba(214, 228, 255, 0.75) 0%, rgba(214, 228, 255, 0) 70%),
+    linear-gradient(180deg, #f6f8ff 0%, #fcfdff 52%, #fff 100%);
+  box-shadow:
+    0 1px 2px rgba(20, 40, 120, 0.04),
+    0 22px 44px -32px rgba(40, 60, 170, 0.32);
+}
+.kd-erg-zahl {
+  padding-bottom: 0.06em; /* Unterlängen im Verlaufstext nicht abschneiden */
+  font-family: var(--font-display);
+  font-size: clamp(30px, 2.9vw, 42px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  background: var(--grad-tief);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.kd-erg-vor {
+  font-size: 0.52em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.kd-erg-pfeil {
+  font-weight: 500;
+}
+.kd-erg-nw {
+  white-space: nowrap;
+}
+/* Desktop (drei nebeneinander): Einheit, darunter die Firma. Gestapelt (unter 900 px): beides in einer Zeile. */
+.kd-erg-zeile {
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  margin-block: 4px 18px; /* unten Mindestabstand, der Rest geht an „Was wir gebaut haben“ (gleich hohe Karten) */
+}
+.kd-erg-einheit {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--page-ink);
+}
+.kd-erg-firma {
+  display: flex;
+  flex: 0 0 auto; /* nie schrumpfen: das Logo hätte sonst die Breite 0 */
+  align-items: center;
+  gap: 9px;
+  min-height: 34px;
+}
+/* feste Höhe, Breite aus dem Seitenverhältnis (je Logo optisch gleich schwer) */
+.kd-erg-logo {
+  width: auto;
+  height: 28px;
+  max-width: 130px;
+  object-fit: contain;
+}
+.kd-erg-logo--estera {
+  height: 20px;
+}
+.kd-erg-logo--fuchspools {
+  height: 34px;
+}
+/* ohne Logo: ruhiges Gebäude-Zeichen im Kästchen, Name daneben */
+.kd-erg-zeichen {
+  display: grid;
+  place-items: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid #dde6fb;
+  background: #fff;
+  box-shadow: 0 4px 10px -8px rgba(40, 60, 170, 0.5);
+}
+.kd-erg-name {
+  font-family: var(--font-display);
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--page-ink);
+}
+.kd-erg-gebaut {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(63, 116, 255, 0.14);
+}
+.kd-erg-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--akzent);
+}
+.kd-erg-text {
+  margin-top: 4px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--page-ink-2);
+  text-wrap: pretty;
+}
+@media (max-width: 899px) {
+  .kd-erg-liste {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    max-width: 560px;
+    margin-inline: auto;
+  }
+  .kd-erg {
+    padding: 20px 22px;
+    border-radius: 22px;
+  }
+  .kd-erg-zahl {
+    font-size: clamp(30px, 8.6vw, 36px);
+  }
+  .kd-erg-zeile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-block: 4px 14px;
+  }
+  .kd-erg-gebaut {
+    padding-top: 12px;
+  }
+}
+
+/* 5,0 auf Google: Übergang von den Ergebnissen zu den Bewertungen */
+.kd-schnitt-zeile {
+  margin-top: clamp(36px, 4.5vw, 56px);
+  text-align: center;
+}
+.kd-schnitt {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 10px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--linie);
+  box-shadow: var(--schatten);
+}
+.kd-schnitt-zahl {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--page-ink);
+}
+.kd-schnitt-anzahl {
+  font-size: 14.5px;
+  color: var(--page-ink-2);
+}
+.kd-sterne {
+  display: inline-flex;
+  gap: 1px;
+}
+/* Karussell in einer Reihe, endlos (KundenKarussell.tsx): Desktop drei Karten, Tablet zwei,
+   Handy eine und die nächste schaut hinein. Die Karten werden per `order` im Kreis umsortiert,
+   die Reihe verschiebt sich nur um --kd-f (Bruchteil einer Karte). Alle Karten gleich hoch. */
+.kd-karussell {
+  margin-top: clamp(24px, 3vw, 36px);
+}
+.kd-fenster {
+  --kd-sichtbar: 3;
+  /* 12 px Luft für den Schatten der äußeren Karten; die nächste Karte (22 px Abstand) bleibt verdeckt */
+  margin-inline: -12px;
+  padding-inline: 12px;
+  scroll-padding-inline: 12px;
+  overflow: hidden;
+  overflow-x: clip; /* kein Scroll-Container: Fokus kann die Reihe nicht verschieben */
+  overflow-y: visible;
+  touch-action: pan-y; /* senkrecht scrollt die Seite, waagerecht wischt das Karussell */
+}
+.kd-karten {
+  --kd-gap: 22px;
+  --kd-breite: calc((100% - 2 * var(--kd-gap)) / 3);
+  --kd-schritt: calc((100% + var(--kd-gap)) / 3);
+  display: flex;
+  gap: var(--kd-gap);
+  transform: translateX(calc(var(--kd-f, 0) * -1 * var(--kd-schritt)));
+}
+.kd-karten[data-bewegt] {
+  will-change: transform;
+}
+.kd-karte {
+  flex: 0 0 var(--kd-breite);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid var(--linie);
+  box-shadow: var(--schatten);
+  overflow: hidden;
+}
+.kd-logo {
+  display: grid;
+  place-items: center;
+  height: 112px;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--linie);
+  background: #fff;
+}
+.kd-logo img {
+  max-width: min(100%, 210px);
+  max-height: 64px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.kd-logo--dunkel {
+  background: #000;
+}
+.kd-logo--dunkel img {
+  max-height: 76px;
+}
+a.kd-logo:hover {
+  background: var(--tint);
+}
+a.kd-logo--dunkel:hover {
+  background: #111;
+}
+a.kd-logo:focus-visible {
+  outline-offset: -4px; /* die Karte schneidet ab, der Rahmen bleibt sichtbar */
+  border-radius: 20px 20px 0 0;
+}
+.kd-wortmarke {
+  font-family: var(--font-bodoni), "Bodoni Moda", Georgia, serif;
+  font-style: italic;
+  font-size: 34px;
+  letter-spacing: 0.04em;
+  color: #1a1a1a;
+}
+.kd-ohne-logo {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--page-ink-3);
+}
+.kd-bewertung {
+  flex: 1;
+  margin: 0;
+  padding: 22px 24px 18px;
+}
+.kd-bewertung-kopf {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.kd-bewertung-kopf > svg {
+  margin-left: auto;
+}
+.kd-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2f5fe8, #6a3fd8);
+  font-weight: 700;
+  color: #fff;
+}
+.kd-name {
+  display: block;
+  font-weight: 700;
+  color: var(--page-ink);
+}
+.kd-datum {
+  display: block;
+  font-size: 13px;
+  color: var(--page-ink-3);
+}
+.kd-text {
+  margin: 10px 0 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--page-ink);
+}
+.kd-umgesetzt {
+  padding: 16px 24px 20px;
+  background: var(--tint);
+  border-top: 1px solid var(--linie);
+}
+.kd-umgesetzt-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--akzent);
+}
+.kd-umgesetzt-text {
+  margin-top: 4px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--page-ink);
+}
+/* Link unter der Reihe: 44 px Trefferfläche, Optik bleibt eine Textzeile */
+.kd-alle {
+  margin-top: 16px;
+  text-align: center;
+}
+.kd-alle .b-textlink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 10px;
+}
+/* Abschluss: kurze Zeile und Knopf */
+.kd-ende {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  margin-top: clamp(36px, 4.5vw, 56px);
+  text-align: center;
+}
+.kd-ende-zeile {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 1.8vw, 24px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  color: var(--page-ink);
+}
+/* Pfeile und Position unter der Reihe, mittig (am Handy mit dem Daumen gut erreichbar) */
+.kd-steuerung {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 28px;
+}
+.kd-pfeil {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--linie);
+  box-shadow: var(--schatten);
+  color: var(--page-ink);
+  touch-action: manipulation; /* schnelles Tippen zoomt nicht */
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color 0.3s var(--ease),
+    transform 0.2s var(--ease);
+}
+.kd-pfeil:hover {
+  border-color: rgba(11, 11, 14, 0.2);
+}
+.kd-pfeil:active {
+  transform: scale(0.94);
+}
+.kd-punkte {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kd-punkt {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(11, 11, 14, 0.16);
+  transition:
+    width 0.45s var(--ease),
+    background-color 0.45s var(--ease);
+}
+.kd-punkt[data-an] {
+  width: 22px;
+  background: var(--akzent);
+}
+/* Touch: kein „klebendes“ Anheben nach dem Tippen oder Wischen (Hover-Effekt aus animation.css) */
+@media (hover: none) {
+  .kd-karten > .kd-karte:hover {
+    transform: none;
+    box-shadow: var(--schatten);
+  }
+  .kd-karten > .kd-karte:hover .kd-logo img {
+    transform: none;
+  }
+}
+@media (max-width: 1099px) {
+  .kd-fenster {
+    --kd-sichtbar: 2;
+  }
+  .kd-karten {
+    --kd-breite: calc((100% - var(--kd-gap)) / 2);
+    --kd-schritt: calc((100% + var(--kd-gap)) / 2);
+  }
+}
+/* Handy: Reihe läuft bis an den Bildschirmrand, die nächste Karte schaut rund 10 % hinein */
+@media (max-width: 699px) {
+  .kd-fenster {
+    --kd-sichtbar: 1;
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter) 0;
+    scroll-padding-inline: var(--gutter);
+  }
+  .kd-karten {
+    --kd-gap: 12px;
+    --kd-breite: calc(100% - var(--kd-gap) - 10vw);
+    --kd-schritt: calc(100% - 10vw);
+  }
+  .kd-steuerung {
+    margin-top: 24px;
+  }
+  /* 5,0-Zeile: am Handy kompakt in einer Zeile statt einer hohen Kapsel */
+  .kd-schnitt {
+    flex-wrap: nowrap;
+    gap: 7px;
+    padding: 9px 14px 9px 12px;
+    white-space: nowrap;
+  }
+  .kd-schnitt > svg {
+    width: 19px;
+    height: 19px;
+  }
+  .kd-schnitt-zahl {
+    font-size: 17px;
+  }
+  .kd-schnitt .kd-sterne svg {
+    width: 14px;
+    height: 14px;
+  }
+  .kd-schnitt-anzahl {
+    font-size: 13.5px;
+  }
+}
+@media (max-width: 359px) {
+  .kd-schnitt {
+    gap: 5px;
+    padding-inline: 10px 12px;
+  }
+  .kd-schnitt .kd-sterne svg {
+    width: 12px;
+    height: 12px;
+  }
+  .kd-schnitt-anzahl {
+    font-size: 12.5px;
+  }
+  /* schmale Karte: etwas weniger Innenabstand, damit Zeilen nicht zu kurz werden */
+  .kd-bewertung {
+    padding-inline: 18px;
+  }
+  .kd-umgesetzt {
+    padding-inline: 18px;
+  }
+  .kd-umgesetzt-label {
+    letter-spacing: 0.1em;
+  }
+  .kd-erg {
+    padding-inline: 18px;
+  }
+  .kd-erg-einheit {
+    font-size: 15px;
+  }
+  .kd-erg-zeile {
+    gap: 10px;
+  }
+  .kd-erg-logo--estera {
+    height: 18px;
+  }
+  .kd-erg-logo--fuchspools {
+    height: 30px;
+  }
+  .kd-erg-zeichen {
+    flex-basis: 28px;
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+  }
+  .kd-erg-name {
+    font-size: 14.5px;
+  }
+}
+
+/* ------------------------------------------------------------ Über uns: Gründer */
+
+/* Kartenart ab der Lösung (wie .lo-karte): hell, 1 px feiner Rand, großer Radius, leichter Schatten.
+   Getönter Grund (sb--tint) zwischen den weißen Lösungen und dem Masterplan; etwas straffer als ein
+   normaler Abschnitt, weil nur zwei Karten darin stehen. */
+.sb.uu {
+  padding-block: clamp(64px, 7vw, 104px);
+}
+.uu-gruender {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 2.2vw, 28px);
+  max-width: 1080px;
+  margin: clamp(28px, 3.6vw, 48px) auto 0;
+}
+/* Handy und Tablet: Foto klein neben Name und Rolle, Text darunter über die ganze Breite */
+.uu-karte {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  grid-template-areas:
+    "foto kopf"
+    "text text";
+  align-items: center;
+  gap: 18px 20px;
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid #dde6fb;
+  background:
+    radial-gradient(90% 60% at 0% 0%, rgba(214, 228, 255, 0.6) 0%, rgba(214, 228, 255, 0) 70%),
+    linear-gradient(180deg, #f6f8ff 0%, #fcfdff 52%, #fff 100%);
+  box-shadow:
+    0 1px 2px rgba(20, 40, 120, 0.04),
+    0 22px 44px -32px rgba(40, 60, 170, 0.32);
+}
+.uu-foto {
+  grid-area: foto;
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #eef2ff;
+}
+.uu-foto img {
+  object-fit: cover;
+}
+/* ohne Foto: ruhige helle Fläche mit Initialen (kein Markenverlauf) */
+.uu-foto-platzhalter {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  border: 1px solid rgba(63, 116, 255, 0.14);
+  border-radius: inherit;
+  background: linear-gradient(160deg, #e9efff 0%, #f2eeff 100%);
+}
+.uu-foto-initialen {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #1c2140;
+}
+.uu-foto-hinweis {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--page-ink-3);
+}
+.uu-kopf {
+  grid-area: kopf;
+  min-width: 0;
+}
+.uu-name {
+  font-family: var(--font-display);
+  font-size: clamp(21px, 1.9vw, 26px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--page-ink);
+}
+.uu-rolle {
+  margin-top: 5px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--akzent);
+}
+/* LinkedIn-Profil: leiser Link unter der Rolle, Trefferfläche 44 px */
+.uu-li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-bottom: -10px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--page-ink-2);
+  transition: color 0.3s var(--ease);
+}
+.uu-li svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+@media (hover: hover) {
+  .uu-li:hover {
+    color: var(--page-ink);
+  }
+}
+.uu-text {
+  grid-area: text;
+}
+.uu-absatz {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--page-ink-2);
+  text-wrap: pretty;
+}
+.uu-absatz + .uu-absatz {
+  margin-top: 12px;
+}
+/* Computer: Foto links über die ganze Kartenhöhe, rechts Name, Rolle und Text */
+@media (min-width: 1100px) {
+  .uu-karte {
+    grid-template-columns: 148px minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "foto kopf"
+      "foto text";
+    align-items: start;
+    gap: 14px 28px;
+    padding: 28px;
+  }
+  .uu-foto-initialen {
+    font-size: 44px;
+  }
+}
+@media (max-width: 759px) {
+  .uu-gruender {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 560px;
+  }
+}
+@media (max-width: 599px) {
+  .uu-karte {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 14px 16px;
+    padding: 20px;
+    border-radius: 22px;
+  }
+  .uu-foto {
+    border-radius: 14px;
+  }
+  .uu-foto-initialen {
+    font-size: 25px;
+  }
+  .uu-rolle {
+    font-size: 14.5px;
+  }
+  .uu-absatz {
+    font-size: 16.5px;
+  }
+}
+
+/* ------------------------------------------------------------ Einblicke: YouTube und LinkedIn */
+
+/* Aktuelles: kompaktes getöntes Band zwischen den weißen Fragen und dem weißen Abschluss (Runde 3).
+   Das Band selbst ist die Fläche, die Videos stehen als weiße Karten darauf. */
+.sb.ak-band {
+  padding-block: clamp(56px, 6vw, 88px);
+}
+.ak-kasten {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "kopf"
+    "liste"
+    "mehr";
+  gap: 20px;
+  max-width: 1080px;
+  margin-inline: auto;
+}
+.ak-kopf {
+  grid-area: kopf;
+}
+.ak-h2 {
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.3vw, 32px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  color: var(--page-ink);
+}
+.ak-lead {
+  margin-top: 10px;
+  max-width: 560px;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--page-ink-2);
+  text-wrap: pretty;
+}
+.ak-liste {
+  grid-area: liste;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.ak-zeile {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid var(--linie);
+  background: #fff;
+  box-shadow: var(--schatten);
+  transition:
+    transform 0.4s var(--ease),
+    box-shadow 0.4s var(--ease);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .ak-zeile:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 1px 2px rgba(11, 11, 14, 0.04),
+      0 22px 44px -24px rgba(60, 40, 180, 0.32);
+  }
+}
+.ak-band .ak-bild {
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+.ak-band .ak-play {
+  left: 10px;
+  bottom: 10px;
+  width: 36px;
+  height: 36px;
+  padding-left: 2px;
+}
+.ak-band .ak-body {
+  padding: 14px 16px 16px;
+}
+.ak-band .ak-titel {
+  font-size: 15.5px;
+  -webkit-line-clamp: 2;
+}
+.ak-band .ak-mehr {
+  margin-top: 10px;
+  font-size: 14.5px;
+}
+.ak-mehr-link {
+  grid-area: mehr;
+}
+/* leiser Link zum Kanal (gleiche Höhe wie die Knöpfe der Seite: Trefferfläche 44 px) */
+.ak-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 18px 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--linie);
+  background: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--page-ink);
+  transition:
+    border-color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+}
+.ak-link svg {
+  width: 24px;
+  height: 17px;
+  flex: 0 0 auto;
+}
+@media (hover: hover) {
+  .ak-link:hover {
+    border-color: rgba(63, 116, 255, 0.35);
+    box-shadow: var(--schatten);
+  }
+}
+/* Computer: Text und Kanal-Link links, Videos rechts */
+@media (min-width: 1000px) {
+  .ak-kasten {
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+    grid-template-areas:
+      "kopf liste"
+      "mehr liste";
+    gap: 22px 44px;
+  }
+  .ak-kopf {
+    align-self: end;
+  }
+  .ak-mehr-link {
+    align-self: start;
+  }
+}
+/* Handy: Videos als flache Zeilen, Bild links, Titel rechts (die ganze Zeile ist der Link) */
+@media (max-width: 699px) {
+  .ak-kasten {
+    gap: 16px;
+  }
+  .ak-liste {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .ak-zeile {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 18px;
+  }
+  .ak-zeile:focus-visible {
+    border-radius: 18px;
+  }
+  .ak-band .ak-bild {
+    flex: 0 0 min(128px, 40%);
+    border-radius: 12px;
+  }
+  .ak-band .ak-play {
+    left: 6px;
+    bottom: 6px;
+    width: 30px;
+    height: 30px;
+  }
+  .ak-band .ak-play svg {
+    width: 14px;
+    height: 14px;
+  }
+  .ak-band .ak-body {
+    padding: 0 6px 0 0;
+  }
+  .ak-band .ak-datum {
+    font-size: 13px;
+  }
+  .ak-band .ak-titel {
+    margin-top: 3px;
+    font-size: 15px;
+    line-height: 1.35;
+    -webkit-line-clamp: 3;
+  }
+  .ak-band .ak-mehr {
+    display: none;
+  }
+}
+
+/* Unterseite /aktuelles: Kanal-Knopf (Videos.tsx) */
+.ak-yt {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--linie);
+  box-shadow: var(--schatten);
+  font-weight: 700;
+  color: var(--page-ink);
+  transition: transform 0.3s var(--ease);
+}
+.ak-yt:hover {
+  transform: translateY(-2px);
+}
+
+/* ------------------------------------------------------------ Nächster Schritt */
+
+.nx {
+  padding: clamp(64px, 7vw, 112px) var(--gutter);
+  scroll-margin-top: 80px;
+}
+.nx-wrap {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  max-width: 1160px;
+  margin-inline: auto;
+  padding-top: 48px;
+}
+/* helle Fläche mit dem Bild-Logo, ragt links oben über den schwarzen Kasten */
+.nx-bild {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  margin-top: -48px;
+  margin-bottom: 48px;
+  min-height: 480px;
+  background:
+    radial-gradient(70% 60% at 50% 40%, rgba(106, 85, 255, 0.1), transparent 70%),
+    #fff;
+  border: 1px solid var(--linie);
+  box-shadow: 0 30px 60px -24px rgba(11, 11, 14, 0.45);
+}
+.nx-bild img {
+  width: 42%;
+  max-width: 150px;
+  height: auto;
+}
+.nx-kasten {
+  margin-left: -80px;
+  padding: clamp(36px, 4.4vw, 64px) clamp(32px, 4.4vw, 64px) clamp(36px, 4.4vw, 64px) calc(80px + clamp(28px, 3.4vw, 52px));
+  /* Firmenfarben statt Schwarz: Verlauf Blau → Violett → Lila mit weichen Lichtflecken */
+  background:
+    radial-gradient(70% 90% at 100% 0%, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 60%),
+    radial-gradient(60% 80% at 0% 100%, rgba(20, 10, 80, 0.35), rgba(20, 10, 80, 0) 70%),
+    linear-gradient(125deg, #2f5fe8 0%, #4f45e4 48%, #7a3fe0 100%);
+  color: #fff;
+  box-shadow: 0 30px 60px -28px rgba(60, 40, 180, 0.65);
+}
+.nx-titel {
+  display: grid;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3.2vw, 48px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+.nx-absatz {
+  margin-top: 18px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+.nx-titel + .nx-absatz {
+  margin-top: 28px;
+}
+/* Direkter Draht: feine Linie, leise Frage, darunter die Nummer als Link (Trefferfläche 48 px) */
+.nx-direkt {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.nx-direkt-text {
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
+}
+.nx-tel {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  margin-top: 6px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+  transition: color 0.3s var(--ease);
+}
+.nx-tel-symbol {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(185, 165, 255, 0.3);
+  background: rgba(185, 165, 255, 0.12);
+}
+@media (hover: hover) {
+  .nx-tel:hover {
+    color: var(--lav);
+  }
+}
+.nx-tel:focus-visible {
+  border-radius: 999px;
+}
+/* Schluss-Satz direkt über dem Knopf */
+.nx-schluss {
+  margin-top: 26px;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 1.8vw, 24px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.nx-cta {
+  margin-top: 18px;
+}
+@media (max-width: 899px) {
+  .nx-wrap {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 0;
+  }
+  .nx-bild {
+    min-height: 240px;
+    margin: 0 24px -40px;
+  }
+  .nx-kasten {
+    margin-left: 0;
+    padding: calc(40px + 32px) 24px 36px;
+  }
+}
+/* Handy: schwarzer Kasten randlos als Band wie beim Masterplan, Text auf der Fluchtlinie der Seite.
+   So passt „Kostenlosen KI-Workshop sichern“ in einer Zeile in den Knopf (vorher zwei Zeilen bei 390 px). */
+@media (max-width: 599px) {
+  .nx {
+    padding-inline: 0;
+  }
+  .nx-bild {
+    min-height: 190px;
+    margin-inline: var(--gutter);
+  }
+  /* Bild-Logo mit Luft oben und unten (vorher stieß es an den Rand der Fläche) */
+  .nx-bild img {
+    width: auto;
+    height: 128px;
+  }
+  .nx-kasten {
+    padding-inline: var(--gutter);
+  }
+}
+
+/* ------------------------------------------------------------ Anmeldung im Fenster */
+
+.fd {
+  width: min(760px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 26px;
+  background: var(--tint);
+  box-shadow: 0 40px 80px -30px rgba(11, 11, 14, 0.6);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.fd::backdrop {
+  background: rgba(8, 8, 12, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.fd[open] {
+  animation: fd-rein 0.35s var(--ease);
+}
+@keyframes fd-rein {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+html[data-dialog-offen] {
+  overflow: hidden;
+}
+.fd-inhalt {
+  position: relative;
+  padding: clamp(24px, 3.4vw, 40px);
+}
+.fd-zu {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--linie);
+  color: var(--page-ink);
+}
+.fd-zu:hover {
+  background: #ececf2;
+}
+/* Fokus-Ring folgt der Form (die globale :focus-visible-Regel setzt sonst 6 px Radius: runder Knopf wurde eckig) */
+.fd-zu:focus-visible,
+.ak-link:focus-visible {
+  border-radius: 999px;
+}
+.ak-zeile:focus-visible {
+  border-radius: 20px;
+}
+.fd-titel {
+  margin-top: 10px;
+  padding-right: 48px;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 2.6vw, 34px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--page-ink);
+}
+.fd-text {
+  margin: 10px 0 22px;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--page-ink-2);
+}
+.fd-direkt {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 15px;
+  color: var(--page-ink-2);
+}
+.fd-direkt a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px; /* Trefferfläche */
+  font-weight: 700;
+  color: var(--page-ink);
+}
+/* Handy: Fenster fast randlos, Kopf kompakter (das Formular selbst: formular.css) */
+@media (max-width: 599px) {
+  .fd {
+    width: calc(100vw - 16px);
+    max-width: none; /* Browser-Vorgabe für Fenster (100 % - 2em) würde 22 px Breite kosten */
+    max-height: calc(100dvh - 16px);
+    border-radius: 22px;
+  }
+  .fd-inhalt {
+    padding: 20px 16px 12px;
+  }
+  .fd-zu {
+    right: 10px;
+    top: 10px;
+  }
+  .fd-titel {
+    margin-top: 8px;
+    padding-right: 44px;
+    font-size: 24px;
+  }
+  .fd-text {
+    margin: 8px 0 20px;
+    font-size: 15.5px;
+    line-height: 1.5;
+  }
+  .fd-direkt {
+    margin-top: 10px;
+  }
+}
+
+/* Knopf im schwarzen Kasten „Nächster Schritt“: am Handy volle Breite. Der Kasten läuft dort randlos als Band,
+   damit passt der Text in einer Zeile; umbrechen darf er nur im Notfall. (Masterplan: styles/masterplan.css) */
+@media (max-width: 599px) {
+  .nx-cta {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+/* Workshop-Bild am Handy: Fotoformat 3:2 (der Preis-Kasten darauf ist seit Runde 3 im Masterplan) */
+@media (max-width: 599px) {
+  .ws-bild {
+    aspect-ratio: 3 / 2;
+  }
+  .ws-bild-platzhalter {
+    gap: 12px;
+  }
+  .ws-bild-platzhalter img {
+    width: 52px;
+  }
+}
+
+/* ------------------------------------------------------------ Zahnräder (Die Lösung) */
+
+/* Ab hier bringt SvH Farbe: Räder im Markenverlauf und hell mit feinem Rand, weiche Schatten.
+   Oben läuft die gestrichelte Linie aus dem Problem weiter: schwarz → Markenviolett. */
+.zr {
+  padding-top: 0;
+  padding-bottom: clamp(56px, 6.5vw, 96px);
+  background: var(--page);
+}
+.zr-faden {
+  position: relative;
+  width: 40px;
+  height: clamp(64px, 6vw, 88px);
+  margin: 0 auto clamp(14px, 1.6vw, 22px);
+}
+.zr-faden svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+.zr-faden path {
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 11 8;
+}
+/* die „Ameisen“ laufen einmal nach unten, sobald der Abschnitt erscheint, dann steht die Linie */
+.zr:has(.zr-kopf[data-rv="in"]) .zr-faden path {
+  animation: b-ameisen 2.4s var(--ease) backwards;
+}
+.zr-faden-spitze {
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  width: 12px;
+  height: 12px;
+  border-top: 2.5px solid #6a55ff;
+  border-right: 2.5px solid #6a55ff;
+  transform: translate(-50%, -1px) rotate(135deg);
+}
+.zr-kopf {
+  max-width: 860px;
+}
+.zr-kopf .b-h2 {
+  font-size: clamp(32px, 3.6vw, 52px);
+}
+.zr-kopf .b-lead {
+  max-width: 660px;
+  text-wrap: balance;
+}
+.zr-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+  margin-top: clamp(32px, 4vw, 56px);
+}
+.zr-svg {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  margin-inline: auto;
+  overflow: visible;
+}
+.zr-ki {
+  font-family: var(--font-display);
+  font-size: 60px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.zr-label {
+  font-family: var(--font-display);
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  fill: #0b2346; /* Marken-Navy wie im Logo */
+}
+/* Bis 1199 px ist die Grafik kleiner (Handy, Tablet, zweispaltig ab 900 px):
+   größere Schrift mit Trennung, damit nichts unter 12 px fällt */
+.zr-label--kurz {
+  display: none;
+  font-size: 23px;
+  letter-spacing: -0.025em;
+}
+@media (max-width: 1199px) {
+  .zr-label--lang {
+    display: none;
+  }
+  .zr-label--kurz {
+    display: inline;
+  }
+}
+
+/* Drehen: nur transform, jede Form um ihre eigene Mitte. Großes Rad 48 s je Umdrehung im
+   Uhrzeigersinn, kleine Räder gegenläufig in 24 s (24 zu 12 Zähne). Startet erst, wenn die
+   Grafik im Bild ist (ZahnradLauf), pausiert außerhalb. */
+@keyframes zr-rechts {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes zr-links {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+.zr-dreh {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: zr-rechts 48s linear infinite;
+  animation-play-state: paused;
+}
+.zr-dreh--klein {
+  animation-name: zr-links;
+  animation-duration: 24s;
+}
+.zr-lauf[data-lauf="an"] .zr-dreh {
+  animation-play-state: running;
+}
+@media (prefers-reduced-motion: reduce) {
+  .zr-dreh {
+    animation: none;
+  }
+}
+
+/* Die sechs Gewinne: Haken in zwei Spalten, am Handy eine */
+.zr-gewinne-titel {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--page-ink);
+}
+.zr-liste {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 28px;
+  margin-top: 22px;
+}
+.zr-liste li {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+}
+.zr-liste li > svg {
+  margin-top: 1px;
+}
+.zr-v-titel {
+  display: block;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--page-ink);
+}
+.zr-v-text {
+  display: block;
+  margin-top: 3px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--page-ink-2);
+  text-wrap: pretty;
+}
+/* Weiter zu den Leistungen: Textlink mit Pfeil nach unten statt Knopf */
+.zr-weiter {
+  display: inline-block;
+  padding-block: 11px;
+  margin-top: 22px;
+  line-height: 1.4;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--akzent);
+  text-decoration: underline;
+  text-decoration-color: rgba(90, 67, 230, 0.3);
+  text-underline-offset: 5px;
+  transition: text-decoration-color 0.3s var(--ease);
+}
+.zr-weiter:hover {
+  text-decoration-color: var(--akzent);
+}
+.zr-weiter-ende {
+  white-space: nowrap;
+}
+.zr-weiter-pfeil {
+  display: inline-block;
+  margin-left: 6px;
+  vertical-align: -3px;
+}
+/* wippt drei Mal, sobald die Gewinne im Bild sind, dann Ruhe */
+.zr-gewinne[data-rv="in"] .zr-weiter-pfeil {
+  animation: b-runter 1.6s ease-in-out 0.9s 3;
+}
+@media (max-width: 899px) {
+  .zr-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .zr-gewinne {
+    width: 100%;
+    max-width: 620px;
+    margin-inline: auto;
+  }
+}
+/* Handy: Grafik fast randlos, damit die Beschriftungen groß genug sind; Gewinne kompakt in einer Spalte */
+@media (max-width: 599px) {
+  .zr-svg {
+    width: calc(100% + 2 * var(--gutter) - 16px);
+    max-width: none;
+    margin-inline: calc(8px - var(--gutter));
+  }
+  .zr-liste {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .zr-v-titel {
+    font-size: 16.5px;
+  }
+  .zr-v-text {
+    margin-top: 1px;
+    line-height: 1.45;
+  }
+  .zr-weiter {
+    margin-top: 14px;
+  }
+}
+
+/* ------------------------------------------------------------ Bewertungen gekürzt, zwei Videos */
+
+.kd-text[data-zu] {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* „Weiterlesen“: 44 px Trefferfläche über Innenabstand, negative Ränder halten die Optik gleich */
+.kd-mehr {
+  display: inline-block;
+  min-height: 44px;
+  margin: -2px -10px -10px;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 24px;
+  touch-action: manipulation;
+  color: var(--akzent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(90, 67, 230, 0.35);
+}
+.kd-mehr:hover {
+  text-decoration-color: var(--akzent);
+}
+/* (zwei Videos: jetzt im Aktuelles-Block oben, .ak-liste) */
+
+/* Handy und Tablet: kleine Großbuchstaben-Beschriftungen auf mindestens 12,5 px (lesbar ohne Zoomen) */
+@media (max-width: 999px) {
+  html .hb-ziel,
+  html .hb-video-tag,
+  html .um-karte-marke,
+  html .kd-erg-label,
+  html .kd-umgesetzt-label,
+  html .lo-stufe {
+    font-size: 12.5px;
+  }
+}
+
+/* Nächster Schritt auf dem farbigen Kasten: Texte etwas kräftiger, Knopf weiß (sonst verschwände er im Verlauf) */
+.nx-absatz,
+.nx-direkt-text {
+  color: rgba(255, 255, 255, 0.92);
+}
+.nx-direkt {
+  border-top-color: rgba(255, 255, 255, 0.25);
+}
+.nx-tel-symbol {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.16);
+}
+@media (hover: hover) {
+  .nx-tel:hover {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+  }
+}
+.nx-kasten .btn-primary.nx-cta {
+  color: #3a2bb8;
+  background: #fff;
+  text-shadow: none;
+  box-shadow:
+    0 12px 30px -12px rgba(20, 10, 80, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+.nx-kasten .btn-primary.nx-cta::before {
+  background: #fff;
+  opacity: 0.25;
+}
+
+/* ------------------------------------------------------------ Leistungen: Pfeile und Texte rund ums Zeichen (07.10.2026) */
+
+.um-pfeile {
+  display: none;
+}
+@media (min-width: 1100px) {
+  .um .um-grid {
+    display: grid;
+    grid-template-columns: minmax(250px, 1fr) minmax(0, 2.3fr) minmax(250px, 1fr);
+    grid-template-areas:
+      "n1 z n3"
+      "n4 z n2"
+      ". n0 .";
+    column-gap: clamp(20px, 2.4vw, 40px);
+    /* mehr Luft: 1 und 3 oben, 4 und 2 deutlich tiefer (07.10.2026) */
+    row-gap: clamp(72px, 7vw, 120px);
+    align-items: center;
+    margin-top: clamp(44px, 4.4vw, 68px);
+  }
+  .um .um-zeichen {
+    grid-area: z;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .um .um-stiel {
+    display: none;
+  }
+  .um-pfeile {
+    display: inline;
+  }
+  .um .um-karten {
+    display: contents;
+  }
+  /* Texte frei auf der dunklen Bühne (keine Kästen) */
+  .um .um-grid .um-karte {
+    display: flex;
+    max-width: 320px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    color: #fff;
+  }
+  .um .um-grid .um-karte:hover {
+    box-shadow: none;
+  }
+  .um .um-karte--n1 {
+    grid-area: n1;
+    align-self: start;
+    justify-self: end;
+  }
+  .um .um-karte--n3 {
+    grid-area: n3;
+    align-self: start;
+  }
+  .um .um-karte--n4 {
+    grid-area: n4;
+    align-self: end;
+    justify-self: end;
+  }
+  .um .um-karte--n2 {
+    grid-area: n2;
+    align-self: end;
+  }
+  .um .um-grid .um-karte--n0 {
+    grid-area: n0;
+    justify-self: center;
+    align-items: center;
+    max-width: 460px;
+    margin-top: 4px;
+    text-align: center;
+  }
+  .um .um-grid .um-karte-kopf {
+    flex-wrap: nowrap;
+    color: #fff;
+    font-size: 19px;
+  }
+  .um .um-grid .um-karte-titel {
+    flex-basis: auto;
+    order: 0;
+  }
+  .um .um-grid .um-karte--n0 .um-karte-kopf {
+    justify-content: center;
+    width: auto;
+  }
+  .um .um-grid .um-karte-marke {
+    margin-left: 4px;
+    border-color: rgba(196, 185, 255, 0.4);
+    background: rgba(196, 185, 255, 0.14);
+    color: #d6ceff;
+  }
+  .um .um-grid .um-karte-text {
+    color: rgba(226, 230, 255, 0.78);
+  }
+  .um .um-grid .um-einfach {
+    border-top-color: rgba(255, 255, 255, 0.14);
+    color: #fff;
+  }
+  .um .um-grid .um-einfach strong {
+    color: #c4b9ff;
+  }
+  .um .um-grid .um-mehr {
+    color: #c4b9ff;
+  }
+  .um .um-grid .um-karte--n0 .um-mehr {
+    align-self: center;
+  }
+}
+
+/* KE Frästechnik: sehr breites Logo, deshalb höher und breiter als die anderen */
+.kd-erg-logo--ke-fraestechnik {
+  height: 30px !important;
+  width: auto !important;
+  max-width: 100% !important;
+}
+
+/* ------------------------------------------------------------ Bildfenster mit Lukas und Jannik (07.10.2026) */
+
+.ff {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  background: #0b0b10;
+}
+.ff img {
+  object-fit: cover;
+}
+.ff-platzhalter {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  padding: 20px;
+  text-align: center;
+  background:
+    radial-gradient(80% 60% at 50% 35%, rgba(106, 85, 255, 0.42), transparent 70%),
+    linear-gradient(180deg, #14142a, var(--b-dunkel, #080a1d));
+}
+.ff-personen {
+  width: min(62%, 220px);
+  height: auto;
+}
+.ff-namen {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+}
+.ff-hinweis {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Nächster Schritt: das Foto füllt die ganze helle Fläche links */
+html .nx-bild {
+  padding: 0;
+  overflow: visible;
+}
+html .nx-bild .nx-foto {
+  position: absolute;
+  inset: 0;
+}
+.nx-siegel {
+  position: absolute;
+  z-index: 2;
+  right: 18px;
+  bottom: 18px;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 10px 24px -10px rgba(11, 11, 14, 0.55);
+}
+.nx-siegel img {
+  width: 24px !important;
+  height: auto;
+}
+
+/* Handy/Tablet: Foto im nächsten Schritt höher, Siegel kleiner (deckt keinen Text ab) */
+@media (max-width: 899px) {
+  html .nx-bild {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+  .nx-siegel {
+    width: 48px;
+    height: 48px;
+    right: 12px;
+    bottom: 12px;
+  }
+  .nx-siegel img {
+    width: 18px !important;
+  }
+  .nx-bild .ff-namen {
+    font-size: 14px;
+  }
+}

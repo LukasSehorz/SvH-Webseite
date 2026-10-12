@@ -1,37 +1,27 @@
 import type { MetadataRoute } from "next";
+import { aktuelles } from "./copy";
 
-/* Die Adresse der veroeffentlichten Seite. Sie traegt einen Bindestrich
-   zwischen svh und consult, und genau diese Schreibweise antwortet auf
-   Netlify. Ohne Bindestrich liegt eine fremde Platzhalterseite, mit der
-   Endung consulting antwortet gar nichts. Die Mailadressen laufen
-   dagegen ueber svhconsult.de ohne Bindestrich, das ist kein Versehen
-   und steht in content.ts erklaert. */
+/* Adresse der veröffentlichten Seite (mit Bindestrich). Die Rechtsseiten waren
+   auf der alten Seite nicht auf noindex gesetzt und stehen deshalb mit
+   niedriger Priorität in der Liste.
+   Feste Daten statt new Date(), damit nicht jeder Build alle Seiten als
+   geändert meldet. Bei inhaltlicher Änderung einer Seite hier nachtragen. */
 const BASE = "https://svh-consult.de";
 
+const STAND = {
+  start: "2026-10-06", // helle Landingpage (ehemals Variante B) ist die einzige Startseite
+  recht: "2026-09-29", // Rechtstexte von der alten Seite übernommen
+};
+
+// /aktuelles gilt als geändert, sobald ein neues Video oben in der Liste steht
+const neuestesVideo = aktuelles.videos.reduce((a, v) => (v.datumIso > a ? v.datumIso : a), "");
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const paths = [
-    { path: "/", priority: 1 },
-    { path: "/ki", priority: 0.9 },
-    { path: "/marketing", priority: 0.9 },
-    { path: "/marketing/webseiten", priority: 0.8 },
-    { path: "/marketing/social-media", priority: 0.8 },
-    /* /marketing/werbetafeln fehlt hier seit dem 03.09.2026 mit Absicht.
-       Die Tafeln werden vorerst nicht angeboten, die Seite ist aus allen
-       Verweisen genommen und traegt selbst die Anweisung noindex. */
-    { path: "/aktuelles", priority: 0.7 },
-    { path: "/ueber-uns", priority: 0.7 },
-    { path: "/kontakt", priority: 0.8 },
-    { path: "/impressum", priority: 0.2 },
-    { path: "/datenschutz", priority: 0.2 },
-    { path: "/agb", priority: 0.2 },
+  return [
+    { url: `${BASE}/`, lastModified: STAND.start, changeFrequency: "weekly", priority: 1 },
+    { url: `${BASE}/aktuelles`, lastModified: neuestesVideo || STAND.start, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${BASE}/impressum`, lastModified: STAND.recht, changeFrequency: "yearly", priority: 0.2 },
+    { url: `${BASE}/datenschutz`, lastModified: STAND.recht, changeFrequency: "yearly", priority: 0.2 },
+    { url: `${BASE}/agb`, lastModified: STAND.recht, changeFrequency: "yearly", priority: 0.2 },
   ];
-
-  const lastModified = new Date();
-
-  return paths.map(({ path, priority }) => ({
-    url: BASE + path,
-    lastModified,
-    changeFrequency: "monthly" as const,
-    priority,
-  }));
 }

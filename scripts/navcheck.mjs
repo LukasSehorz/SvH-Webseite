@@ -1,0 +1,41 @@
+// Leiste über Chaos (mobil, Hochscrollen), über Spielzug (1440×900), CTA-Leiste am Fahrplan-Ende
+import { chromium } from "playwright";
+const out = "../review/bau-runde2/A/A-integration";
+(await import("node:fs")).mkdirSync(out, { recursive: true });
+const b = await chromium.launch();
+const go = async (p, y) => { const from = await p.evaluate(() => scrollY); const st = y > from ? 160 : -160; for (let v = from; st > 0 ? v < y : v > y; v += st) { await p.evaluate((q) => scrollTo(0, q), v); await p.waitForTimeout(45); } await p.evaluate((q) => scrollTo(0, q), y); };
+// mobil
+const m = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+await m.addInitScript(() => localStorage.setItem("svh-einwilligung", "notwendig"));
+const p = await m.newPage();
+await p.goto("http://localhost:3200/", { waitUntil: "networkidle" });
+await p.waitForTimeout(2000);
+const ch = await p.evaluate(() => document.getElementById("problem").getBoundingClientRect().top + scrollY);
+await go(p, ch + 1400);
+await p.waitForTimeout(800);
+await p.screenshot({ path: `${out}/390-chaos-runter.png` });
+await go(p, ch + 1100);
+await p.waitForTimeout(900);
+await p.screenshot({ path: `${out}/390-chaos-hoch.png` });
+const fp = await p.evaluate(() => { const s = document.getElementById("fahrplan"); return s.getBoundingClientRect().bottom + scrollY; });
+await go(p, fp - 844 + 40);
+await p.waitForTimeout(1200);
+await p.screenshot({ path: `${out}/390-fahrplan-ende.png` });
+console.log("CTA-Leiste am Fahrplan-Ende sichtbar:", await p.evaluate(() => document.querySelector(".mcta").dataset.show), "· Inline-Knöpfe im Bild:", await p.evaluate(() => [...document.querySelectorAll("main [data-cta-inline]")].filter((e) => { const r = e.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0; }).length));
+await m.close();
+// Desktop Spielzug: Leiste eingeblendet über der H2
+const d = await b.newContext({ viewport: { width: 1440, height: 900 } });
+await d.addInitScript(() => localStorage.setItem("svh-einwilligung", "notwendig"));
+const q = await d.newPage();
+await q.goto("http://localhost:3200/", { waitUntil: "networkidle" });
+await q.waitForTimeout(2000);
+const sz = await q.evaluate(() => document.getElementById("fahrplan").getBoundingClientRect().top + scrollY);
+await go(q, sz + 400);
+await q.waitForTimeout(600);
+await go(q, sz + 300);
+await q.waitForTimeout(900);
+await q.screenshot({ path: `${out}/1440-spielzug-leiste.png`, clip: { x: 0, y: 0, width: 1440, height: 160 } });
+await go(q, sz + 900);
+await q.waitForTimeout(1200);
+await q.screenshot({ path: `${out}/1440-leiste-weg.png`, clip: { x: 0, y: 0, width: 1440, height: 160 } });
+await b.close();

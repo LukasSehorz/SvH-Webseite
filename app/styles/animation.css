@@ -1,0 +1,268 @@
+/* =====================================================================
+   Animationen
+   Regel seit Runde 3 („Apple-Ruhe, aber keine tote Seite“): Bewegung nur mit Bedeutung.
+   - Einmal: Auftritt beim Laden (Hero), Einblenden beim ersten Erscheinen (data-rv, Reveal.tsx),
+     Lichtkante über den Knopf, „Ameisen“ auf den Linien, Pfeil am Zahnrad-Link (3 Mal).
+   - Endlos nur, wo die Bewegung die Aussage ist: Zahnräder (bausteine.css), Szenen der Lösungen
+     (loesungen.css), Lichtimpuls und Start-Ring im ∞ (hier, langsam).
+   - Beim Drüberfahren: Karten, Logos, Knöpfe.
+   Gestrichen (Endlosschleifen ohne Bedeutung): fließender Verlauf in Verlaufswörtern und Trust-Leiste,
+   schwebende Elemente (Laptop, Bild „Nächster Schritt“, Figuren), wackelndes Männchen, hüpfende
+   Play-Symbole und Preise, pulsierende Ringe am Video, wippende Pfeile im Workshop.
+   „Bewegung reduzieren“ im System stoppt alles (globals.css).
+   ===================================================================== */
+
+@keyframes b-rein {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+@keyframes b-zeichnen {
+  from {
+    stroke-dashoffset: 30;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+/* Lichtkante: läuft einmal von rechts nach links über den Knopf */
+@keyframes b-glanz {
+  from {
+    background-position: 130% 0;
+  }
+  to {
+    background-position: -40% 0;
+  }
+}
+/* „Ameisenstraße“: die Striche laufen drei Schritte (3 × 19 px) in Pfeilrichtung und bleiben stehen */
+@keyframes b-ameisen {
+  from {
+    stroke-dashoffset: 57;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes b-runter {
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+/* ------------------------------------------------------------ Hero: Auftritt beim Laden */
+
+/* Zielgruppe, Überschrift, Unterzeile und Google-Siegel stehen sofort da: Deckkraft 0 beim Start
+   verzögerte das größte Element (LCP) am Handy auf 4,2 s. Nur Video, Haken und Knopf gleiten herein. */
+.hb-video,
+.hb-punkte li,
+.hb-cta {
+  animation: b-rein 0.8s var(--ease) backwards;
+}
+.hb-video {
+  animation-delay: 0.12s;
+}
+.hb-punkte li:nth-child(1) {
+  animation-delay: 0.34s;
+}
+.hb-punkte li:nth-child(2) {
+  animation-delay: 0.44s;
+}
+.hb-punkte li:nth-child(3) {
+  animation-delay: 0.54s;
+}
+.hb-punkte li:nth-child(4) {
+  animation-delay: 0.64s;
+}
+.hb-cta {
+  animation-delay: 0.78s;
+}
+/* Haken zeichnen sich nacheinander */
+.hb-punkte .b-haken path {
+  stroke-dasharray: 30;
+  animation: b-zeichnen 0.6s var(--ease) backwards;
+}
+.hb-punkte li:nth-child(1) .b-haken path {
+  animation-delay: 0.6s;
+}
+.hb-punkte li:nth-child(2) .b-haken path {
+  animation-delay: 0.72s;
+}
+.hb-punkte li:nth-child(3) .b-haken path {
+  animation-delay: 0.84s;
+}
+.hb-punkte li:nth-child(4) .b-haken path {
+  animation-delay: 0.96s;
+}
+/* Play-Knopf: ruhig (der feste Ring steht in hero.css), wächst nur beim Drüberfahren */
+.hb-play {
+  position: relative;
+  transition: transform 0.35s var(--ease);
+}
+.hb-video:hover .hb-play {
+  transform: scale(1.08);
+}
+
+/* ------------------------------------------------------------ Knöpfe: Lichtkante einmal */
+
+/* Einmal, wenn der Knopf erscheint, und wieder beim Drüberfahren (Übergang in nav.css).
+   Knöpfe in einer Einblend-Gruppe warten, bis die Gruppe im Bild ist. */
+.btn-primary::after {
+  animation: b-glanz 1.2s var(--ease) 0.6s backwards;
+}
+[data-rv]:not([data-rv="in"]) .btn-primary::after {
+  animation: none;
+}
+.hb-cta .btn-primary::after {
+  animation-delay: 1.5s;
+}
+
+/* ------------------------------------------------------------ Logo-Kasten */
+
+.kl-logo img {
+  transition: transform 0.35s var(--ease);
+}
+.kl-logo:hover img {
+  transform: scale(1.08);
+}
+
+/* ------------------------------------------------------------ Problem → Lösung */
+
+/* Linien und Pfeil: die „Ameisen“ laufen einmal in Pfeilrichtung, sobald die Studien im Bild sind */
+.pv-verbinder svg path {
+  stroke-dasharray: 11 8;
+}
+.pv-boxen:has(> [data-rv="in"]) + .pv-verbinder svg path {
+  animation: b-ameisen 2.4s var(--ease) 0.2s backwards;
+}
+.pv-box,
+.pv-kasten {
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.4s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+.pv-box:hover,
+.pv-kasten:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 2px 0 rgba(106, 85, 255, 0.45),
+    0 26px 48px -20px rgba(60, 40, 180, 0.45);
+}
+
+/* ------------------------------------------------------------ Unendlichkeitszeichen: Lichtimpuls */
+
+/* Ein Glanz läuft ruhig das Band entlang (zeigt: alles greift ineinander). Ohne Weichzeichner:
+   zwei Schichten (Unendlich.tsx) im Modus „weiches Licht“ hellen das Band nur auf, statt einen weißen
+   Fleck daraufzulegen. --v rückt den schmalen Kern in die Mitte des breiten Scheins. */
+.um-impuls {
+  opacity: 0.7;
+  mix-blend-mode: soft-light;
+}
+.um-impuls path {
+  stroke-dashoffset: calc((var(--l) - var(--v, 0)) * 1px);
+  animation: um-lauf 12s linear infinite;
+}
+@keyframes um-lauf {
+  to {
+    stroke-dashoffset: calc(var(--v, 0) * -1px);
+  }
+}
+/* Start-Knopf: ein feiner Ring geht langsam nach außen, dann lange Ruhe (zeigt: hier geht es los) */
+.um-start::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  animation: um-ring 6.5s var(--ease) 1s infinite;
+  pointer-events: none;
+}
+@keyframes um-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  40%,
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+/* Karten heben sich beim Drüberfahren leicht an (eigene Eigenschaft, stört das Einblenden nicht) */
+.um-karte {
+  transition:
+    opacity 0.7s var(--ease) calc(var(--d, 0) * 90ms),
+    transform 0.7s var(--ease) calc(var(--d, 0) * 90ms),
+    translate 0.4s var(--ease),
+    box-shadow 0.4s var(--ease);
+}
+@media (hover: hover) {
+  .um-karte:hover {
+    translate: 0 -3px;
+    box-shadow:
+      inset 0 1px 0 #fff,
+      0 1px 2px rgba(11, 11, 14, 0.04),
+      0 24px 46px -24px rgba(60, 40, 180, 0.42);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .um-start::before {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------ Workshop */
+
+.wf-karte {
+  transition:
+    transform 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+.wf-karte:hover {
+  transform: translateY(-3px);
+}
+
+/* ------------------------------------------------------------ Masterplan, Kunden, Gründer, Nächster Schritt */
+
+.kd-karte,
+.ak-li-link {
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.4s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+.kd-karte:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 1px 2px rgba(11, 11, 14, 0.04),
+    0 24px 46px -24px rgba(60, 40, 180, 0.4);
+}
+.kd-logo img {
+  transition: transform 0.4s var(--ease);
+}
+.kd-karte:hover .kd-logo img {
+  transform: scale(1.06);
+}
+.uu-foto img,
+.uu-foto-initialen {
+  transition: transform 0.6s var(--ease);
+}
+.uu-gruender-eintrag:hover .uu-foto img,
+.uu-gruender-eintrag:hover .uu-foto-initialen {
+  transform: scale(1.05);
+}
+/* Play-Symbol der Videos: wächst nur beim Drüberfahren */
+.ak-play {
+  transition: transform 0.35s var(--ease);
+}
+a:hover .ak-play {
+  transform: scale(1.08);
+}
+
+/* ------------------------------------------------------------ Fragen: Antwort gleitet auf */
+
+.fr-item[open] .fr-antwort {
+  animation: b-rein 0.4s var(--ease);
+}

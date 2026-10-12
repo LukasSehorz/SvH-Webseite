@@ -1,0 +1,1192 @@
+/* =====================================================================
+   KI-Masterplan (components/b/Masterplan.tsx + MasterplanDokument.tsx), neu seit 06.10.2026.
+   Dunkle Bühne über die volle Breite, Licht in Markenfarben von oben. Der Plan ist ein gezeichnetes
+   Druckstück: Deckblatt mit Siegel hinten, drei Seiten davor aufgefächert.
+   Maße im Dokument: .mpd ist ein Container; jede Seite steht in cqi (Anteil der Dokumentbreite) und rechnet
+   ihre Schrift aus der eigenen Breite (--b / 24). Innen ist alles in em, so skaliert jede Seite als Ganzes.
+   Bewegung einmalig beim Erscheinen (data-rv, Reveal.tsx), nur translate/rotate/scale/opacity.
+   Ohne JavaScript und bei „Bewegung reduzieren“ steht der fertige Zustand da (Ausgangslagen nur unter html.rv-an).
+   ===================================================================== */
+
+.mp {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: clamp(96px, 8.4vw, 124px) clamp(88px, 7vw, 104px);
+  background: var(--b-dunkel);
+  color: #fff;
+  /* Sprung aus dem Menü: die dunkle Bühne beginnt oben am Fensterrand, die Leiste schwebt darüber */
+  scroll-margin-top: -88px;
+}
+/* Licht von oben: ein breiter, sehr weicher Kegel in Markenfarben, dazu ein Hauch Blau links und Violett rechts */
+.mp::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 auto;
+  height: min(1100px, 100%);
+  background:
+    radial-gradient(42% 46% at 50% 0%, rgba(106, 85, 255, 0.3) 0%, rgba(106, 85, 255, 0) 100%),
+    radial-gradient(30% 34% at 32% 0%, rgba(63, 116, 255, 0.2) 0%, rgba(63, 116, 255, 0) 100%),
+    radial-gradient(30% 34% at 68% 0%, rgba(140, 109, 255, 0.16) 0%, rgba(140, 109, 255, 0) 100%);
+  pointer-events: none;
+}
+/* feine Lichtkante ganz oben (wie die Oberkante einer Glasplatte) */
+.mp::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(140, 109, 255, 0) 10%, rgba(170, 160, 255, 0.45) 50%, rgba(140, 109, 255, 0) 90%);
+  pointer-events: none;
+}
+.mp-wrap {
+  /* etwas breiter als die übrigen Sektionen: Platz für die Anmerkungen links und rechts vom Dokument */
+  max-width: calc(1280px + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ------------------------------------------------------------ Kopf */
+
+.mp-kopf {
+  max-width: 880px;
+  margin-inline: auto;
+  text-align: center;
+}
+.mp-label {
+  color: #aab5ff;
+}
+.mp-titel {
+  margin-top: 18px;
+  font-family: var(--font-display);
+  font-size: clamp(46px, 6.2vw, 88px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: #fff;
+}
+/* Verlaufswort auf Dunkel: hellere Stufen derselben Markenfarben (Kontrast) */
+.mp-titel .b-grad {
+  background: linear-gradient(92deg, #7f9fff 0%, #9d88ff 55%, #c3b0ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  /* Unterlänge des „p“ nicht abschneiden; „KI-Masterplan“ bricht nie am Bindestrich */
+  padding-bottom: 0.08em;
+  white-space: nowrap;
+}
+.mp-unter {
+  margin-top: 20px;
+  font-family: var(--font-display);
+  font-size: clamp(21px, 2vw, 29px);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  color: rgba(226, 230, 255, 0.82);
+}
+.mp-intro {
+  margin-top: 14px;
+  font-size: clamp(16px, 1.2vw, 18px);
+  line-height: 1.55;
+  color: rgba(226, 230, 255, 0.64);
+}
+
+/* ------------------------------------------------------------ Bühne: Dokument + Anmerkungen */
+
+.mp-buehne {
+  position: relative;
+  margin-top: clamp(64px, 5.4vw, 76px);
+}
+.mp-figur {
+  margin: 0;
+}
+.mp-beispiel {
+  margin-top: 20px;
+  font-size: 13px;
+  line-height: 1.4;
+  text-wrap: balance;
+  letter-spacing: 0.01em;
+  text-align: center;
+  color: rgba(226, 230, 255, 0.6);
+}
+
+/* ---------- Das Dokument */
+
+.mpd {
+  /* Lage der Blätter (Desktop/Tablet): Deckblatt hinten mittig, Seite 1 vorne, 2 und 3 links und rechts */
+  --deck-x: 30cqi;
+  --deck-y: 1cqi;
+  --deck-b: 40cqi;
+  --deck-r: -2.5deg;
+  --s1-x: 33.5cqi;
+  --s1-y: 22cqi;
+  --s1-r: 0deg;
+  --s2-x: 3cqi;
+  --s2-y: 39cqi;
+  --s2-r: -7deg;
+  --s3-x: 64cqi;
+  --s3-y: 39cqi;
+  --s3-r: 7deg;
+  --seite-b: 33cqi;
+  /* Siegel: auf der rechten oberen Ecke des Deckblatts */
+  --sg-x: 61cqi;
+  --sg-y: -4cqi;
+  --sg-b: 17.5cqi;
+  --sg-r: 12deg;
+  /* Stapel, aus dem die Blätter auffächern */
+  --stapel-x: 33.5cqi;
+  --stapel-y: 22cqi;
+
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  margin-inline: auto;
+  aspect-ratio: 100 / 89;
+  container-type: inline-size;
+}
+/* weiches Licht unter dem Papier, wie eine Tischlampe */
+.mpd::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -6% -22% -14%;
+  background: radial-gradient(closest-side, rgba(106, 85, 255, 0.26) 0%, rgba(63, 116, 255, 0.1) 55%, rgba(63, 116, 255, 0) 100%);
+  pointer-events: none;
+}
+
+.mpd-blatt {
+  position: absolute;
+  z-index: var(--z, 1);
+  left: var(--x);
+  top: var(--y);
+  width: var(--b);
+  aspect-ratio: 1 / 1.4142;
+  overflow: hidden;
+  padding: 1.9em;
+  border-radius: 0.32em;
+  font-family: var(--font-sans);
+  font-size: calc(var(--b) / 24);
+  line-height: 1.3;
+  color: #10132b;
+  background: linear-gradient(180deg, #ffffff 0%, #fcfcff 55%, #f6f7fc 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(16, 19, 43, 0.04),
+    0 0.15em 0.35em rgba(4, 5, 18, 0.28),
+    0 1.6em 3.2em -1em rgba(4, 5, 18, 0.65),
+    0 3.6em 6em -3em rgba(30, 20, 110, 0.55);
+  rotate: var(--r);
+  transition:
+    translate 1.05s var(--ease) calc(0.08s + var(--i, 0) * 70ms),
+    rotate 1.05s var(--ease) calc(0.08s + var(--i, 0) * 70ms),
+    scale 0.45s var(--ease);
+}
+.mpd-blatt p {
+  margin: 0;
+}
+.mpd-blatt--deck {
+  --x: var(--deck-x);
+  --y: var(--deck-y);
+  --b: var(--deck-b);
+  --r: var(--deck-r);
+  --z: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Deckblatt etwas feiner gesetzt als die Innenseiten */
+  font-size: calc(var(--b) / 26);
+  padding: 1.75em 1.8em;
+  text-align: center;
+  /* darunter liegen weitere Seiten: der Plan ist ein dickes Dokument, kein Einzelblatt */
+  box-shadow:
+    inset 0 0 0 1px rgba(16, 19, 43, 0.04),
+    0.22em 0.26em 0 -0.04em #e6e8f1,
+    0.44em 0.52em 0 -0.08em #d5d8e6,
+    0.66em 0.78em 0 -0.12em #c3c7da,
+    0 1.6em 3.2em -1em rgba(4, 5, 18, 0.65),
+    0 3.6em 6em -3em rgba(30, 20, 110, 0.55);
+}
+.mpd-blatt--1 {
+  --x: var(--s1-x);
+  --y: var(--s1-y);
+  --b: var(--seite-b);
+  --r: var(--s1-r);
+  --z: 4;
+}
+.mpd-blatt--2 {
+  --x: var(--s2-x);
+  --y: var(--s2-y);
+  --b: var(--seite-b);
+  --r: var(--s2-r);
+  --z: 2;
+}
+.mpd-blatt--3 {
+  --x: var(--s3-x);
+  --y: var(--s3-y);
+  --b: var(--seite-b);
+  --r: var(--s3-r);
+  --z: 3;
+}
+
+/* ---------- Deckblatt */
+
+.mpd-deck-kante {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 0.38em;
+  background: linear-gradient(92deg, #3f74ff 0%, #6a55ff 55%, #8c6dff 100%);
+}
+.mpd-mono {
+  display: block;
+  width: auto;
+  height: 3.1em;
+}
+.mpd-deck-titel {
+  margin-top: 0.7em !important;
+  font-family: var(--font-display);
+  font-size: 2.45em;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: #0b0d24;
+}
+.mpd-deck-fuer {
+  margin-top: 0.45em !important;
+  font-size: 1.05em;
+  color: #4a4d66;
+}
+.mpd-deck-strich {
+  width: 2.6em;
+  height: 0.14em;
+  margin-top: 0.85em;
+  border-radius: 99em;
+  background: linear-gradient(92deg, #3f74ff, #8c6dff);
+}
+.mpd-deck-von {
+  margin-top: 0.75em !important;
+  font-size: 0.62em;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #6b6e86;
+}
+/* dezenter Verlauf im unteren Teil des Deckblatts */
+.mpd-deck-licht {
+  position: absolute;
+  inset: auto 0 0;
+  height: 52%;
+  background:
+    radial-gradient(90% 80% at 85% 100%, rgba(140, 109, 255, 0.2) 0%, rgba(140, 109, 255, 0) 70%),
+    radial-gradient(80% 70% at 10% 100%, rgba(63, 116, 255, 0.16) 0%, rgba(63, 116, 255, 0) 70%);
+  pointer-events: none;
+}
+
+/* ---------- Siegel „Wert 1.099 €“ (geprägte Medaille; „0 €“ erst im Preisblock) */
+
+.mpd-siegel {
+  position: absolute;
+  z-index: 6;
+  left: var(--sg-x);
+  top: var(--sg-y);
+  width: var(--sg-b);
+  aspect-ratio: 1;
+  rotate: var(--sg-r);
+  border-radius: 50%;
+  filter: drop-shadow(0 0.5cqi 1cqi rgba(4, 5, 18, 0.5));
+  transition:
+    scale 0.75s cubic-bezier(0.34, 1.45, 0.5, 1) 0.8s,
+    rotate 0.75s var(--ease) 0.8s,
+    opacity 0.3s linear 0.8s;
+}
+.mpd-siegel svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.mpd-siegel-ring {
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  fill: #dfe2ff;
+}
+.mpd-siegel-striche {
+  fill: none;
+  stroke: rgba(185, 165, 255, 0.45);
+  stroke-width: 3;
+  stroke-dasharray: 0.14 0.86;
+}
+.mpd-siegel-wert {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  fill: #aab5ff;
+}
+.mpd-siegel-betrag {
+  font-family: var(--font-display);
+  font-size: 29px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  fill: #fff;
+}
+
+/* ---------- Innenseiten: Kopf und Fuß */
+
+.mpd-kopf {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  padding-bottom: 1.05em;
+  border-bottom: 1px solid rgba(16, 19, 43, 0.08);
+}
+.mpd-nr {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.8em;
+  height: 1.8em;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 1em;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  background: linear-gradient(135deg, #3f74ff 0%, #6a55ff 55%, #8c6dff 100%);
+  box-shadow: 0 0.25em 0.6em -0.2em rgba(90, 67, 230, 0.65);
+}
+.mpd-kicker {
+  font-size: 0.6em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #5a43e6;
+}
+.mpd-titel {
+  margin-top: 0.15em !important;
+  font-family: var(--font-display);
+  font-size: 1.3em;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: #0b0d24;
+}
+.mpd-fuss {
+  position: absolute;
+  left: calc(1.9em / 0.56);
+  right: calc(1.9em / 0.56);
+  bottom: calc(1.25em / 0.56);
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.9em;
+  border-top: 1px solid rgba(16, 19, 43, 0.07);
+  font-size: 0.56em;
+  letter-spacing: 0.06em;
+  color: #8a8ca3;
+}
+.mpd-fuss-beispiel {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+.mpd-einheit {
+  font-size: 0.58em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8a8ca3;
+}
+
+/* ---------- Seite 1: Zeitfresser */
+
+.mpd-blatt--1 .mpd-einheit {
+  margin-top: 1.3em !important;
+}
+.mpd-balken {
+  display: grid;
+  gap: 1.12em;
+  margin: 0.9em 0 0;
+  padding: 0;
+  list-style: none;
+}
+.mpd-balken li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 0.4em;
+  font-size: 0.8em;
+  line-height: 1.2;
+}
+.mpd-b-name {
+  font-weight: 600;
+  color: #1a1d3a;
+}
+.mpd-b-wert {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #0b0d24;
+}
+.mpd-b-spur {
+  grid-column: 1 / -1;
+  height: 0.55em;
+  overflow: hidden;
+  border-radius: 99em;
+  background: #eceef6;
+}
+.mpd-b-fuell {
+  display: block;
+  width: calc(var(--w) * 100%);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #3f74ff 0%, #6a55ff 60%, #8c6dff 100%);
+  transform-origin: left center;
+  transition: transform 0.85s var(--ease) calc(0.45s + var(--j, 0) * 70ms);
+}
+.mpd-summe {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.7em !important;
+  padding: 0.8em 0.9em;
+  border-radius: 0.55em;
+  font-size: 0.8em;
+  color: #3b3e58;
+  background: linear-gradient(135deg, rgba(63, 116, 255, 0.08) 0%, rgba(140, 109, 255, 0.14) 100%);
+  box-shadow: inset 0 0 0 1px rgba(106, 85, 255, 0.12);
+}
+.mpd-summe strong {
+  font-weight: 800;
+  color: #4b36d6;
+}
+
+/* ---------- Seite 2: Top 3 */
+
+.mpd-top {
+  display: grid;
+  gap: 0.7em;
+  margin: 1.25em 0 0;
+  padding: 0;
+  list-style: none;
+}
+.mpd-top li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.7em;
+  padding: 0.8em 0.85em;
+  border-radius: 0.6em;
+  background: #fff;
+  box-shadow:
+    inset 0 0 0 1px rgba(16, 19, 43, 0.08),
+    0 0.2em 0.5em -0.25em rgba(16, 19, 43, 0.16);
+}
+.mpd-top-rang {
+  display: grid;
+  place-items: center;
+  width: 1.55em;
+  height: 1.55em;
+  border-radius: 0.45em;
+  font-family: var(--font-display);
+  font-size: 0.8em;
+  font-weight: 800;
+  color: #5a43e6;
+  background: #f0eeff;
+}
+.mpd-top-inhalt {
+  min-width: 0;
+}
+.mpd-top-titel {
+  font-size: 0.8em;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #0b0d24;
+}
+.mpd-top-spart {
+  display: inline-block;
+  margin-top: 0.45em !important;
+  padding: 0.25em 0.6em;
+  border-radius: 99em;
+  font-size: 0.66em;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(92deg, #3f74ff 0%, #6a55ff 60%, #8c6dff 100%);
+}
+.mpd-top-meta {
+  margin-top: 0.55em !important;
+  font-size: 0.6em;
+  color: #6b6e86;
+}
+.mpd-top-aufwand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.mpd-punkte {
+  display: inline-flex;
+  gap: 0.25em;
+}
+.mpd-punkte i {
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background: #dcdeea;
+}
+.mpd-punkte--1 i:nth-child(1),
+.mpd-punkte--2 i:nth-child(-n + 2) {
+  background: #6a55ff;
+}
+.mpd-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em;
+  margin-top: 0.5em !important;
+}
+.mpd-chips span {
+  padding: 0.2em 0.6em;
+  border-radius: 99em;
+  font-size: 0.58em;
+  font-weight: 600;
+  color: #3b3e58;
+  background: #f3f4f9;
+  box-shadow: inset 0 0 0 1px rgba(16, 19, 43, 0.08);
+}
+
+/* ---------- Seite 3: Fahrplan */
+
+/* Kopf mit der Nummer rechts: die Anmerkung ③ zeigt am Desktop von rechts auf sie */
+.mpd-blatt--3 .mpd-kopf {
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+.mpd-weg {
+  position: relative;
+  display: grid;
+  gap: 1.2em;
+  margin: 1.45em 0 0;
+  padding: 0 0 0 1.7em;
+  list-style: none;
+}
+/* senkrechte Linie durch die Punkte */
+.mpd-weg::before {
+  content: "";
+  position: absolute;
+  left: 0.42em;
+  top: 0.5em;
+  bottom: 1.6em;
+  width: 0.12em;
+  border-radius: 99em;
+  background: linear-gradient(180deg, #3f74ff 0%, #8c6dff 100%);
+  opacity: 0.35;
+}
+.mpd-weg li {
+  position: relative;
+}
+.mpd-weg-punkt {
+  position: absolute;
+  left: -1.7em;
+  top: 0.02em;
+  width: 0.96em;
+  height: 0.96em;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: inset 0 0 0 0.2em #6a55ff;
+}
+.mpd-weg-start .mpd-weg-punkt {
+  background: linear-gradient(135deg, #3f74ff, #8c6dff);
+  box-shadow: 0 0 0 0.25em rgba(106, 85, 255, 0.16);
+}
+.mpd-weg-wann {
+  font-size: 0.58em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #5a43e6;
+}
+.mpd-weg-was {
+  margin-top: 0.25em !important;
+  font-size: 0.8em;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #0b0d24;
+}
+.mpd-weg-wie {
+  margin-top: 0.2em !important;
+  font-size: 0.64em;
+  color: #6b6e86;
+}
+.mpd-werkzeuge {
+  margin-top: 1.5em;
+  padding-top: 1.1em;
+  border-top: 1px dashed rgba(16, 19, 43, 0.12);
+}
+
+/* ---------- Anmerkungen ① ② ③ (echter Text) */
+
+.mp-punkte {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mp-punkt-titel {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 26px;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+.mp-punkt-nr {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  background: linear-gradient(135deg, #3f74ff 0%, #6a55ff 55%, #8c6dff 100%);
+  box-shadow: 0 6px 16px -6px rgba(106, 85, 255, 0.9);
+}
+.mp-punkt-satz {
+  margin-top: 6px;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: rgba(226, 230, 255, 0.7);
+  text-wrap: pretty;
+}
+.mp-punkt-linie {
+  display: none;
+}
+
+/* Desktop: Anmerkungen links und rechts ums Dokument, feine Linie bis kurz vor die Nummer im Dokument.
+   Jede Anmerkung spannt vom Text bis zum Ziel (Ziel in % des Dokuments, aus der Lage der Blätter oben gerechnet). */
+@media (min-width: 1320px) {
+  .mp-buehne {
+    container-type: inline-size;
+    --luft: 28px;
+    --anm: clamp(192px, calc((100cqi - 760px) / 2 - var(--luft)), 250px);
+    --dok: min(780px, calc(100cqi - 2 * (var(--anm) + var(--luft))));
+  }
+  .mpd {
+    width: var(--dok);
+    max-width: none;
+  }
+  /* liegt deckungsgleich über dem Dokument (gleiche Breite, gleiches Seitenverhältnis) */
+  .mp-punkte {
+    position: absolute;
+    top: 0;
+    left: calc(50% - var(--dok) / 2);
+    width: var(--dok);
+    aspect-ratio: 100 / 89;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .mp-punkt {
+    position: absolute;
+    display: flex;
+    align-items: flex-start;
+    /* erste Titelzeile (26 px) mittig auf der Ziellinie */
+    top: calc(var(--ty) - 13px);
+    pointer-events: auto;
+  }
+  .mp-punkt-text {
+    flex: none;
+    width: var(--anm);
+  }
+  .mp-punkt-linie {
+    position: relative;
+    display: block;
+    flex: 1;
+    height: 1px;
+    margin-top: 12.5px;
+    background: linear-gradient(90deg, rgba(170, 181, 255, 0.28) 0%, rgba(150, 130, 255, 0.95) 100%);
+    transform-origin: left center;
+    transition: transform 0.7s var(--ease) calc(0.75s + var(--d, 0) * 110ms);
+  }
+  .mp-punkt-ziel {
+    position: absolute;
+    right: -3px;
+    top: -3px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #8c6dff;
+    box-shadow: 0 0 0 3px rgba(140, 109, 255, 0.22);
+    transition: opacity 0.3s linear calc(1.3s + var(--d, 0) * 110ms);
+  }
+  /* links: Text rechtsbündig, die Linie wächst aus der Titelzeile nach rechts */
+  .mp-punkt--1,
+  .mp-punkt--2 {
+    left: calc(-1 * (var(--anm) + var(--luft)));
+    width: calc(var(--anm) + var(--luft) + var(--tx));
+    text-align: right;
+  }
+  /* Nummer immer an der Linie: links steht sie hinter dem Titel */
+  .mp-punkt--1 .mp-punkt-titel,
+  .mp-punkt--2 .mp-punkt-titel {
+    flex-direction: row-reverse;
+  }
+  .mp-punkt--1 .mp-punkt-linie,
+  .mp-punkt--2 .mp-punkt-linie {
+    margin-left: 14px;
+  }
+  /* rechts: gespiegelt */
+  .mp-punkt--3 {
+    left: var(--tx);
+    width: calc(100% - var(--tx) + var(--luft) + var(--anm));
+    flex-direction: row-reverse;
+  }
+  .mp-punkt--3 .mp-punkt-linie {
+    margin-right: 14px;
+    background: linear-gradient(270deg, rgba(170, 181, 255, 0.28) 0%, rgba(150, 130, 255, 0.95) 100%);
+    transform-origin: right center;
+  }
+  .mp-punkt--3 .mp-punkt-ziel {
+    right: auto;
+    left: -3px;
+  }
+  /* Ziele: Nummern im Dokument (x = Kante der Nummer, y = ihre Mitte), Dokument 100 × 89 */
+  .mp-punkt--1 {
+    --tx: 35.4%;
+    --ty: 29.5%;
+  }
+  .mp-punkt--2 {
+    --tx: 2.6%;
+    --ty: 50.5%;
+  }
+  .mp-punkt--3 {
+    --tx: 97.4%;
+    --ty: 50.5%;
+  }
+  /* Zeigt man auf eine Anmerkung, hebt sich ihre Seite leicht an und die Linie leuchtet */
+  @media (hover: hover) {
+    .mp-buehne:has(.mp-punkt--1:hover) .mpd-blatt--1,
+    .mp-buehne:has(.mp-punkt--2:hover) .mpd-blatt--2,
+    .mp-buehne:has(.mp-punkt--3:hover) .mpd-blatt--3 {
+      scale: 1.03;
+    }
+    .mp-punkt:hover .mp-punkt-linie {
+      filter: brightness(1.35);
+    }
+  }
+}
+
+/* Tablet: Liste in drei Spalten unter dem Dokument */
+@media (min-width: 700px) and (max-width: 1319px) {
+  .mp-punkte {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+    max-width: 980px;
+    margin: 40px auto 0;
+  }
+  .mp-punkt {
+    padding-top: 18px;
+    border-top: 1px solid rgba(226, 230, 255, 0.12);
+  }
+}
+
+/* ------------------------------------------------------------ Wert, Knopf, Mikrozeile */
+
+.mp-wert {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 620px;
+  margin: clamp(32px, 2.8vw, 40px) auto 0;
+  text-align: center;
+}
+/* feine Lichtlinie als Übergang vom Dokument zum Wert */
+.mp-wert::before {
+  content: "";
+  width: min(240px, 60%);
+  height: 1px;
+  margin-bottom: clamp(32px, 3vw, 44px);
+  background: linear-gradient(90deg, rgba(140, 109, 255, 0) 0%, rgba(170, 160, 255, 0.5) 50%, rgba(140, 109, 255, 0) 100%);
+}
+.mp-wert-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #aab5ff;
+}
+.mp-wert-zeile {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 4px 18px;
+  margin-top: 12px;
+  font-family: var(--font-display);
+  line-height: 1;
+}
+/* Durchstreichung gedämpft hell (kein Rot, keine Rabatt-Anmutung); „0 €“ bleibt deutlich kleiner als die Überschrift */
+.mp-wert-alt {
+  font-size: clamp(22px, 1.9vw, 28px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: rgba(226, 230, 255, 0.5);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: rgba(226, 230, 255, 0.55);
+}
+.mp-wert-neu {
+  font-size: clamp(48px, 4.4vw, 64px);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  background: linear-gradient(180deg, #ffffff 30%, #c9bcff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-bottom: 0.04em;
+}
+.mp-wert-text {
+  margin-top: 14px;
+  max-width: 460px;
+  text-wrap: balance;
+  font-size: clamp(17px, 1.3vw, 19px);
+  line-height: 1.5;
+  color: rgba(226, 230, 255, 0.82);
+}
+.mp-cta {
+  margin-top: 30px;
+}
+.mp-mikro {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 20px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: rgba(226, 230, 255, 0.72);
+}
+.mp-mikro li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ------------------------------------------------------------ Handy */
+
+@media (max-width: 699px) {
+  .mp {
+    padding-block: 80px 64px;
+    /* am Handy landet der Sprung 24 px tiefer: das Label steht so unter dem weißen Auslauf der Leiste */
+    scroll-margin-top: -64px;
+  }
+  .mp-titel {
+    margin-top: 14px;
+    font-size: clamp(34px, 11.5vw, 52px);
+  }
+  .mp-unter {
+    margin-top: 16px;
+    font-size: 21px;
+  }
+  .mp-intro {
+    font-size: 16px;
+  }
+  .mp-buehne {
+    margin-top: 36px;
+  }
+  /* Deckblatt groß oben links, die drei Innenseiten kleiner daneben und darunter: liest sich als ein Dokument
+     mit Seiten. Das Dokument nutzt fast die ganze Bildschirmbreite (8 px Rand statt Seitenrand). */
+  .mpd {
+    --deck-x: 1cqi;
+    --deck-y: 1.5cqi;
+    --deck-b: 55cqi;
+    --deck-r: -3deg;
+    --s1-x: 54.5cqi;
+    --s1-y: 9cqi;
+    --s1-r: 3deg;
+    --s2-x: 3cqi;
+    --s2-y: 74cqi;
+    --s2-r: 2.5deg;
+    --s3-x: 52cqi;
+    --s3-y: 72.5cqi;
+    --s3-r: -2.5deg;
+    --seite-b: 44cqi;
+    --sg-x: 16cqi;
+    --sg-y: 39cqi;
+    --sg-b: 26cqi;
+    --sg-r: -8deg;
+    --stapel-x: 22cqi;
+    --stapel-y: 30cqi;
+    width: calc(100% + 2 * var(--gutter) - 16px);
+    max-width: 480px;
+    margin-inline: auto;
+    position: relative;
+    left: 50%;
+    translate: -50% 0;
+    aspect-ratio: 100 / 139;
+  }
+  /* Innenseiten: größere Schrift, Krümel (Schildchen, Meta-Zeilen, Fußzeilen) ausgeblendet */
+  .mpd-blatt {
+    font-size: calc(var(--b) / 19);
+    padding: 1.6em;
+  }
+  .mpd-blatt--deck {
+    font-size: calc(var(--b) / 22);
+  }
+  .mpd-kicker,
+  .mpd-einheit,
+  .mpd-fuss,
+  .mpd-top-meta,
+  .mpd-chips,
+  .mpd-weg-wie,
+  .mpd-werkzeuge {
+    display: none;
+  }
+  .mpd-deck-von {
+    font-size: 0.7em;
+  }
+  .mpd-kopf {
+    padding-bottom: 0.9em;
+  }
+  .mpd-balken {
+    gap: 0.75em;
+    margin-top: 1.1em;
+  }
+  .mpd-summe {
+    margin-top: 1.1em !important;
+  }
+  .mpd-top {
+    margin-top: 1.2em;
+    gap: 0.85em;
+  }
+  .mpd-top li {
+    padding: 0.95em 0.85em;
+  }
+  .mpd-top-titel {
+    font-size: 0.86em;
+  }
+  .mpd-top-spart {
+    margin-top: 0.55em !important;
+    font-size: 0.74em;
+  }
+  .mpd-weg {
+    gap: 1.9em;
+    margin-top: 1.6em;
+  }
+  .mpd-weg::before {
+    bottom: 1.2em;
+  }
+  .mpd-weg-wann {
+    font-size: 0.68em;
+  }
+  .mpd-weg-was {
+    font-size: 0.88em;
+  }
+  .mpd::before {
+    inset: -4% -14% -6%;
+  }
+  .mpd-blatt--1 {
+    --z: 2;
+  }
+  .mpd-blatt--2 {
+    --z: 3;
+  }
+  .mpd-blatt--3 {
+    --z: 4;
+  }
+  .mpd-blatt--3 .mpd-kopf {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  .mp-beispiel {
+    margin-top: 14px;
+  }
+  .mp-punkte {
+    margin-top: 24px;
+  }
+  .mp-punkt {
+    padding-block: 13px;
+    border-top: 1px solid rgba(226, 230, 255, 0.12);
+  }
+  .mp-punkt-satz {
+    margin-top: 4px;
+    font-size: 15px;
+  }
+  .mp-punkt:last-child {
+    padding-bottom: 0;
+  }
+  .mp-punkt-satz {
+    padding-left: 38px;
+  }
+  .mp-wert {
+    margin-top: 28px;
+  }
+  .mp-wert-alt {
+    font-size: 20px;
+  }
+  /* kleiner als die Überschrift (H2 am Handy 37–45 px) */
+  .mp-wert-neu {
+    font-size: clamp(30px, 9vw, 36px);
+  }
+  .mp-wert-text {
+    font-size: 16.5px;
+  }
+  .mp-wert::before {
+    margin-bottom: 28px;
+  }
+  /* Knopf volle Breite, Text in einer Zeile (Notfall: umbrechen) */
+  .mp-cta {
+    width: 100%;
+    margin-top: 26px;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+/* ------------------------------------------------------------ Bewegung beim Erscheinen */
+
+/* Ausgangslage: alle Blätter liegen auf einem Stapel, das Siegel ist noch nicht gestempelt,
+   die Balken sind leer, die Linien noch nicht gezogen. Nur mit JavaScript (html.rv-an). */
+html.rv-an .mp-buehne:not([data-rv="in"]) .mpd-blatt {
+  translate: calc(var(--stapel-x) - var(--x)) calc(var(--stapel-y) - var(--y));
+  rotate: 0deg;
+}
+html.rv-an .mp-buehne:not([data-rv="in"]) .mpd-siegel {
+  scale: 0.35;
+  rotate: calc(var(--sg-r) - 40deg);
+  opacity: 0;
+}
+html.rv-an .mp-buehne:not([data-rv="in"]) .mpd-b-fuell {
+  transform: scaleX(0);
+}
+html.rv-an .mp-buehne:not([data-rv="in"]) .mp-punkt-linie {
+  transform: scaleX(0);
+}
+html.rv-an .mp-buehne:not([data-rv="in"]) .mp-punkt-ziel {
+  opacity: 0;
+}
+.mp-punkt-text {
+  transition:
+    opacity 0.6s var(--ease) calc(0.55s + var(--d, 0) * 110ms),
+    translate 0.6s var(--ease) calc(0.55s + var(--d, 0) * 110ms);
+}
+html.rv-an .mp-buehne:not([data-rv="in"]) .mp-punkt-text {
+  opacity: 0;
+  translate: 0 10px;
+}
+
+/* ---------- Reihenfolge klar machen: jede Stufe eine Farbe (1 Blau, 2 Violett, 3 Lila),
+   gleich bei Leiste, Anmerkung, Linie und der zugehörigen Seite im Dokument */
+.mp-farbe--1 { --s: #3f74ff; --s-hell: #9db7ff; }
+.mp-farbe--2 { --s: #7a5cff; --s-hell: #c0b0ff; }
+.mp-farbe--3 { --s: #b45cf2; --s-hell: #e2b8ff; }
+
+.mp-reihe {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px 14px;
+  margin: clamp(26px, 3vw, 40px) auto 0;
+  padding: 0;
+  list-style: none;
+}
+.mp-reihe-schritt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mp-reihe-nr {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--s);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--s) 25%, transparent);
+}
+.mp-reihe-titel {
+  display: grid;
+  font-family: var(--font-display);
+  font-size: 16.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+}
+.mp-reihe-wann {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--s-hell);
+}
+.mp-reihe-pfeil {
+  margin-left: 4px;
+  color: rgba(226, 230, 255, 0.55);
+}
+
+/* Nummern und Linien in der Farbe ihrer Stufe */
+html .mp-farbe--1 .mp-punkt-nr,
+html .mp-farbe--2 .mp-punkt-nr,
+html .mp-farbe--3 .mp-punkt-nr,
+html .mpd-blatt.mp-farbe--1 .mpd-nr,
+html .mpd-blatt.mp-farbe--2 .mpd-nr,
+html .mpd-blatt.mp-farbe--3 .mpd-nr {
+  background: var(--s);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--s) 28%, transparent);
+}
+.mp-punkt-titel {
+  color: #fff;
+}
+.mp-farbe--1 .mp-punkt-titel > span:last-child,
+.mp-farbe--2 .mp-punkt-titel > span:last-child,
+.mp-farbe--3 .mp-punkt-titel > span:last-child {
+  text-decoration: underline;
+  text-decoration-color: var(--s);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
+@media (min-width: 1320px) {
+  html .mp-punkt.mp-farbe--1 .mp-punkt-linie,
+  html .mp-punkt.mp-farbe--2 .mp-punkt-linie {
+    height: 2px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--s) 30%, transparent) 0%, var(--s) 100%);
+  }
+  html .mp-punkt.mp-farbe--3 .mp-punkt-linie {
+    height: 2px;
+    background: linear-gradient(270deg, color-mix(in srgb, var(--s) 30%, transparent) 0%, var(--s) 100%);
+  }
+  html .mp-punkt .mp-punkt-ziel {
+    background: var(--s);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--s) 30%, transparent);
+  }
+}
+/* farbiger Streifen oben auf jeder Seite des Dokuments */
+.mpd-blatt.mp-farbe--1::before,
+.mpd-blatt.mp-farbe--2::before,
+.mpd-blatt.mp-farbe--3::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 0.45em;
+  background: var(--s);
+}
+@media (max-width: 699px) {
+  /* Handy: untereinander, die Nummern zeigen die Reihenfolge, Pfeile entfallen */
+  .mp-reihe {
+    flex-direction: column;
+    align-items: flex-start;
+    width: fit-content;
+    gap: 12px;
+  }
+  .mp-reihe-pfeil {
+    display: none;
+  }
+}

@@ -1,0 +1,366 @@
+/* ============================================================ Formular (Variante B) */
+
+.fm {
+  display: grid;
+  /* Spalte nie breiter als die Karte (sonst schiebt der Knopf alles über den Rand) */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  padding: clamp(24px, 3.4vw, 40px);
+  border-radius: 26px;
+}
+.fm-gruppe {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.fm-frage {
+  display: block;
+  margin-bottom: 14px;
+  padding: 0;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--page-ink);
+}
+.fm-hint {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--page-ink-3);
+}
+
+/* Auswahl-Kacheln */
+.fm-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  outline: none;
+}
+.fm-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--linie);
+  background: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--page-ink);
+  cursor: pointer;
+  transition:
+    border-color 0.25s var(--ease),
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease);
+}
+.fm-chip:hover {
+  border-color: rgba(106, 85, 255, 0.45);
+}
+.fm-chip input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.fm-chip:has(input:focus-visible) {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+.fm-chip[data-an="true"] {
+  border-color: transparent;
+  background: var(--grad-tief);
+  color: #fff;
+}
+
+/* Regler */
+.fm-regler {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+/* Trefferfläche 44 px hoch (Finger), die sichtbare Schiene bleibt 6 px */
+.fm-regler input[type="range"] {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.fm-regler input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #3f74ff, #6a55ff var(--wert, 10%), #e4e4ec var(--wert, 10%));
+}
+.fm-regler input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #3f74ff, #6a55ff var(--wert, 10%), #e4e4ec var(--wert, 10%));
+}
+.fm-regler input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -10px; /* mittig auf der 6-px-Schiene */
+  border-radius: 999px;
+  background: #fff;
+  border: 2px solid #6a55ff;
+  box-shadow: 0 4px 12px rgba(60, 40, 180, 0.3);
+}
+.fm-regler input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #fff;
+  border: 2px solid #6a55ff;
+  box-shadow: 0 4px 12px rgba(60, 40, 180, 0.3);
+}
+.fm-regler-wert {
+  flex: 0 0 auto;
+  min-width: 132px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: var(--tint);
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--page-ink);
+}
+.fm-calc {
+  margin-top: 10px;
+  font-size: 14.5px;
+  color: var(--page-ink-3);
+}
+
+/* Textfelder */
+.fm-felder {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.fm-feld {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+.fm-feld--breit {
+  grid-column: 1 / -1;
+}
+.fm-feld label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--page-ink);
+}
+.fm-feld input,
+.fm-feld textarea {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1.5px solid var(--linie);
+  background: #fff;
+  font: inherit;
+  font-size: 16px;
+  color: var(--page-ink);
+  transition:
+    border-color 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+.fm-feld textarea {
+  resize: vertical;
+}
+.fm-feld input:focus,
+.fm-feld textarea:focus {
+  outline: none;
+  border-color: #6a55ff;
+  box-shadow: 0 0 0 4px rgba(106, 85, 255, 0.15);
+}
+.fm-feld input[aria-invalid="true"] {
+  border-color: #d93a4a;
+}
+.fm-falle {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.fm-fehler {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #c42b3b;
+}
+.fm-feld .fm-fehler {
+  margin-top: 0;
+}
+
+.fm-zustimmung {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--page-ink-2);
+  cursor: pointer;
+}
+.fm-zustimmung input {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  accent-color: #6a55ff;
+}
+.fm-zustimmung a {
+  color: var(--akzent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.fm-senden {
+  width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+.fm-senden:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+.fm-unten {
+  margin-top: -14px;
+  font-size: 14px;
+  text-align: center;
+  color: var(--page-ink-3);
+}
+
+/* Ergebnis */
+.fm--fertig {
+  justify-items: start;
+  gap: 12px;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--page-ink-2);
+  outline: none;
+}
+.fm-fertig-symbol {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  background: var(--tint);
+}
+.fm-fertig-titel {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--page-ink);
+}
+.fm-direkt {
+  display: grid;
+  gap: 6px;
+}
+
+/* Handy: kurz statt 2,6 Bildschirme. Keine zweite Karte im Fenster (die Felder stehen direkt auf dem
+   hellen Grund), Auswahl-Knöpfe zweispaltig, Regler mit Wert in einer Zeile, Name und Firma nebeneinander.
+   Alle Tippziele bleiben mindestens 44 px hoch. */
+@media (max-width: 599px) {
+  .fm {
+    gap: 20px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .fm-frage {
+    margin-bottom: 10px;
+    font-size: 16px;
+    line-height: 1.35;
+  }
+  .fm-hint {
+    font-size: 13.5px;
+  }
+  /* gleich breite Knöpfe, lange Begriffe dürfen zweizeilig werden */
+  .fm-chips {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .fm-chip {
+    justify-content: center;
+    padding: 6px 8px;
+    border-radius: 14px;
+    font-size: 14.5px;
+    line-height: 1.25;
+    text-align: center;
+  }
+  .fm-regler {
+    gap: 12px;
+  }
+  .fm-regler-wert {
+    min-width: 0;
+    padding: 7px 10px;
+    font-size: 14.5px;
+    white-space: nowrap;
+  }
+  .fm-calc {
+    margin-top: 2px;
+    font-size: 14px;
+  }
+  .fm-felder {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 10px;
+  }
+  .fm-feld--email,
+  .fm-feld--phone {
+    grid-column: 1 / -1;
+  }
+  .fm-feld {
+    gap: 6px;
+  }
+  .fm-feld label {
+    font-size: 14.5px;
+  }
+  .fm-feld input,
+  .fm-feld textarea {
+    min-height: 48px;
+    padding: 10px 14px;
+    border-radius: 12px;
+  }
+  .fm-feld textarea {
+    height: 72px;
+  }
+  .fm-zustimmung {
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .fm-unten {
+    margin-top: -10px;
+    font-size: 13.5px;
+  }
+  /* Knopftext in einer Zeile */
+  .fm-senden {
+    gap: 10px;
+    padding-inline: 18px 16px;
+    font-size: 15.5px;
+  }
+}
+/* sehr schmal (320 px): Name und Firma wieder untereinander */
+@media (max-width: 359px) {
+  .fm-felder {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* wie alle Knöpfe bei 320 px: kleiner, ohne Pfeil (nav.css), damit der Text in eine Zeile passt */
+  .fm-senden {
+    padding-inline: 14px;
+    font-size: 14px;
+  }
+}

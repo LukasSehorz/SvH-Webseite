@@ -1,0 +1,1813 @@
+/* =====================================================================
+   Lösungen (Bento): gehört dem Bau-Agenten „Lösungen“
+   Sieben helle Karten, oben eine kleine gläserne Oberfläche in Markenblau, unten Stufe, Titel, Text.
+   Reihenfolge nach Stufe (1, 2, 2, 3, 4, 4, 4); am Handy niedrigere Bildflächen und straffere Abstände.
+   Grundzustand = fertiger Endzustand (ohne JavaScript, bei „Bewegung reduzieren“).
+   Die ruhigen Endlos-Abläufe laufen nur mit .lo-an (Karte im Bild) und stehen mit .lo-pause.
+   ===================================================================== */
+
+.lo {
+  --lo-blau: #3f74ff;
+  --lo-violett: #6a55ff;
+  --lo-glas: linear-gradient(160deg, #82a3ff 0%, #4f7cff 46%, #5a63ff 100%);
+  --lo-glas-rand: rgba(255, 255, 255, 0.55);
+  --lo-glas-schatten:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -10px 18px -12px rgba(70, 50, 220, 0.55),
+    0 10px 22px -12px rgba(52, 88, 255, 0.65);
+  --lo-linie: #dde6fb;
+  --lo-zyklus: 9s;
+}
+
+/* ------------------------------------------------------------ Kopf */
+
+.lo-kopf {
+  max-width: 820px;
+}
+.lo-kopf .b-lead {
+  max-width: 660px;
+}
+
+/* ------------------------------------------------------------ Raster */
+
+.lo-raster {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: clamp(36px, 5vw, 64px);
+}
+/* nach Stufe gelesen: links oben Stufe 1, dann 2, 2, 3, 4, 4, 4 */
+@media (min-width: 640px) {
+  .lo-raster {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "wissen crm"
+      "fulfilment business"
+      "agenten whatsapp"
+      "voice voice";
+    gap: 20px;
+  }
+}
+@media (min-width: 1000px) {
+  .lo-raster {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+      "wissen crm crm"
+      "fulfilment business agenten"
+      "voice voice whatsapp";
+    gap: 24px;
+  }
+}
+@media (min-width: 640px) {
+  .lo-karte--business { grid-area: business; }
+  .lo-karte--crm { grid-area: crm; }
+  .lo-karte--wissen { grid-area: wissen; }
+  .lo-karte--agenten { grid-area: agenten; }
+  .lo-karte--fulfilment { grid-area: fulfilment; }
+  .lo-karte--whatsapp { grid-area: whatsapp; }
+  .lo-karte--voice { grid-area: voice; }
+}
+
+/* ------------------------------------------------------------ Karte */
+
+.lo-karte {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 24px;
+  border: 1px solid var(--lo-linie);
+  background:
+    radial-gradient(90% 60% at 0% 0%, rgba(214, 228, 255, 0.75) 0%, rgba(214, 228, 255, 0) 70%),
+    linear-gradient(180deg, #f6f8ff 0%, #fcfdff 52%, #fff 100%);
+  box-shadow:
+    0 1px 2px rgba(20, 40, 120, 0.04),
+    0 22px 44px -32px rgba(40, 60, 170, 0.32);
+  /* Einblenden (data-rv) behält seine Staffel, Anheben beim Drüberfahren reagiert sofort */
+  transition-property: opacity, transform, translate, box-shadow, border-color;
+  transition-duration: 0.7s, 0.7s, 0.45s, 0.45s, 0.45s;
+  transition-timing-function: var(--ease);
+  transition-delay: calc(var(--d, 0) * 90ms), calc(var(--d, 0) * 90ms), 0s, 0s, 0s;
+}
+@media (hover: hover) {
+  .lo-karte:hover {
+    translate: 0 -4px;
+    border-color: #c9d7fb;
+    box-shadow:
+      0 1px 2px rgba(20, 40, 120, 0.05),
+      0 30px 56px -30px rgba(40, 60, 190, 0.42);
+  }
+}
+
+/* Bildfläche mit weichem blauem Schimmer */
+.lo-bild {
+  position: relative;
+  flex: 0 0 auto;
+  height: 244px;
+  overflow: hidden;
+  container: lo-bild / inline-size;
+  color: var(--page-ink);
+  font-family: var(--font-sans);
+  line-height: 1.35;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.lo-bild::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(52% 50% at 50% 50%, rgba(63, 116, 255, 0.2) 0%, rgba(106, 85, 255, 0.07) 58%, rgba(106, 85, 255, 0) 100%);
+  /* Schimmer läuft zur Textfläche hin weich aus, keine Kante */
+  -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+}
+
+.lo-text {
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  gap: 10px;
+  flex: 1 1 auto;
+  padding: 6px 26px 28px;
+}
+.lo-stufe {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 11px 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(63, 116, 255, 0.18);
+  background: rgba(63, 116, 255, 0.07);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  color: #3557e0;
+}
+/* Punkt in der Farbe der Stufe (wie im Unendlichkeitszeichen) */
+.lo-stufe::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--stufe, var(--lo-blau));
+}
+.lo-titel {
+  margin-top: 2px;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 1.6vw, 22px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  color: var(--page-ink);
+}
+.lo-nw {
+  white-space: nowrap;
+}
+.lo-p {
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--page-ink-2);
+  text-wrap: pretty;
+}
+/* ------------------------------------------------------------ Schluss: Zeile und Knopf (wie .kd-ende bei den Kunden) */
+
+.lo-ende {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  margin-top: clamp(36px, 4.5vw, 56px);
+  text-align: center;
+}
+.lo-ende-zeile {
+  max-width: 560px;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 1.8vw, 24px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  color: var(--page-ink);
+}
+
+@media (max-width: 639px) {
+  .sb.lo {
+    padding-block: 52px 56px;
+  }
+  .lo-raster {
+    gap: 12px;
+    margin-top: 26px;
+  }
+  .lo-karte {
+    border-radius: 22px;
+  }
+  .lo-text {
+    gap: 7px;
+    padding: 0 20px 19px;
+  }
+  .lo-stufe {
+    padding: 3px 10px 3px 8px;
+    font-size: 12px;
+  }
+  .lo-titel {
+    margin-top: 0;
+    font-size: 19px;
+  }
+  .lo-p {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+}
+
+/* ------------------------------------------------------------ Gemeinsame Glas-Bausteine */
+
+.lo-glas {
+  background: var(--lo-glas);
+  border: 1px solid var(--lo-glas-rand);
+  box-shadow: var(--lo-glas-schatten);
+  color: #fff;
+}
+.lo-fenster {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(63, 116, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 1px 2px rgba(30, 50, 140, 0.05),
+    0 14px 26px -16px rgba(52, 88, 255, 0.42);
+}
+/* Kreis, der sich abhakt */
+.lo-kreis {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1.5px solid #cbd8fb;
+}
+.lo-kreis-ok {
+  position: absolute;
+  inset: -1.5px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--lo-glas);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 4px 10px -4px rgba(52, 88, 255, 0.7);
+  color: #fff;
+}
+
+/* ------------------------------------------------------------ 1 · Business: gestapelte Aufgaben */
+
+.lo-bz {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  padding: 0 22px;
+}
+.lo-bz-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 300px;
+  margin-inline: auto;
+  height: 40px;
+  padding: 0 10px 0 12px;
+  border-radius: 12px;
+}
+/* leichte Tiefe: oben schmaler und blasser, wie ein Stapel */
+.lo-bz-chip:nth-child(1) {
+  max-width: min(272px, 90%);
+  opacity: 0.86;
+}
+.lo-bz-chip:nth-child(2) {
+  max-width: min(286px, 95%);
+  opacity: 0.94;
+}
+.lo-bz-ico {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  opacity: 0.95;
+}
+.lo-bz-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+.lo-bz-status {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+}
+.lo-bz-lauf {
+  display: grid;
+  place-items: center;
+  opacity: 0.95;
+}
+.lo-bz-ok {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--lo-blau);
+  box-shadow: 0 2px 6px -2px rgba(20, 30, 120, 0.45);
+}
+
+/* ------------------------------------------------------------ 2 · CRM: Programme um die Mitte */
+
+.lo-crm {
+  position: absolute;
+  inset: 0;
+}
+.lo-crm::before {
+  /* zweiter, breiter Schimmer wie ein Lichthof */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(92cqw, 560px);
+  height: 150px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(63, 116, 255, 0.18), rgba(63, 116, 255, 0));
+}
+.lo-crm-buehne {
+  --r-mitte: 41px;
+  position: absolute;
+  left: 50%;
+  top: calc(50% - 8px);
+  width: 0;
+  height: 0;
+}
+.lo-crm-app {
+  --px: calc(var(--xs) * 1cqw);
+  --py: calc(var(--ys) * 1px);
+  position: absolute;
+  left: var(--px);
+  top: var(--py);
+  width: 0;
+  height: 0;
+}
+/* Verbindung von der Kachel zur Mitte: Länge und Winkel rechnet CSS aus */
+.lo-crm-linie {
+  position: absolute;
+  left: 0;
+  top: -0.75px;
+  height: 1.5px;
+  width: calc(hypot(var(--px), var(--py)) - var(--r-mitte));
+  transform-origin: 0 50%;
+  transform: rotate(atan2(calc(var(--py) * -1), calc(var(--px) * -1)));
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(63, 116, 255, 0.16), rgba(63, 116, 255, 0.42));
+}
+.lo-crm-puls {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.lo-crm-puls::before {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: -0.75px;
+  width: 26px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgba(63, 116, 255, 0), #3f74ff 70%, #8fb0ff);
+  box-shadow: 0 0 8px rgba(63, 116, 255, 0.55);
+}
+.lo-crm-schwebe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+.lo-crm-kachel {
+  position: absolute;
+  left: -20px;
+  top: -20px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+}
+.lo-crm-label {
+  position: absolute;
+  left: 0;
+  top: 25px;
+  translate: -50% 0;
+  white-space: nowrap;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #3a4466;
+}
+.lo-crm-mitte {
+  position: absolute;
+  left: calc(var(--r-mitte) * -1);
+  top: calc(var(--r-mitte) * -1);
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1px;
+  width: calc(var(--r-mitte) * 2);
+  height: calc(var(--r-mitte) * 2);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 30%, #fff 0%, #f3f6ff 100%);
+  border: 1px solid rgba(63, 116, 255, 0.22);
+  box-shadow:
+    0 0 0 7px rgba(63, 116, 255, 0.07),
+    0 16px 34px -12px rgba(52, 88, 255, 0.5);
+  color: var(--lo-blau);
+}
+.lo-crm-mitte span {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #2f55e6;
+}
+.lo-crm-mitte::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(63, 116, 255, 0.4);
+  opacity: 0;
+}
+@container lo-bild (min-width: 560px) {
+  .lo-crm-buehne {
+    --r-mitte: 48px;
+    top: calc(50% - 6px);
+  }
+  .lo-crm-app {
+    --px: calc(var(--xb) * 1cqw);
+    --py: calc(var(--yb) * 1px);
+  }
+  .lo-crm-kachel {
+    left: -22px;
+    top: -22px;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+  }
+  .lo-crm-label {
+    top: 28px;
+    font-size: 12px;
+  }
+  .lo-crm-mitte span {
+    font-size: 13px;
+  }
+}
+
+/* ------------------------------------------------------------ 3 · Wissensdatenbank */
+
+.lo-wi {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 8px 18px 0;
+}
+.lo-wi-fenster {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  width: 100%;
+  max-width: 340px;
+  padding: 12px;
+  border-radius: 18px;
+}
+/* zweites Blatt dahinter, wie ein Stapel */
+.lo-wi-fenster::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: -8px;
+  height: 20px;
+  z-index: -1;
+  border-radius: 14px 14px 0 0;
+  background: rgba(99, 136, 255, 0.45);
+}
+.lo-wi-feld {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 6px 14px -8px rgba(20, 30, 120, 0.5);
+}
+.lo-wi-lupe {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  height: 17px;
+  color: #6a7699;
+}
+.lo-wi-frage {
+  min-height: 34px;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 17px;
+  color: var(--page-ink);
+}
+.lo-wi-wort {
+  white-space: nowrap;
+}
+.lo-wi-z {
+  position: relative;
+}
+.lo-wi-z::after {
+  content: "";
+  position: absolute;
+  right: -1.5px;
+  top: 0.05em;
+  width: 1.5px;
+  height: 1.15em;
+  border-radius: 1px;
+  background: var(--lo-blau);
+  opacity: 0;
+}
+.lo-wi-platz {
+  position: relative;
+}
+/* leere Ergebniszeilen, solange noch keine Antwort da ist (die Antwortkarte deckt sie zu) */
+.lo-wi-skelett {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  padding: 46px 12px 12px;
+  border-radius: 13px;
+  border: 1px dashed rgba(255, 255, 255, 0.32);
+}
+.lo-wi-skelett i {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.24);
+}
+.lo-wi-skelett i:nth-child(1) {
+  width: 34%;
+}
+.lo-wi-skelett i:nth-child(2) {
+  width: 88%;
+}
+.lo-wi-skelett i:nth-child(3) {
+  width: 62%;
+}
+.lo-wi-antwort {
+  position: relative;
+  display: grid;
+  gap: 5px;
+  padding: 10px 12px 11px;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 6px 14px -8px rgba(20, 30, 120, 0.5);
+}
+.lo-wi-ki {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #3557e0;
+}
+.lo-wi-text {
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--page-ink);
+}
+.lo-wi-quelle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  justify-self: start;
+  margin-top: 2px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #eef3ff;
+  font-size: 11px;
+  font-weight: 500;
+  color: #4a5577;
+}
+.lo-wi-denkt {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  display: inline-flex;
+  gap: 4px;
+  padding: 8px 11px;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 6px 14px -8px rgba(20, 30, 120, 0.5);
+  opacity: 0;
+}
+.lo-wi-denkt i,
+.lo-wa-tippt i {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8aa6ff;
+}
+
+/* ------------------------------------------------------------ 4 · KI-Agent: Einstellungen */
+
+.lo-ag {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 0 18px;
+}
+.lo-ag-karte {
+  min-width: 0;
+  width: 100%;
+  max-width: 320px;
+  padding: 12px 12px 6px;
+  border-radius: 18px;
+}
+.lo-ag-kopf {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 2px 10px;
+  border-bottom: 1px solid #edf1fb;
+}
+.lo-ag-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+.lo-ag-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.lo-ag-aktiv {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #eef3ff;
+  font-size: 11px;
+  font-weight: 600;
+  color: #3557e0;
+}
+.lo-ag-aktiv i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lo-blau);
+  box-shadow: 0 0 0 3px rgba(63, 116, 255, 0.18);
+}
+.lo-ag-zeile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 2px;
+}
+.lo-ag-zeile + .lo-ag-zeile {
+  border-top: 1px solid #f1f4fc;
+}
+.lo-ag-regel {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  font-weight: 500;
+  color: #2c3450;
+}
+.lo-ag-schalter {
+  position: relative;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 18px;
+  border-radius: 999px;
+  background: #dfe4f1;
+  overflow: hidden;
+}
+.lo-ag-an {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #3f74ff, #6a55ff);
+}
+.lo-ag-knopf {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(20, 30, 80, 0.35);
+  transform: translateX(12px);
+}
+
+@container lo-bild (max-width: 329px) {
+  .lo-ag {
+    padding: 0 10px;
+  }
+  .lo-ag-karte {
+    padding: 11px 10px 5px;
+  }
+  .lo-ag-kopf {
+    gap: 8px;
+  }
+  .lo-ag-avatar {
+    width: 26px;
+    height: 26px;
+  }
+  .lo-ag-name {
+    font-size: 12.5px;
+  }
+  .lo-ag-aktiv {
+    padding: 3px 7px;
+    gap: 4px;
+  }
+  .lo-ag-regel {
+    font-size: 11.5px;
+  }
+}
+
+/* ------------------------------------------------------------ 5 · Fulfilment */
+
+.lo-fu {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 0 18px;
+}
+.lo-fu-karte {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  max-width: 340px;
+  padding: 13px 12px 14px;
+  border-radius: 18px;
+}
+.lo-fu-kopf {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 2px;
+}
+.lo-fu-ico {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+}
+.lo-fu-nr {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.lo-fu-strecke {
+  position: relative;
+}
+.lo-fu-linie,
+.lo-fu-laeufer {
+  position: absolute;
+  left: calc(50% / var(--n));
+  right: calc(50% / var(--n));
+  top: 10px;
+  height: 3px;
+}
+.lo-fu-linie {
+  border-radius: 3px;
+  background: #e3e9f8;
+  overflow: hidden;
+}
+.lo-fu-fuell {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #3f74ff, #6a55ff);
+  transform-origin: 0 50%;
+}
+.lo-fu-laeufer {
+  transform: translateX(100%);
+}
+.lo-fu-punkt {
+  position: absolute;
+  left: -6px;
+  top: -4.5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--lo-blau);
+  box-shadow: 0 0 0 4px rgba(63, 116, 255, 0.18), 0 0 14px rgba(63, 116, 255, 0.6);
+}
+.lo-fu-schritte {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+}
+.lo-fu-schritt {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.lo-fu-name {
+  max-width: 100%;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: center;
+  color: #3a4466;
+}
+.lo-fu-hinweis {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  justify-self: center;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: #eef3ff;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #3557e0;
+}
+
+/* schmale Karte (unter 330 px): Schritte untereinander, der Punkt läuft nach unten */
+@container lo-bild (max-width: 329px) {
+  .lo-fu-karte {
+    gap: 11px;
+    padding: 11px 14px 12px;
+  }
+  .lo-fu-ico {
+    width: 26px;
+    height: 26px;
+  }
+  .lo-fu-schritte {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .lo-fu-kreis {
+    width: 20px;
+    height: 20px;
+  }
+  .lo-fu-schritt {
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    align-items: center;
+    gap: 10px;
+  }
+  .lo-fu-name {
+    text-align: left;
+    font-size: 12px;
+  }
+  .lo-fu-linie,
+  .lo-fu-laeufer {
+    left: 8.5px;
+    right: auto;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    height: auto;
+  }
+  .lo-fu-fuell {
+    transform-origin: 50% 0;
+  }
+  .lo-fu-laeufer {
+    transform: translateY(100%);
+  }
+  .lo-fu-punkt {
+    left: -4.5px;
+    top: -6px;
+  }
+  .lo-fu-hinweis {
+    padding: 4px 10px;
+  }
+  .lo-fu-hinweis {
+    justify-self: start;
+  }
+}
+
+/* ------------------------------------------------------------ 6 · WhatsApp */
+
+.lo-wa {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  padding-top: 14px;
+}
+.lo-wa-handy {
+  width: min(248px, 100% - 28px);
+  height: 270px;
+  padding: 6px;
+  border-radius: 36px;
+  background: linear-gradient(180deg, #ffffff, #f2f5ff);
+  border: 1px solid #d6e0fa;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9),
+    0 24px 44px -22px rgba(52, 80, 255, 0.5);
+  -webkit-mask-image: linear-gradient(180deg, #000 192px, transparent 224px);
+  mask-image: linear-gradient(180deg, #000 192px, transparent 224px);
+}
+.lo-wa-schirm {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 30px;
+  background: linear-gradient(180deg, #f7f9ff, #eef2fb);
+  border: 1px solid #e3e9f8;
+}
+.lo-wa-insel {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  width: 50px;
+  height: 13px;
+  translate: -50% 0;
+  border-radius: 999px;
+  background: #11142a;
+}
+.lo-wa-kopf {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 25px 12px 7px 9px;
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid #e6ebf7;
+  color: #4a5577;
+}
+.lo-wa-avatar {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+.lo-wa-titel {
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--page-ink);
+}
+.lo-wa-chat {
+  display: grid;
+  gap: 6px;
+  padding: 9px 10px;
+}
+.lo-wa-zeile {
+  position: relative;
+  display: flex;
+}
+.lo-wa-zeile--ki {
+  justify-content: flex-end;
+}
+.lo-wa-blase {
+  max-width: 86%;
+  padding: 6px 10px 7px;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.38;
+}
+.lo-wa-zeile--kunde .lo-wa-blase {
+  border-radius: 13px 13px 13px 4px;
+  background: #e6eaf2;
+  color: #1d2236;
+  transform-origin: 0 100%;
+}
+.lo-wa-zeile--ki .lo-wa-blase {
+  border-radius: 13px 13px 4px 13px;
+  background: linear-gradient(160deg, #6f95ff 0%, #4a78ff 55%, #5b62ff 100%);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 14px -8px rgba(52, 88, 255, 0.7);
+  transform-origin: 100% 100%;
+}
+.lo-wa-tippt {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: inline-flex;
+  gap: 4px;
+  padding: 9px 11px;
+  border-radius: 13px 13px 4px 13px;
+  background: #fff;
+  box-shadow: 0 4px 12px -6px rgba(20, 30, 120, 0.4);
+  opacity: 0;
+}
+
+/* ------------------------------------------------------------ 7 · Voice */
+
+.lo-vo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 0 18px;
+}
+.lo-vo-anruf {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  max-width: 340px;
+  padding: 12px 14px 14px;
+  border-radius: 18px;
+}
+.lo-vo-kopf {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.lo-vo-hoerer {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--lo-blau);
+  box-shadow: 0 4px 10px -4px rgba(20, 30, 120, 0.5);
+}
+.lo-vo-hoerer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  opacity: 0;
+}
+.lo-vo-txt {
+  display: grid;
+  min-width: 0;
+}
+.lo-vo-txt b {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.lo-vo-txt small {
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.88;
+}
+.lo-vo-welle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 40px;
+}
+.lo-vo-welle i {
+  display: block;
+  flex: 0 1 4px;
+  min-width: 2px;
+  height: calc(var(--h) * 100%);
+  border-radius: 3px;
+  background: linear-gradient(180deg, #fff, rgba(255, 255, 255, 0.75));
+}
+.lo-vo-status {
+  display: grid;
+  width: 100%;
+  max-width: 340px;
+  padding: 4px 12px;
+  border-radius: 16px;
+}
+.lo-vo-status li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #2c3450;
+}
+.lo-vo-status li + li {
+  border-top: 1px solid #f1f4fc;
+}
+.lo-vo-kreis {
+  width: 20px;
+  height: 20px;
+}
+/* breite Karte: Anruf links, Status rechts */
+@container lo-bild (min-width: 560px) {
+  .lo-vo {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    max-width: 700px;
+    margin-inline: auto;
+    padding: 0 28px;
+  }
+  .lo-vo-anruf,
+  .lo-vo-status {
+    max-width: none;
+  }
+  .lo-vo-anruf {
+    gap: 16px;
+    padding: 14px 16px 18px;
+  }
+  .lo-vo-welle {
+    height: 56px;
+  }
+  .lo-vo-status {
+    padding: 6px 14px;
+  }
+  .lo-vo-status li {
+    padding: 9px 0;
+    font-size: 12.5px;
+  }
+}
+
+/* Handy: Voice steht untereinander und braucht etwas mehr Höhe */
+@container lo-bild (max-width: 559px) {
+  .lo-vo {
+    gap: 8px;
+  }
+  .lo-vo-anruf {
+    gap: 8px;
+    padding: 10px 12px 12px;
+  }
+  .lo-vo-status li {
+    padding: 4px 0;
+  }
+}
+
+/* =====================================================================
+   Handy: niedrigere Bildflächen (je nach Inhalt), die kleinen Oberflächen rücken zusammen.
+   Schrift in den Oberflächen bleibt bei mindestens 11 px.
+   ===================================================================== */
+@media (max-width: 639px) {
+  /* Schatten der Oberflächen laufen weich aus statt an der Bildkante abgeschnitten zu werden
+     (die Karte selbst schneidet an ihren runden Ecken) */
+  .lo-bild {
+    height: 188px;
+    overflow: visible;
+  }
+  .lo-karte--wissen .lo-bild {
+    height: 192px;
+  }
+  .lo-karte--crm .lo-bild {
+    height: 188px;
+  }
+  .lo-karte--fulfilment .lo-bild {
+    height: 180px;
+  }
+  .lo-karte--business .lo-bild {
+    height: 164px;
+  }
+  .lo-karte--voice .lo-bild {
+    height: 216px;
+  }
+  /* WhatsApp: das Handy ist höher als die Fläche und läuft unten weich aus, hier wird geschnitten */
+  .lo-karte--whatsapp .lo-bild {
+    height: 206px;
+    overflow: hidden;
+  }
+
+  /* Business: Aufgaben enger gestapelt */
+  .lo-bz {
+    gap: 5px;
+  }
+  .lo-bz-chip {
+    height: 30px;
+  }
+
+  /* CRM: drei Reihen rücken zusammen, Kacheln etwas kleiner */
+  .lo-crm::before {
+    height: 130px;
+  }
+  .lo-crm-buehne {
+    --r-mitte: 37px;
+    top: calc(50% - 10px);
+  }
+  .lo-crm-app {
+    --px: calc(var(--xm) * 1cqw);
+    --py: calc(var(--ym) * 1px);
+  }
+  .lo-crm-kachel {
+    left: -18px;
+    top: -18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+  }
+  .lo-crm-label {
+    top: 22px;
+  }
+
+  /* Wissen: ohne „KI-Antwort“-Zeile, Abstände knapper */
+  .lo-wi {
+    padding: 6px 16px 0;
+  }
+  .lo-wi-fenster {
+    gap: 8px;
+    padding: 10px;
+  }
+  .lo-wi-feld {
+    padding: 7px 11px;
+  }
+  .lo-wi-antwort {
+    gap: 4px;
+    padding: 8px 11px 9px;
+  }
+  .lo-wi-ki {
+    display: none;
+  }
+  .lo-wi-quelle {
+    margin-top: 1px;
+  }
+  .lo-wi-skelett {
+    padding: 30px 12px 10px;
+  }
+
+  /* Agent: Zeilen enger */
+  .lo-ag-karte {
+    padding: 10px 11px 4px;
+  }
+  .lo-ag-kopf {
+    padding-bottom: 8px;
+  }
+  .lo-ag-zeile {
+    padding: 4px 2px;
+  }
+
+  /* Fulfilment */
+  .lo-fu-karte {
+    gap: 13px;
+    padding: 12px 12px 13px;
+  }
+
+  /* Voice: Welle und Status flacher */
+  .lo-vo-anruf {
+    padding: 10px 12px 11px;
+  }
+  .lo-vo-welle {
+    height: 30px;
+  }
+  .lo-vo-status {
+    padding: 3px 12px;
+  }
+  .lo-vo-status li {
+    padding: 3px 0;
+  }
+
+  /* WhatsApp: Handy rückt nach oben, läuft nach der dritten Nachricht weich aus */
+  .lo-wa {
+    padding-top: 10px;
+  }
+  .lo-wa-kopf {
+    padding-top: 23px;
+    padding-bottom: 6px;
+  }
+  .lo-wa-chat {
+    gap: 5px;
+    padding: 8px 10px;
+  }
+  .lo-wa-handy {
+    -webkit-mask-image: linear-gradient(180deg, #000 174px, transparent 196px);
+    mask-image: linear-gradient(180deg, #000 174px, transparent 196px);
+  }
+}
+/* kleines Handy (Bildbreite unter 330 px): Fulfilment-Schritte stehen untereinander */
+@media (max-width: 369px) {
+  .lo-karte--fulfilment .lo-bild {
+    height: 236px;
+  }
+}
+
+/* =====================================================================
+   Bewegung: nur wenn die Karte im Bild ist und niemand weniger Bewegung wünscht
+   ===================================================================== */
+
+.lo-pause,
+.lo-pause *,
+.lo-pause *::before,
+.lo-pause *::after {
+  animation-play-state: paused !important;
+}
+
+@keyframes lo-drehen {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes lo-schweben {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -4px;
+  }
+}
+@keyframes lo-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+@keyframes lo-hupf {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  30% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+
+/* Abhaken im 9-s-Takt: Schritt 1 bei 15 %, 2 bei 32 %, 3 bei 49 %, 4 bei 66 %, gemeinsam zurück ab 87 % */
+@keyframes lo-ok-1 {
+  0%, 12% { opacity: 0; transform: scale(0.4); }
+  16%, 87% { opacity: 1; transform: scale(1); }
+  91%, 100% { opacity: 0; transform: scale(0.4); }
+}
+@keyframes lo-ok-2 {
+  0%, 29% { opacity: 0; transform: scale(0.4); }
+  33%, 87% { opacity: 1; transform: scale(1); }
+  91%, 100% { opacity: 0; transform: scale(0.4); }
+}
+@keyframes lo-ok-3 {
+  0%, 46% { opacity: 0; transform: scale(0.4); }
+  50%, 87% { opacity: 1; transform: scale(1); }
+  91%, 100% { opacity: 0; transform: scale(0.4); }
+}
+@keyframes lo-ok-4 {
+  0%, 63% { opacity: 0; transform: scale(0.4); }
+  67%, 87% { opacity: 1; transform: scale(1); }
+  91%, 100% { opacity: 0; transform: scale(0.4); }
+}
+/* Schalter: Farbe blendet ein, Knopf gleitet */
+@keyframes lo-ein-1 {
+  0%, 12% { opacity: 0; }
+  16%, 87% { opacity: 1; }
+  91%, 100% { opacity: 0; }
+}
+@keyframes lo-ein-2 {
+  0%, 29% { opacity: 0; }
+  33%, 87% { opacity: 1; }
+  91%, 100% { opacity: 0; }
+}
+@keyframes lo-ein-3 {
+  0%, 46% { opacity: 0; }
+  50%, 87% { opacity: 1; }
+  91%, 100% { opacity: 0; }
+}
+@keyframes lo-ein-4 {
+  0%, 63% { opacity: 0; }
+  67%, 87% { opacity: 1; }
+  91%, 100% { opacity: 0; }
+}
+@keyframes lo-knopf-1 {
+  0%, 12% { transform: translateX(0); }
+  16%, 87% { transform: translateX(12px); }
+  91%, 100% { transform: translateX(0); }
+}
+@keyframes lo-knopf-2 {
+  0%, 29% { transform: translateX(0); }
+  33%, 87% { transform: translateX(12px); }
+  91%, 100% { transform: translateX(0); }
+}
+@keyframes lo-knopf-3 {
+  0%, 46% { transform: translateX(0); }
+  50%, 87% { transform: translateX(12px); }
+  91%, 100% { transform: translateX(0); }
+}
+@keyframes lo-knopf-4 {
+  0%, 63% { transform: translateX(0); }
+  67%, 87% { transform: translateX(12px); }
+  91%, 100% { transform: translateX(0); }
+}
+
+/* CRM: Lichtpunkt läuft von der Kachel zur Mitte */
+@keyframes lo-crm-puls {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  48% {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+  56%,
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Wissen (10-s-Takt): Frage tippt sich ein, kurz „denkt“, dann kommt die Antwort */
+@keyframes lo-wi-frage {
+  0%, 4% { opacity: 0; }
+  7%, 82% { opacity: 1; }
+  84%, 100% { opacity: 0; }
+}
+@keyframes lo-wi-z {
+  0% { opacity: 0; }
+  0.4%, 78.5% { opacity: 1; }
+  79%, 100% { opacity: 0; }
+}
+@keyframes lo-wi-cursor {
+  0% { opacity: 1; }
+  0.35%, 100% { opacity: 0; }
+}
+@keyframes lo-wi-cursor-ende {
+  0% { opacity: 1; }
+  3% { opacity: 0; }
+  6% { opacity: 1; }
+  9%, 100% { opacity: 0; }
+}
+@keyframes lo-wi-denkt {
+  0%, 25% { opacity: 0; transform: translateY(6px); }
+  27%, 31% { opacity: 1; transform: none; }
+  33%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-wi-antwort {
+  0%, 32% { opacity: 0; transform: translateY(10px); }
+  36%, 82% { opacity: 1; transform: none; }
+  84%, 100% { opacity: 0; transform: none; }
+}
+
+/* Fulfilment (9-s-Takt): Punkt läuft von Schritt zu Schritt, Schritte haken sich ab */
+@keyframes lo-fu-lauf {
+  0%, 5% { transform: translateX(0); opacity: 1; }
+  20%, 27% { transform: translateX(33.333%); opacity: 1; }
+  42%, 49% { transform: translateX(66.667%); opacity: 1; }
+  64%, 88% { transform: translateX(100%); opacity: 1; }
+  91% { transform: translateX(100%); opacity: 0; }
+  94% { transform: translateX(0); opacity: 0; }
+  97%, 100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes lo-fu-fuell {
+  0%, 5% { transform: scaleX(0); opacity: 1; }
+  20%, 27% { transform: scaleX(0.3333); opacity: 1; }
+  42%, 49% { transform: scaleX(0.6667); opacity: 1; }
+  64%, 88% { transform: scaleX(1); opacity: 1; }
+  91% { transform: scaleX(1); opacity: 0; }
+  93% { transform: scaleX(0); opacity: 0; }
+  95%, 100% { transform: scaleX(0); opacity: 1; }
+}
+@keyframes lo-fu-lauf-y {
+  0%, 5% { transform: translateY(0); opacity: 1; }
+  20%, 27% { transform: translateY(33.333%); opacity: 1; }
+  42%, 49% { transform: translateY(66.667%); opacity: 1; }
+  64%, 88% { transform: translateY(100%); opacity: 1; }
+  91% { transform: translateY(100%); opacity: 0; }
+  94% { transform: translateY(0); opacity: 0; }
+  97%, 100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes lo-fu-fuell-y {
+  0%, 5% { transform: scaleY(0); opacity: 1; }
+  20%, 27% { transform: scaleY(0.3333); opacity: 1; }
+  42%, 49% { transform: scaleY(0.6667); opacity: 1; }
+  64%, 88% { transform: scaleY(1); opacity: 1; }
+  91% { transform: scaleY(1); opacity: 0; }
+  93% { transform: scaleY(0); opacity: 0; }
+  95%, 100% { transform: scaleY(0); opacity: 1; }
+}
+@keyframes lo-fu-1 {
+  0%, 2% { opacity: 0; transform: scale(0.4); }
+  5%, 88% { opacity: 1; transform: scale(1); }
+  91%, 100% { opacity: 0; transform: scale(0.4); }
+}
+@keyframes lo-fu-2 {
+  0%, 19% { opacity: 0; transform: scale(0.4); }
+  22%, 88% { opacity: 1; transform: scale(1); }
+  91%, 100% { opacity: 0; transform: scale(0.4); }
+}
+@keyframes lo-fu-3 {
+  0%, 41% { opacity: 0; transform: scale(0.4); }
+  44%, 88% { opacity: 1; transform: scale(1); }
+  91%, 100% { opacity: 0; transform: scale(0.4); }
+}
+@keyframes lo-fu-4 {
+  0%, 63% { opacity: 0; transform: scale(0.4); }
+  66%, 88% { opacity: 1; transform: scale(1); }
+  91%, 100% { opacity: 0; transform: scale(0.4); }
+}
+@keyframes lo-fu-hinweis {
+  0%, 67% { opacity: 0; transform: translateY(6px); }
+  71%, 88% { opacity: 1; transform: none; }
+  91%, 100% { opacity: 0; transform: none; }
+}
+
+/* WhatsApp (10-s-Takt) */
+@keyframes lo-wa-b1 {
+  0%, 4% { opacity: 0; transform: translateY(8px) scale(0.94); }
+  8%, 86% { opacity: 1; transform: none; }
+  90%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-wa-tippt {
+  0%, 12% { opacity: 0; transform: scale(0.9); }
+  15%, 27% { opacity: 1; transform: none; }
+  29%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-wa-b2 {
+  0%, 28% { opacity: 0; transform: translateY(8px) scale(0.94); }
+  32%, 86% { opacity: 1; transform: none; }
+  90%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-wa-b3 {
+  0%, 50% { opacity: 0; transform: translateY(8px) scale(0.94); }
+  54%, 86% { opacity: 1; transform: none; }
+  90%, 100% { opacity: 0; transform: none; }
+}
+
+/* Voice: Wellenform atmet */
+@keyframes lo-vo-welle {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.35);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Business */
+  .lo-an .lo-bz-lauf svg {
+    animation: lo-drehen 1.6s linear infinite;
+  }
+  .lo-an .lo-bz-ok,
+  .lo-an .lo-kreis-ok {
+    animation: lo-ok-1 var(--lo-zyklus) var(--ease) infinite both;
+  }
+  .lo-an .lo-ok-2 {
+    animation-name: lo-ok-2;
+  }
+  .lo-an .lo-ok-3 {
+    animation-name: lo-ok-3;
+  }
+  .lo-an .lo-ok-4 {
+    animation-name: lo-ok-4;
+  }
+
+  /* CRM */
+  .lo-an .lo-crm-schwebe {
+    animation: lo-schweben 5.2s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -0.85s);
+  }
+  .lo-an .lo-crm-puls {
+    animation: lo-crm-puls 4.2s cubic-bezier(0.45, 0, 0.4, 1) infinite both;
+    animation-delay: calc(var(--i) * 0.7s);
+  }
+  .lo-an .lo-crm-mitte::before {
+    animation: lo-ring 2.1s ease-out infinite;
+    animation-delay: 1.2s;
+  }
+
+  /* Wissen */
+  .lo-an .lo-wi-frage {
+    animation: lo-wi-frage 10s linear infinite both;
+  }
+  .lo-an .lo-wi-z {
+    animation: lo-wi-z 10s linear infinite both;
+    animation-delay: calc(0.75s + var(--i) * var(--t) * 1ms);
+  }
+  .lo-an .lo-wi-z::after {
+    animation: lo-wi-cursor 10s steps(1, end) infinite none;
+    animation-delay: calc(0.75s + var(--i) * var(--t) * 1ms);
+  }
+  .lo-an .lo-wi-wort:last-child .lo-wi-z:last-child::after {
+    animation-name: lo-wi-cursor-ende;
+  }
+  .lo-an .lo-wi-denkt {
+    animation: lo-wi-denkt 10s var(--ease) infinite both;
+  }
+  .lo-an .lo-wi-denkt i,
+  .lo-an .lo-wa-tippt i {
+    animation: lo-hupf 1s ease-in-out infinite;
+  }
+  .lo-an .lo-wi-denkt i:nth-child(2),
+  .lo-an .lo-wa-tippt i:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .lo-an .lo-wi-denkt i:nth-child(3),
+  .lo-an .lo-wa-tippt i:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .lo-an .lo-wi-antwort {
+    animation: lo-wi-antwort 10s var(--ease) infinite both;
+  }
+
+  /* Agent */
+  .lo-an .lo-ag-an {
+    animation: lo-ein-1 var(--lo-zyklus) var(--ease) infinite both;
+  }
+  .lo-an .lo-ein-2 {
+    animation-name: lo-ein-2;
+  }
+  .lo-an .lo-ein-3 {
+    animation-name: lo-ein-3;
+  }
+  .lo-an .lo-ein-4 {
+    animation-name: lo-ein-4;
+  }
+  .lo-an .lo-ag-knopf {
+    animation: lo-knopf-1 var(--lo-zyklus) var(--ease) infinite both;
+  }
+  .lo-an .lo-knopf-2 {
+    animation-name: lo-knopf-2;
+  }
+  .lo-an .lo-knopf-3 {
+    animation-name: lo-knopf-3;
+  }
+  .lo-an .lo-knopf-4 {
+    animation-name: lo-knopf-4;
+  }
+  .lo-an .lo-ag-aktiv i {
+    animation: lo-hupf 2.4s ease-in-out infinite;
+  }
+
+  /* Fulfilment */
+  .lo-an .lo-fu-laeufer {
+    animation: lo-fu-lauf var(--lo-zyklus) cubic-bezier(0.45, 0, 0.3, 1) infinite both;
+  }
+  .lo-an .lo-fu-fuell {
+    animation: lo-fu-fuell var(--lo-zyklus) cubic-bezier(0.45, 0, 0.3, 1) infinite both;
+  }
+  @container lo-bild (max-width: 329px) {
+    .lo-an .lo-fu-laeufer {
+      animation-name: lo-fu-lauf-y;
+    }
+    .lo-an .lo-fu-fuell {
+      animation-name: lo-fu-fuell-y;
+    }
+  }
+  .lo-an .lo-fu-1 {
+    animation: lo-fu-1 var(--lo-zyklus) var(--ease) infinite both;
+  }
+  .lo-an .lo-fu-2 {
+    animation: lo-fu-2 var(--lo-zyklus) var(--ease) infinite both;
+  }
+  .lo-an .lo-fu-3 {
+    animation: lo-fu-3 var(--lo-zyklus) var(--ease) infinite both;
+  }
+  .lo-an .lo-fu-4 {
+    animation: lo-fu-4 var(--lo-zyklus) var(--ease) infinite both;
+  }
+  .lo-an .lo-fu-hinweis {
+    animation: lo-fu-hinweis var(--lo-zyklus) var(--ease) infinite both;
+  }
+
+  /* WhatsApp */
+  .lo-an .lo-wa-b1 {
+    animation: lo-wa-b1 10s var(--ease) infinite both;
+  }
+  .lo-an .lo-wa-tippt {
+    animation: lo-wa-tippt 10s var(--ease) infinite both;
+  }
+  .lo-an .lo-wa-b2 {
+    animation: lo-wa-b2 10s var(--ease) infinite both;
+  }
+  .lo-an .lo-wa-b3 {
+    animation: lo-wa-b3 10s var(--ease) infinite both;
+  }
+
+  /* Voice */
+  .lo-an .lo-vo-welle i {
+    animation: lo-vo-welle 1.5s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -0.11s);
+  }
+  .lo-an .lo-vo-welle i:nth-child(3n + 1) {
+    animation-duration: 1.25s;
+  }
+  .lo-an .lo-vo-welle i:nth-child(4n + 2) {
+    animation-duration: 1.8s;
+  }
+  .lo-an .lo-vo-hoerer::before {
+    animation: lo-ring 2.4s ease-out infinite;
+  }
+}
+
+/* Ende der Lösungen mit Foto der Gründer (07.10.2026): links Foto, rechts Frage, Satz und Knopf */
+.lo-ende--foto {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  justify-items: stretch;
+  gap: clamp(28px, 4vw, 64px);
+  max-width: 1080px;
+  margin-inline: auto;
+  text-align: left;
+}
+.lo-foto {
+  aspect-ratio: 4 / 3;
+  border-radius: 26px;
+  box-shadow: 0 30px 60px -30px rgba(11, 11, 14, 0.5);
+}
+.lo-ende-text {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+}
+.lo-ende--foto .lo-ende-zeile {
+  max-width: none;
+  font-size: clamp(24px, 2.3vw, 32px);
+  font-weight: 700;
+}
+.lo-ende-satz {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--page-ink-2);
+}
+@media (max-width: 899px) {
+  .lo-ende--foto {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 560px;
+  }
+}
+@media (max-width: 599px) {
+  .lo-ende-text .btn {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+/* Frage und Antwort je in einer eigenen Zeile, ohne weiteren Umbruch (ab 600 px) */
+.lo-ende-z {
+  display: block;
+}
+@media (min-width: 600px) {
+  .lo-ende--foto .lo-ende-zeile {
+    font-size: clamp(22px, 2.05vw, 29px);
+  }
+  .lo-ende-z {
+    white-space: nowrap;
+  }
+}
+/* Handy: ebenfalls genau zwei Zeilen, Schrift wächst mit der Bildschirmbreite */
+@media (max-width: 599px) {
+  .lo-ende--foto .lo-ende-zeile {
+    font-size: min(24px, 4.7vw);
+  }
+  .lo-ende-z {
+    white-space: nowrap;
+  }
+}
