@@ -70,7 +70,6 @@ export function Workshop() {
           ) : (
             <div className="ws-bild-platzhalter" aria-hidden="true">
               <Image src="/logo/svh-bild-480.webp" alt="" width={96} height={156} />
-              <span>{workshopB.bildFolgt}</span>
             </div>
           )}
         </div>
