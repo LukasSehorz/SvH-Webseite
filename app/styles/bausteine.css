@@ -919,17 +919,11 @@ html.rv-an .pv-box:not([data-rv="in"]) .pv-saeule {
     radial-gradient(80% 60% at 50% 35%, rgba(106, 85, 255, 0.45), transparent 70%),
     linear-gradient(180deg, #14142a, var(--b-dunkel, #080a1d));
 }
+/* Bis ein Foto da ist: nur das SvH-Logo, etwas größer, ohne Hinweistext */
 .ws-bild-platzhalter img {
-  width: 72px;
+  width: 92px;
   height: auto;
-  opacity: 0.85;
-}
-.ws-bild-platzhalter span {
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
+  opacity: 0.9;
 }
 
 .wf {

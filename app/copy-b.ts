@@ -25,7 +25,7 @@ export const metaB = {
 export type SubLink = { label: string; text: string; href: string };
 export type NavLink = { label: string; href: string; id: string; sub?: SubLink[]; foot?: { label: string; href: string } };
 
-// Google-Profil (5,0 Sterne, 6 Bewertungen, Stand 07.10.2026): Hero und Kunden verlinken dorthin
+// Google-Profil (5,0 Sterne, 7 Bewertungen, Stand 12.10.2026): Hero und Kunden verlinken dorthin
 const GOOGLE_PROFIL =
   "https://www.google.com/maps/place/SvH+Consulting/@48.3285982,11.8226616,10z/data=!4m6!3m5!1s0x8eafb3c841f9a22f:0xc493185e015a3928!8m2!3d48.3285982!4d11.8226616!16s%2Fg%2F11nvctpln1";
 
@@ -80,9 +80,9 @@ export const heroB = {
   google: {
     schnitt: "5,0",
     text: "bei Google",
-    anzahl: "6 Bewertungen",
+    anzahl: "7 Bewertungen",
     href: GOOGLE_PROFIL,
-    label: "5,0 bei Google · 6 Bewertungen, Profil öffnen, neues Fenster",
+    label: "5,0 bei Google · 7 Bewertungen, Profil öffnen, neues Fenster",
   },
   // OFFEN: Foto von Jannik und Lukas, z. B. "/b/gruender.jpg". Leer = kein Hintergrundbild.
   hintergrund: "",
@@ -256,9 +256,8 @@ export const workshopB = {
       { titel: "Ziel verfehlt?", text: "Dann bekommst du dein Geld zurück. So steht es in deinem Angebot." },
     ],
   },
-  // OFFEN: großes Bild rechts (z. B. Foto aus einem Workshop), "/b/workshop.jpg"
+  // OFFEN: großes Bild rechts (z. B. Foto aus einem Workshop), "/b/workshop.jpg". Bis dahin steht dort nur das SvH-Logo.
   bild: "",
-  bildFolgt: "Bild folgt",
   // Preisanker „1.099 € → 0 €“: seit Runde 3 im Masterplan (masterplanB.preis)
 };
 
@@ -375,7 +374,7 @@ export const kundenB = {
   pfeil: "auf",
   ctaZeile: "Das will ich für meinen Betrieb auch.",
   schnitt: "5,0",
-  anzahl: "6 Google-Bewertungen",
+  anzahl: "7 Google-Bewertungen",
   profil: GOOGLE_PROFIL,
   // Karussell: eine Reihe, Pfeile drehen endlos weiter
   zurueck: "Vorherige Bewertung",
@@ -460,25 +459,25 @@ export const teamB = {
   label: "Wer dahintersteckt",
   titel: "Wer das für dich _baut_",
   people: [
-    // Porträts seit 12.10.2026 (auf Kopf und Oberkörper zugeschnitten); Texte sind Entwürfe, bitte prüfen und ergänzen
+    // Porträts seit 12.10.2026 (auf Kopf und Oberkörper zugeschnitten); Aufgaben laut Lukas (12.10.2026)
     {
       name: "Lukas Sehorz",
-      rolle: "Gründer · Digitalisierung und Prozessoptimierung",
+      rolle: "Gründer · Umsetzung und Programmierung",
       initials: "LS",
       foto: "/b/portraet-lukas-kopf.webp",
       linkedin: "https://www.linkedin.com/in/lukas-sehorz-324870242/",
       text: [
-        "Lukas hat Digitalisierung und Prozessoptimierung studiert. Er findet die Stellen, an denen in deinem Betrieb jeden Tag Zeit verloren geht, und macht daraus Abläufe, die wie von selbst laufen.",
+        "Lukas setzt um, was wir mit dir planen. Er programmiert die Automatisierungen selbst und bleibt dran, bis jeder Auftrag fertig ist und in deinem Betrieb zuverlässig läuft.",
       ],
     },
     {
       name: "Jannik vom Hofe",
-      rolle: "Gründer · KI und Kommunikation",
+      rolle: "Gründer · Vertrieb, Kunden und Team",
       initials: "JvH",
       foto: "/b/portraet-jannik-kopf.webp",
       linkedin: "https://www.linkedin.com/in/jannik-vom-hofe-b525b53b4/",
       text: [
-        "Jannik verfolgt jeden Tag, was sich bei KI tut, und zeigt auf YouTube, was davon für Betriebe wirklich zählt. Er übersetzt Technik in Alltagssprache, damit dein ganzes Team mitkommt.",
+        "Jannik verantwortet den Vertrieb, betreut unsere Kunden und führt unser Team. Er sorgt dafür, dass du vom ersten Gespräch an weißt, woran wir arbeiten und wer sich um dich kümmert.",
       ],
     },
   ],
