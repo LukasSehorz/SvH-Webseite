@@ -113,7 +113,7 @@ export default function Loesungen() {
 
         {/* Übergang zu den Ergebnissen: Foto der Gründer neben der Frage „Welche davon lohnt sich bei dir?“ */}
         <div className="lo-ende lo-ende--foto" data-rv="">
-          <FotoFenster className="lo-foto" src={t.foto} alt={t.fotoAlt} hinweis={t.fotoFolgt} sizes="(max-width: 899px) 100vw, 560px" />
+          <FotoFenster className="lo-foto" src={t.foto} alt={t.fotoAlt} sizes="(max-width: 899px) 100vw, 560px" />
           <div className="lo-ende-text">
             {/* genau zwei Zeilen: Frage, dann Antwort */}
             <p className="lo-ende-zeile">

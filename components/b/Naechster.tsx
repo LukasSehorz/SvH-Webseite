@@ -15,12 +15,14 @@ export default function Naechster() {
   return (
     <section className="nx" id="termin" aria-labelledby="nx-titel">
       <div className="nx-wrap" data-rv="">
-        {/* Foto der Gründer (Platzhalter, bis das Foto da ist), unten das Bild-Logo als kleines Siegel */}
+        {/* Foto der Gründer mit dem Bild-Logo als kleinem Siegel. Ohne Foto zeigt das Fenster selbst das Logo, dann kein Siegel. */}
         <div className="nx-bild">
-          <FotoFenster className="nx-foto" src={naechsterB.foto} alt={naechsterB.fotoAlt} hinweis={naechsterB.fotoFolgt} sizes="(max-width: 899px) 100vw, 440px" />
-          <span className="nx-siegel" aria-hidden="true">
-            <Image src="/logo/svh-bild-navy.webp" alt="" width={30} height={49} />
-          </span>
+          <FotoFenster className="nx-foto" src={naechsterB.foto} alt={naechsterB.fotoAlt} sizes="(max-width: 899px) 100vw, 440px" />
+          {naechsterB.foto ? (
+            <span className="nx-siegel" aria-hidden="true">
+              <Image src="/logo/svh-bild-navy.webp" alt="" width={30} height={49} />
+            </span>
+          ) : null}
         </div>
         <div className="nx-kasten">
           <h2 className="nx-titel" id="nx-titel">

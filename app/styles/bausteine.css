@@ -2688,22 +2688,11 @@ html[data-dialog-offen] {
     radial-gradient(80% 60% at 50% 35%, rgba(106, 85, 255, 0.42), transparent 70%),
     linear-gradient(180deg, #14142a, var(--b-dunkel, #080a1d));
 }
-.ff-personen {
-  width: min(62%, 220px);
+/* Ohne Foto: nur das SvH-Logo (wie beim Workshop-Bild) */
+.ff-platzhalter img {
+  width: 92px;
   height: auto;
-}
-.ff-namen {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.85);
-}
-.ff-hinweis {
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  opacity: 0.9;
 }
 
 /* Nächster Schritt: das Foto füllt die ganze helle Fläche links */
@@ -2747,8 +2736,5 @@ html .nx-bild .nx-foto {
   }
   .nx-siegel img {
     width: 18px !important;
-  }
-  .nx-bild .ff-namen {
-    font-size: 14px;
   }
 }
