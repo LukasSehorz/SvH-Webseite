@@ -274,7 +274,6 @@ export const loesungenB = {
   // Foto von Jannik (12.10.2026), vollständig und unbeschnitten (Seitenverhältnis 1122 × 2407)
   foto: "/b/jannik-schreibtisch-ganz.webp",
   fotoAlt: "Jannik vom Hofe, Gründer von SvH Consulting, an seinem Schreibtisch",
-  fotoFolgt: "Foto folgt",
   // Schild je Karte: „Stufe 1 · Wissen“ (Kurzname wie im Unendlichkeitszeichen darüber)
   stufe: (nr: number) => `Stufe ${nr} · ${leistungenB.teile.find((t) => t.nr === nr)?.kurz ?? ""}`,
   karten: [
@@ -509,10 +508,9 @@ export const naechsterB = {
   ],
   telefon: "Lieber erst kurz sprechen? Ruf uns direkt an:",
   schluss: "Mach noch heute den ersten Schritt.",
-  // OFFEN: Foto von Lukas und Jannik zusammen (Hochformat), z. B. "/b/gruender-naechster.jpg"
+  // OFFEN: Foto von Lukas und Jannik zusammen (Hochformat), z. B. "/b/gruender-naechster.jpg". Bis dahin nur das SvH-Logo.
   foto: "",
   fotoAlt: "Lukas Sehorz und Jannik vom Hofe, die Gründer von SvH Consulting",
-  fotoFolgt: "Foto folgt",
 };
 
 /* Zahnräder: das Lösungsprinzip direkt nach dem Problem (Baulig: „Was dich erwartet“).
