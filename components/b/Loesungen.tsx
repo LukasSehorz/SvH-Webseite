@@ -4,7 +4,7 @@ import { loesungenB } from "@/app/copy-b";
 import Cta from "@/components/system/Cta";
 import { Grad, stufe } from "@/components/b/ui";
 import LoesungenBewegung from "@/components/b/LoesungenBewegung";
-import { BildAgenten, BildBusiness, BildCrm, BildFulfilment, BildVoice, BildWhatsapp, BildWissen } from "@/components/b/LoesungenBilder";
+import { BildAgenten, BildAuftrag, BildBusiness, BildCrm, BildFulfilment, BildSendung, BildVoice, BildWhatsapp, BildWissen } from "@/components/b/LoesungenBilder";
 import { STUFEN_FARBEN } from "@/components/b/Unendlich";
 import FotoFenster from "./FotoFenster";
 
@@ -13,6 +13,8 @@ import FotoFenster from "./FotoFenster";
    (1, 2, 2, 3, 4, 4, 4). Das Schild „Stufe 1 · Wissen“ trägt den Punkt in der Farbe der Stufe aus dem
    Unendlichkeitszeichen darüber. Jede Karte hat eine kleine, ruhige Endlos-Animation, die nur läuft,
    solange die Karte im Bild ist (LoesungenBewegung).
+   Darunter zwei Beispiele aus der Logistik (27.10.2026): kleiner Zwischentitel, zwei gleiche Karten nebeneinander,
+   damit Speditionen sich wiederfinden, ohne dass die Seite zur Logistik-Seite wird.
    Unter dem Raster eine kurze Zeile und der Knopf (wie am Ende der Kunden): am Handy sonst eine lange Strecke ohne Knopf. */
 
 type Karte = (typeof loesungenB.karten)[number];
@@ -59,6 +61,53 @@ function Bild({ karte }: { karte: Karte }): ReactNode {
   }
 }
 
+type LgKarte = (typeof loesungenB.logistik.karten)[number];
+type UiLogistik = {
+  mail?: string;
+  datei?: string;
+  kopf?: string;
+  felder?: { name: string; wert: string }[];
+  fertig?: string;
+  frage?: string;
+  antwort?: string;
+  schritte?: string[];
+  belegArt?: string;
+  belegKurz?: string;
+  zugeordnet?: string;
+  belegSchritte?: string[];
+};
+
+function LgBild({ karte }: { karte: LgKarte }): ReactNode {
+  const ui = karte.ui as UiLogistik;
+  switch (karte.id) {
+    case "auftrag":
+      return (
+        <BildAuftrag
+          mail={ui.mail ?? ""}
+          datei={ui.datei ?? ""}
+          kopf={ui.kopf ?? ""}
+          felder={ui.felder ?? []}
+          fertig={ui.fertig ?? ""}
+        />
+      );
+    case "sendung":
+      return (
+        <BildSendung
+          frage={ui.frage ?? ""}
+          antwort={ui.antwort ?? ""}
+          schritte={ui.schritte ?? []}
+          datei={ui.datei ?? ""}
+          belegArt={ui.belegArt ?? ""}
+          belegKurz={ui.belegKurz ?? ""}
+          zugeordnet={ui.zugeordnet ?? ""}
+          belegSchritte={ui.belegSchritte ?? []}
+        />
+      );
+    default:
+      return null;
+  }
+}
+
 /** Kurze Wörter mit Bindestrich (E-Mails) nicht am Bindestrich umbrechen */
 function OhneTrennung({ text }: { text: string }) {
   return (
@@ -81,6 +130,7 @@ const STAFFEL = [0, 1, 0, 1, 2, 0, 1];
 
 export default function Loesungen() {
   const t = loesungenB;
+  const lg = t.logistik;
   return (
     <section className="sb lo" id="loesungen" aria-labelledby="loesungen-titel">
       <div className="sb-wrap">
@@ -110,6 +160,34 @@ export default function Loesungen() {
             </li>
           ))}
         </ul>
+
+        {/* Zwei Beispiele aus der Logistik: Zwischentitel, dann zwei Karten in derselben Machart */}
+        <div className="lo-lg" role="group" aria-labelledby="loesungen-logistik">
+          <div className="lo-lg-kopf" data-rv="">
+            <h3 className="lo-lg-label" id="loesungen-logistik">
+              {lg.label}
+            </h3>
+            <p className="lo-lg-text">{lg.text}</p>
+          </div>
+          <ul className="lo-lg-raster">
+            {lg.karten.map((k, i) => (
+              <li key={k.id} className={`lo-karte lo-karte--${k.id}`} data-rv="" style={stufe(i)}>
+                <div className="lo-bild" aria-hidden="true">
+                  <LgBild karte={k} />
+                </div>
+                <div className="lo-text">
+                  <span className="lo-stufe" style={{ "--stufe": STUFEN_FARBEN[k.stufe - 1] } as CSSProperties}>
+                    {t.stufe(k.stufe)}
+                  </span>
+                  <h4 className="lo-titel">{k.titel}</h4>
+                  <p className="lo-p">
+                    <OhneTrennung text={k.text} />
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         {/* Übergang zu den Ergebnissen: Foto der Gründer neben der Frage „Welche davon lohnt sich bei dir?“ */}
         <div className="lo-ende lo-ende--foto" data-rv="">

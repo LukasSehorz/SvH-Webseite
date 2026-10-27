@@ -1752,24 +1752,19 @@ a.kd-logo:focus-visible {
 
 /* ------------------------------------------------------------ Einblicke: YouTube und LinkedIn */
 
-/* Aktuelles: kompaktes getöntes Band zwischen den weißen Fragen und dem weißen Abschluss (Runde 3).
-   Das Band selbst ist die Fläche, die Videos stehen als weiße Karten darauf. */
+/* Aktuelles: getöntes Band zwischen den weißen Fragen und dem weißen Abschluss (Runde 3).
+   Das Band selbst ist die Fläche, die Videos stehen als weiße Karten darauf, in einem Karussell
+   (VideoKarussell.tsx): Kopf, darunter die Reihe, darunter Pfeile mit Balken und der Link zum Kanal. */
 .sb.ak-band {
   padding-block: clamp(56px, 6vw, 88px);
 }
 .ak-kasten {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-areas:
-    "kopf"
-    "liste"
-    "mehr";
-  gap: 20px;
-  max-width: 1080px;
-  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 2.6vw, 34px);
 }
 .ak-kopf {
-  grid-area: kopf;
+  max-width: 620px;
 }
 .ak-h2 {
   margin-top: 10px;
@@ -1789,57 +1784,225 @@ a.kd-logo:focus-visible {
   color: var(--page-ink-2);
   text-wrap: pretty;
 }
-.ak-liste {
-  grid-area: liste;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+
+/* Reihe: echter waagerechter Scrollbereich mit Einrasten, Scrollleiste unsichtbar (Bedienung über Pfeile,
+   Finger, Trackpad, Pfeiltasten). Ränder: 12 px seitlich und Luft oben/unten für Schatten und Anheben,
+   per negativem Rand wieder ausgeglichen. Die nächste Karte (22 px Abstand) bleibt am Computer verdeckt. */
+.vk {
+  min-width: 0;
 }
-.ak-zeile {
+.vk-reihe {
+  --vk-gap: 22px;
+  --vk-rand: 12px;
+  position: relative; /* hält die unsichtbaren Screenreader-Texte (sr-only, absolut) in der Reihe, sonst verbreitern sie die Seite */
+  display: flex;
+  gap: var(--vk-gap);
+  margin: -8px calc(-1 * var(--vk-rand)) -36px;
+  padding: 8px var(--vk-rand) 36px;
+  scroll-padding-inline: var(--vk-rand);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain; /* am Ende kein „Zurück“-Wischen des Browsers */
+  scrollbar-width: none;
+}
+.vk-reihe::-webkit-scrollbar {
+  display: none;
+}
+.vk-karte {
+  flex: 0 0 calc((100% - 2 * var(--vk-gap)) / 3);
+  min-width: 0;
+  display: flex;
+  scroll-snap-align: start;
+}
+.vk-link {
+  position: relative;
+  isolation: isolate; /* Safari: runde Ecken bleiben beim Anheben sauber */
   display: flex;
   flex-direction: column;
-  height: 100%;
+  width: 100%;
   overflow: hidden;
   border-radius: 20px;
   border: 1px solid var(--linie);
   background: #fff;
   box-shadow: var(--schatten);
+  -webkit-tap-highlight-color: transparent;
   transition:
     transform 0.4s var(--ease),
     box-shadow 0.4s var(--ease);
 }
+.vk-link:focus-visible {
+  border-radius: 20px;
+}
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .ak-zeile:hover {
+  .vk-link:hover {
     transform: translateY(-3px);
     box-shadow:
       0 1px 2px rgba(11, 11, 14, 0.04),
       0 22px 44px -24px rgba(60, 40, 180, 0.32);
   }
 }
-.ak-band .ak-bild {
+.vk-bild {
   flex: 0 0 auto;
   overflow: hidden;
 }
-.ak-band .ak-play {
-  left: 10px;
-  bottom: 10px;
-  width: 36px;
-  height: 36px;
+.vk-bild img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.vk .ak-play {
+  left: 12px;
+  bottom: 12px;
+  width: 40px;
+  height: 40px;
   padding-left: 2px;
 }
-.ak-band .ak-body {
-  padding: 14px 16px 16px;
+.vk-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px 18px 18px;
 }
-.ak-band .ak-titel {
-  font-size: 15.5px;
-  -webkit-line-clamp: 2;
+.vk-datum {
+  font-size: 13.5px;
+  color: var(--page-ink-3);
 }
-.ak-band .ak-mehr {
-  margin-top: 10px;
+.vk-titel {
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--page-ink);
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+.vk-mehr {
+  margin-top: auto;
+  padding-top: 14px;
   font-size: 14.5px;
+  font-weight: 600;
+  color: var(--akzent);
 }
-.ak-mehr-link {
-  grid-area: mehr;
+
+/* Zeile unter der Reihe: links der Kanal-Link, rechts Pfeile mit Balken (Pfeile kommen im Code zuerst) */
+.vk-fuss {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-top: 26px;
+}
+.vk-steuerung {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.vk-pfeil {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--linie);
+  box-shadow: var(--schatten);
+  color: var(--page-ink);
+  cursor: pointer;
+  touch-action: manipulation; /* schnelles Tippen zoomt nicht */
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color 0.3s var(--ease),
+    color 0.3s var(--ease),
+    background-color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease),
+    transform 0.2s var(--ease);
+}
+.vk-pfeil:focus-visible {
+  border-radius: 999px;
+}
+@media (hover: hover) {
+  .vk-pfeil:not([aria-disabled="true"]):hover {
+    border-color: rgba(11, 11, 14, 0.2);
+  }
+}
+.vk-pfeil:not([aria-disabled="true"]):active {
+  transform: scale(0.94);
+}
+/* am Anfang oder Ende: Pfeil grau, bleibt aber fokussierbar (Fokus springt nicht weg) */
+.vk-pfeil[aria-disabled="true"] {
+  cursor: default;
+  color: rgba(11, 11, 14, 0.25);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: none;
+}
+/* Balken: welcher Teil der Reihe gerade zu sehen ist (Breite und Lage setzt VideoKarussell.tsx) */
+.vk-balken {
+  position: relative;
+  width: 96px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(11, 11, 14, 0.1);
+  overflow: hidden;
+}
+.vk-daumen {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 27.273%; /* 3 von 11, bis das Skript misst */
+  border-radius: inherit;
+  background: var(--akzent);
+}
+
+/* Tablet: zwei Karten */
+@media (max-width: 1099px) {
+  .vk-karte {
+    flex-basis: calc((100% - var(--vk-gap)) / 2);
+  }
+}
+/* Handy: Reihe läuft bis an den Bildschirmrand, eine Karte, die nächste schaut etwa 10 % herein.
+   Karte c = (Breite − Rand − Abstand) / 1,1, dann bleiben rechts 0,1 · c für die nächste Karte. */
+@media (max-width: 699px) {
+  .vk-reihe {
+    --vk-gap: 12px;
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+  }
+  .vk-karte {
+    flex-basis: calc((100% + var(--gutter) - var(--vk-gap)) / 1.1);
+  }
+  .vk-link {
+    border-radius: 18px;
+  }
+  .vk-link:focus-visible {
+    border-radius: 18px;
+  }
+  .vk .ak-play {
+    left: 10px;
+    bottom: 10px;
+    width: 36px;
+    height: 36px;
+  }
+  .vk-body {
+    padding: 14px 16px 16px;
+  }
+  .vk-datum {
+    font-size: 13px;
+  }
+  /* etwas größer: kurze Titel laufen so meist auf zwei Zeilen, die Karten wirken nicht leer */
+  .vk-titel {
+    font-size: 17px;
+    line-height: 1.35;
+  }
+  .vk-mehr {
+    padding-top: 12px;
+  }
+  /* Pfeile mittig direkt unter der Reihe (Daumen), der Kanal-Link darunter */
+  .vk-fuss {
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 22px;
+  }
 }
 /* leiser Link zum Kanal (gleiche Höhe wie die Knöpfe der Seite: Trefferfläche 44 px) */
 .ak-link {
@@ -1867,71 +2030,6 @@ a.kd-logo:focus-visible {
   .ak-link:hover {
     border-color: rgba(63, 116, 255, 0.35);
     box-shadow: var(--schatten);
-  }
-}
-/* Computer: Text und Kanal-Link links, Videos rechts */
-@media (min-width: 1000px) {
-  .ak-kasten {
-    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
-    grid-template-areas:
-      "kopf liste"
-      "mehr liste";
-    gap: 22px 44px;
-  }
-  .ak-kopf {
-    align-self: end;
-  }
-  .ak-mehr-link {
-    align-self: start;
-  }
-}
-/* Handy: Videos als flache Zeilen, Bild links, Titel rechts (die ganze Zeile ist der Link) */
-@media (max-width: 699px) {
-  .ak-kasten {
-    gap: 16px;
-  }
-  .ak-liste {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
-  }
-  .ak-zeile {
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    padding: 8px;
-    border-radius: 18px;
-  }
-  .ak-zeile:focus-visible {
-    border-radius: 18px;
-  }
-  .ak-band .ak-bild {
-    flex: 0 0 min(128px, 40%);
-    border-radius: 12px;
-  }
-  .ak-band .ak-play {
-    left: 6px;
-    bottom: 6px;
-    width: 30px;
-    height: 30px;
-  }
-  .ak-band .ak-play svg {
-    width: 14px;
-    height: 14px;
-  }
-  .ak-band .ak-body {
-    padding: 0 6px 0 0;
-  }
-  .ak-band .ak-datum {
-    font-size: 13px;
-  }
-  .ak-band .ak-titel {
-    margin-top: 3px;
-    font-size: 15px;
-    line-height: 1.35;
-    -webkit-line-clamp: 3;
-  }
-  .ak-band .ak-mehr {
-    display: none;
   }
 }
 

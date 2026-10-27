@@ -39,10 +39,14 @@ export default function Hero() {
         </div>
 
         <div className="hb-grid">
-          {/* Bild der Gründer (ersetzt das Video-Fenster), freigestellt auf dem weißen Grund */}
-          <figure className="hb-bild">
-            <Image src={heroB.bild.src} alt={heroB.bild.alt} width={heroB.bild.w} height={heroB.bild.h} priority sizes="(max-width: 999px) 100vw, 640px" />
-          </figure>
+          {/* Die beiden Gründer im Anzug, nebeneinander und bewusst kleiner als ein großes Titelbild */}
+          <div className="hb-bild">
+            {heroB.bilder.map((b) => (
+              <figure key={b.src} className="hb-portrait">
+                <Image src={b.src} alt={b.alt} width={b.w} height={b.h} priority sizes="(max-width: 699px) 44vw, 240px" />
+              </figure>
+            ))}
+          </div>
 
           <div className="hb-text">
             <ul className="hb-punkte">

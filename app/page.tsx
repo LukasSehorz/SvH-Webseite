@@ -22,10 +22,10 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 /* Startseite. Aufbau nach der Struktur von andreasbaulig.de (roter Faden, Erklärung in app/copy-b.ts):
    Versprechen + Beweis → Problem → Lösung mit Gewinnen (Zahnräder) → Leistungen 0–4 → Lösungen →
-   Kunden (Beweis) → Gründer → Masterplan → Ablauf mit Garantie → nächster Schritt → Für wen → Fragen → Videos → Abschluss.
-   Die Videos (Aktuelles, führen zu YouTube) stehen seit Runde 3 hinter den Fragen: vor dem Angebot führt nichts von der Seite weg.
+   Kunden (Beweis) → Gründer → Masterplan → Ablauf mit Garantie → nächster Schritt → Für wen → Videos → Abschluss → Fragen.
+   Reihenfolge am Ende auf Lukas' Wunsch (27.10.2026): Für wen, Aktuelles, „Dein Start“, dann die Fragen ganz unten vor der Fußzeile.
    Hintergründe wechseln ab: Lösungen weiß · Kunden getönt · Gründer getönt · Masterplan dunkles Band über die volle Breite ·
-   Workshop getönt · nächster Schritt weiß (dunkler Kasten) · Für wen + Fragen weiß · Videos getönt · Abschluss weiß.
+   Workshop getönt · nächster Schritt weiß (dunkler Kasten) · Für wen weiß · Videos getönt · Abschluss weiß · Fragen weiß.
    Alle Knöpfe „Kostenlosen KI-Workshop sichern“ öffnen die Anmeldung im Fenster (FormDialog im Layout). */
 export default function Home() {
   return (
@@ -67,9 +67,9 @@ export default function Home() {
       <Workshop />
       <Naechster />
       <FuerWen />
-      <Fragen />
       <Aktuelles />
       <Abschluss />
+      <Fragen />
     </main>
   );
 }
