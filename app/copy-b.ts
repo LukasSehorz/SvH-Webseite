@@ -124,18 +124,26 @@ export const problemB = {
   label: "Das Problem",
   titel: "Es ist nicht deine _Schuld_.",
   text: "Jeder Anbieter verkauft dir sein eigenes Tool, aber keiner sorgt dafür, dass alles mit deinen Abläufen zusammenspielt. Deshalb probiert fast jeder Betrieb KI aus, aber kaum einer spart damit wirklich Zeit. Was fehlt, ist ein klarer Plan.",
+  // Seit 27.10.2026 als ruhiger Befund (Punkteraster, Wochenleiste, Liste), Zahlen unverändert
   studie1: {
-    balken: [
-      { wert: 88, label: "nutzen KI", farbe: "rot" },
-      { wert: 7, label: "richtig eingeführt", farbe: "gruen" },
-    ],
+    // McKinsey: 88 % nutzen KI, 7 % haben sie richtig (unternehmensweit) eingeführt; die 7 sind Teil der 88
+    nutzen: { wert: 88, label: "nutzen KI" },
+    richtig: { wert: 7, label: "haben sie richtig eingeführt" },
+    titel: "88 % nutzen KI, aber nur 7 % haben sie richtig eingeführt.",
+    raster: "1 Punkt = 1 % der befragten Unternehmen",
+    // Folgerung, nur ab Tablet sichtbar (gleicht die Karte neben der Atlassian-Karte aus)
+    fazit: "Es fehlt nicht am Tool, sondern an der richtigen Einführung.",
     quelle: "McKinsey, The State of AI, 2025",
     href: "https://www.mckinsey.com/featured-insights/charts/ai-at-work-but-not-at-scale",
   },
   studie2: {
     // Atlassian: ein Viertel der Arbeitszeit geht fürs Suchen drauf, bei 40 Std. also rund 10 Std.
-    titel: "10 Stunden pro Woche sucht jeder Mitarbeiter nach Informationen.",
-    unter: "Das ist ein Viertel seiner Arbeitszeit.",
+    titel: "10 Stunden pro Woche sucht jeder Mitarbeiter nach Informationen. Das ist ein Viertel seiner Arbeitszeit.",
+    stunden: { wert: 10, einheit: "Std.", label: "pro Woche sucht jeder Mitarbeiter nach Informationen" },
+    anteil: { wert: 25, einheit: "%", label: "seiner Arbeitszeit" },
+    woche: "40-Stunden-Woche",
+    suchen: "10 Std. Suchen",
+    tage: ["Mo", "Di", "Mi", "Do", "Fr"],
     fazit: "Bei vier Mitarbeitern ist das rechnerisch eine volle Stelle, nur fürs Suchen.",
     quelle: "Atlassian, State of Teams 2025",
     href: "https://www.atlassian.com/blog/state-of-teams-2025",
@@ -143,11 +151,12 @@ export const problemB = {
   quelleLabel: "Quelle",
   folgen: {
     titel: "Was passiert, wenn du nichts änderst",
+    // Symbol je Punkt (Linien-Symbole in Problem.tsx)
     punkte: [
-      "Riesiger Zeitverlust, jeden Tag",
-      "Anfragen bleiben liegen, Umsatz geht verloren",
-      "Dein Team ist überlastet und macht Fehler",
-      "Wettbewerber mit KI werden schneller und günstiger",
+      { text: "Riesiger Zeitverlust, jeden Tag", symbol: "uhr" },
+      { text: "Anfragen bleiben liegen, Umsatz geht verloren", symbol: "eingang" },
+      { text: "Dein Team ist überlastet und macht Fehler", symbol: "warnung" },
+      { text: "Wettbewerber mit KI werden schneller und günstiger", symbol: "trend" },
     ],
   },
   // Die Vorteile stehen seit Runde 2 in der Lösung (Zahnräder), Baulig: „Was du erwarten kannst“

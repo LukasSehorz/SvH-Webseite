@@ -126,30 +126,6 @@
   transform: scale(1.08);
 }
 
-/* ------------------------------------------------------------ Problem → Lösung */
-
-/* Linien und Pfeil: die „Ameisen“ laufen einmal in Pfeilrichtung, sobald die Studien im Bild sind */
-.pv-verbinder svg path {
-  stroke-dasharray: 11 8;
-}
-.pv-boxen:has(> [data-rv="in"]) + .pv-verbinder svg path {
-  animation: b-ameisen 2.4s var(--ease) 0.2s backwards;
-}
-.pv-box,
-.pv-kasten {
-  transition:
-    opacity 0.7s var(--ease),
-    transform 0.4s var(--ease),
-    box-shadow 0.35s var(--ease);
-}
-.pv-box:hover,
-.pv-kasten:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    0 2px 0 rgba(106, 85, 255, 0.45),
-    0 26px 48px -20px rgba(60, 40, 180, 0.45);
-}
-
 /* ------------------------------------------------------------ Unendlichkeitszeichen: Lichtimpuls */
 
 /* Ein Glanz läuft ruhig das Band entlang (zeigt: alles greift ineinander). Ohne Weichzeichner:

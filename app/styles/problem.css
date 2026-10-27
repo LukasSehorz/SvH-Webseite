@@ -1,0 +1,550 @@
+/* =====================================================================
+   Problem („Es ist nicht deine Schuld“), Runde 4 vom 27.10.2026
+   Ruhiger Befund statt Comic: helle Karten wie bei den Lösungen (1 px Rand, großer Radius,
+   weicher Schatten), Einheiten-Schaubilder, Tabellenziffern. Farbe sparsam:
+   Markenblau = richtig gemacht, gedämpftes Rot = Verlust, sonst Grautöne.
+   Bewegung einmal beim Erscheinen (Punkte und Stunden füllen sich), nur transform/opacity.
+   Ohne JavaScript oder mit „Bewegung reduzieren“ steht sofort der Endzustand da.
+   Am Ende: die feine Linie zur Lösung (zr-faden, sitzt in Zahnraeder.tsx).
+   ===================================================================== */
+
+.pb {
+  --pb-linie: #dde6fb;
+  --pb-blau: #3f74ff;
+  --pb-grau: #b9c4dc;
+  --pb-leer: #eaeef6;
+  --pb-rot: #b23a32;
+  --pb-rot-fuell: #cd5f55;
+  --pb-rot-flaeche: #fbf1ef;
+  --pb-rot-linie: #f2dbd6;
+  --pb-stunde: #dfe4ef;
+}
+
+/* unten knapper: die feine Linie der Lösung setzt den Weg fort */
+.sb.pb {
+  padding-bottom: clamp(36px, 4vw, 56px);
+}
+.pb-wrap {
+  width: 100%;
+  max-width: calc(1120px + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.pb-kopf {
+  max-width: 900px;
+  margin-inline: auto;
+  text-align: center;
+}
+.pb-kopf .b-h2 {
+  font-size: clamp(34px, 3.8vw, 56px);
+}
+.pb-kopf .b-lead {
+  max-width: 760px;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------ Raster */
+
+/* ab Tablet: zwei Karten, deren Zeilen (Zahlen, Schaubild, Folgerung, Quelle) per subgrid
+   auf gleicher Höhe stehen, darunter die Folgen über die volle Breite */
+.pb-raster {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(16px, 2vw, 24px);
+  margin-top: clamp(32px, 4.4vw, 60px);
+}
+
+/* Karten wie die Lösungen: hell, feiner Rand, oben ein Hauch Blau */
+.pb-karte,
+.pb-folgen {
+  min-width: 0;
+  border: 1px solid var(--pb-linie);
+  border-radius: 24px;
+  background: linear-gradient(180deg, #f6f8ff 0%, #fcfdff 46%, #fff 100%);
+  box-shadow:
+    0 1px 2px rgba(20, 40, 120, 0.04),
+    0 22px 44px -32px rgba(40, 60, 170, 0.32);
+}
+.pb-karte {
+  position: relative;
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+  padding: clamp(22px, 2.6vw, 34px) clamp(22px, 2.6vw, 34px) 0;
+}
+
+/* ------------------------------------------------------------ Zahlen */
+
+/* links etwas breiter: „pro Woche sucht jeder Mitarbeiter …“ ist die längste Beschriftung */
+.pb-werte {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 20px;
+}
+.pb-wert {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+.pb-zahl {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 4.4vw, 60px);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+  color: var(--page-ink);
+}
+.pb-einheit {
+  margin-left: 0.1em;
+  font-size: 0.46em;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--page-ink-3);
+}
+.pb-zahl--einstellig .pb-einheit {
+  margin-left: -0.02em;
+}
+.pb-wert--blau .pb-zahl {
+  color: var(--pb-blau);
+}
+.pb-wert--rot .pb-zahl {
+  color: var(--pb-rot);
+}
+.pb-wert--blau .pb-einheit,
+.pb-wert--rot .pb-einheit {
+  color: inherit;
+  opacity: 0.72;
+}
+.pb-wert-label {
+  display: flex;
+  gap: 9px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--page-ink-2);
+  text-wrap: pretty;
+}
+/* Farbmarke = Legende zum Schaubild darunter */
+.pb-marke {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  margin-top: 0.46em;
+  border-radius: 50%;
+}
+.pb-marke--grau {
+  background: var(--pb-grau);
+}
+.pb-marke--blau {
+  background: var(--pb-blau);
+}
+.pb-marke--rot {
+  border-radius: 2px;
+  background: var(--pb-rot-fuell);
+}
+
+/* ------------------------------------------------------------ Schaubild: gemeinsame Kopfzeile */
+
+.pb-schaubild {
+  margin-top: clamp(22px, 2.6vw, 32px);
+}
+.pb-schaubild-kopf {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--page-ink-3);
+}
+.pb-schaubild-rot {
+  font-weight: 600;
+  color: var(--pb-rot);
+}
+
+/* ------------------------------------------------------------ McKinsey: 100 Punkte */
+
+/* ab Tablet 4 Zeilen × 25 Spalten (so hoch wie die Wochenleiste daneben), am Handy 5 × 20.
+   Spaltenweise gefüllt: 7 blau, dann 81 grau-blau, 12 leer */
+.pb-punkte {
+  display: grid;
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: clamp(4px, 0.45vw, 6px);
+}
+.pb-p {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--pb-leer);
+}
+.pb-p--grau::after,
+.pb-p--blau::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--pb-grau);
+}
+.pb-p--blau::after {
+  background: var(--pb-blau);
+}
+/* Übergang nur beim Erscheinen: beim Laden verschwinden die Punkte sofort, statt rückwärts zu laufen */
+.pb-karte[data-rv="in"] .pb-p::after {
+  transition:
+    opacity 0.5s var(--ease),
+    transform 0.5s var(--ease);
+  transition-delay: calc(var(--i, 0) * 9ms + 250ms);
+}
+html.rv-an .pb-karte:not([data-rv="in"]) .pb-p::after {
+  opacity: 0;
+  transform: scale(0.35);
+}
+
+/* ------------------------------------------------------------ Atlassian: Arbeitswoche */
+
+.pb-tage {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(6px, 0.9vw, 10px);
+}
+.pb-tag {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.pb-stunden {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 2px;
+  height: clamp(30px, 4vw, 56px);
+}
+.pb-h {
+  position: relative;
+  border-radius: 2.5px;
+  background: var(--pb-stunde);
+}
+.pb-h--suchen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--pb-rot-fuell);
+  transform-origin: bottom;
+}
+.pb-karte[data-rv="in"] .pb-h--suchen::after {
+  transition:
+    opacity 0.45s var(--ease),
+    transform 0.45s var(--ease);
+  transition-delay: calc(var(--c, 0) * 60ms + 300ms);
+}
+html.rv-an .pb-karte:not([data-rv="in"]) .pb-h--suchen::after {
+  opacity: 0;
+  transform: scaleY(0.2);
+}
+.pb-tag-name {
+  font-size: 12.5px;
+  line-height: 1;
+  text-align: center;
+  color: var(--page-ink-3);
+}
+
+/* Folgerung: ruhige Randlinie wie ein Merksatz im Bericht */
+.pb-fazit {
+  align-self: start;
+  margin-top: clamp(20px, 2.4vw, 28px);
+  padding-left: 14px;
+  border-left: 2px solid var(--pb-rot-fuell);
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--page-ink);
+  text-wrap: pretty;
+}
+.pb-fazit--blau {
+  border-left-color: var(--pb-blau);
+}
+
+/* ------------------------------------------------------------ Quelle (Tippfläche 44 px) */
+
+/* sitzt immer unten in der Karte (eigene Zeile im Raster) */
+.pb-quelle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-self: end;
+  column-gap: 5px;
+  margin-top: clamp(18px, 2.4vw, 28px);
+  border-top: 1px solid var(--linie-2);
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: var(--page-ink-3);
+}
+.pb-quelle a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 48px;
+  color: var(--page-ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--linie);
+  text-underline-offset: 3px;
+  transition:
+    color 0.25s var(--ease),
+    text-decoration-color 0.25s var(--ease);
+}
+.pb-quelle a:hover {
+  color: var(--page-ink);
+  text-decoration-color: currentColor;
+}
+.pb-quelle svg {
+  flex: 0 0 auto;
+  opacity: 0.6;
+}
+
+/* ------------------------------------------------------------ Folgen */
+
+.pb-folgen {
+  grid-column: 1 / -1;
+  margin-top: clamp(16px, 2vw, 24px);
+  padding: clamp(24px, 2.6vw, 34px);
+  background: #fff;
+}
+.pb-folgen-titel {
+  text-wrap: balance;
+  font-family: var(--font-display);
+  font-size: clamp(19px, 1.6vw, 22px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--page-ink);
+}
+.pb-folgen-liste {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 22px;
+}
+.pb-folgen-liste li {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding-inline: clamp(16px, 2vw, 26px);
+  border-left: 1px solid var(--linie-2);
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--page-ink);
+  text-wrap: pretty;
+}
+.pb-folgen-liste li:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.pb-symbol {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  border: 1px solid var(--pb-rot-linie);
+  background: var(--pb-rot-flaeche);
+  color: var(--pb-rot);
+}
+
+/* ------------------------------------------------------------ Knopf */
+
+.pb-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(28px, 4vw, 52px);
+}
+
+/* ------------------------------------------------------------ Tablet: Folgen 2 × 2 */
+
+@media (max-width: 999px) {
+  .pb-folgen-liste {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 22px;
+  }
+  .pb-folgen-liste li:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* ------------------------------------------------------------ Handy */
+
+@media (max-width: 699px) {
+  .sb.pb {
+    padding-top: 60px;
+  }
+  .pb-raster {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .pb-karte {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    border-radius: 20px;
+  }
+  /* Folgerung zu McKinsey nur ab Tablet: dort gleicht sie die Karte aus, am Handy spart sie Höhe */
+  .pb-ab-tablet {
+    display: none;
+  }
+  .pb-folgen {
+    margin-top: 0;
+  }
+  /* im Spaltenfluss würde align-self: end die Zeile nach rechts schieben */
+  .pb-quelle {
+    align-self: stretch;
+  }
+  .pb-quelle a {
+    min-height: 44px;
+  }
+  .pb-cta {
+    margin-top: 24px;
+  }
+  .pb-werte {
+    gap: 16px;
+  }
+  .pb-punkte {
+    grid-template-rows: repeat(5, auto);
+    gap: 4px;
+  }
+  /* Spalten nach Textlänge: „88 % nutzen KI“ ist kurz und bekommt nur so viel Platz, wie es braucht */
+  .pb-werte {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 32px;
+  }
+  .pb-karte--woche .pb-werte {
+    grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr);
+    column-gap: 14px;
+  }
+  .pb-zahl {
+    font-size: 40px;
+  }
+  .pb-wert {
+    gap: 10px;
+  }
+  .pb-wert-label {
+    font-size: 14.5px;
+  }
+  .pb-schaubild {
+    margin-top: 18px;
+  }
+  .pb-schaubild-kopf {
+    margin-bottom: 8px;
+    font-size: 12.5px;
+  }
+  .pb-fazit {
+    padding-left: 12px;
+    font-size: 15px;
+    text-wrap: balance;
+  }
+  .pb-folgen {
+    border-radius: 20px;
+    padding: 18px 20px 6px;
+  }
+  .pb-folgen-titel {
+    font-size: 18px;
+  }
+  .pb-folgen-liste {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0;
+    margin-top: 8px;
+  }
+  .pb-folgen-liste li,
+  .pb-folgen-liste li:nth-child(3) {
+    grid-template-columns: 32px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+    padding: 8px 0;
+    border-left: 0;
+    border-top: 1px solid var(--linie-2);
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .pb-folgen-liste li:first-child {
+    border-top: 0;
+  }
+  .pb-symbol {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+  }
+  .pb-symbol svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+@media (max-width: 359px) {
+  .pb-karte {
+    padding-inline: 18px;
+  }
+  /* „Quelle:“ bleibt für Vorleseprogramme, sichtbar reicht der Link mit Pfeil unter der Linie */
+  .pb-quelle-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .pb-schaubild-kopf {
+    font-size: 12px;
+  }
+  .pb-werte {
+    column-gap: 24px;
+  }
+  /* „seiner Arbeitszeit“ darf zweizeilig werden, damit „nach Informationen“ zusammenbleibt */
+  .pb-karte--woche .pb-werte {
+    grid-template-columns: minmax(0, 1.95fr) minmax(0, 1fr);
+    column-gap: 12px;
+  }
+  .pb-wert-label {
+    font-size: 14px;
+  }
+  .pb-zahl {
+    font-size: 36px;
+  }
+  .pb-folgen {
+    padding-inline: 18px;
+  }
+}
+
+/* ------------------------------------------------------------ Übergang zur Lösung (Zahnraeder.tsx) */
+
+/* Eine Haarlinie aus dem Weiß in die Markenfarbe, unten ein kleiner Punkt. Wächst einmal von oben,
+   sobald der Kopf der Lösung erscheint (ersetzt die gestrichelte Comic-Linie mit Pfeil). */
+.zr .zr-faden {
+  position: relative;
+  width: 1px;
+  height: clamp(44px, 5vw, 72px);
+  margin: 0 auto clamp(18px, 2vw, 26px);
+  background: linear-gradient(180deg, rgba(106, 85, 255, 0) 0%, rgba(106, 85, 255, 0.5) 100%);
+  transform-origin: top;
+}
+.zr:has(.zr-kopf[data-rv="in"]) .zr-faden {
+  transition: transform 0.9s var(--ease);
+}
+.zr .zr-faden::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 5px;
+  height: 5px;
+  margin-left: -2.5px;
+  border-radius: 50%;
+  background: #6a55ff;
+  opacity: 0.75;
+}
+html.rv-an .zr:not(:has(.zr-kopf[data-rv="in"])) .zr-faden {
+  transform: scaleY(0);
+}
