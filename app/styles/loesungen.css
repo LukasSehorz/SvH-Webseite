@@ -1829,3 +1829,807 @@ html .lo-ende--foto {
     max-width: 300px;
   }
 }
+
+/* =====================================================================
+   Beispiele aus der Logistik (27.10.2026): Zwischentitel und zwei Karten in derselben Machart
+   a) Auftrag aus der E-Mail landet im TMS, b) Sendungsauskunft und Ablieferbeleg.
+   Grundzustand = fertiger Endzustand; Abläufe im 10-s-Takt nur mit .lo-an.
+   ===================================================================== */
+
+.lo-lg {
+  margin-top: clamp(52px, 6vw, 88px);
+}
+.lo-lg-kopf {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+}
+/* Label mit feinen Linien links und rechts */
+.lo-lg-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 620px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--akzent);
+}
+.lo-lg-label::before,
+.lo-lg-label::after {
+  content: "";
+  flex: 1 1 0;
+  min-width: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(90, 67, 230, 0), rgba(90, 67, 230, 0.3));
+}
+.lo-lg-label::after {
+  background: linear-gradient(270deg, rgba(90, 67, 230, 0), rgba(90, 67, 230, 0.3));
+}
+.lo-lg-text {
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--page-ink-2);
+  text-wrap: balance;
+}
+.lo-lg-raster {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+}
+@media (min-width: 640px) {
+  .lo-lg-raster {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+@media (min-width: 1000px) {
+  .lo-lg-raster {
+    gap: 24px;
+  }
+}
+
+/* ------------------------------------------------------------ Logistik a · Auftrag landet im TMS */
+
+.lo-at {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  justify-items: center;
+  padding: 0 18px;
+}
+.lo-at-mail {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  max-width: 320px;
+  padding: 5px 7px 5px 5px;
+  border-radius: 13px;
+}
+.lo-at-mail-ico {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--lo-blau);
+  box-shadow: 0 3px 8px -3px rgba(20, 30, 120, 0.5);
+}
+.lo-at-mail-kopf {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.lo-at-datei {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  padding: 3px 8px 3px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+/* Verbindung Mail → TMS nur in der breiten Karte */
+.lo-at-weg {
+  display: none;
+}
+.lo-at-form {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 16px;
+}
+.lo-at-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 2px;
+  min-height: 21px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.lo-at-titel {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.lo-at-felder {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+.lo-at-feld {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  padding: 4px 9px 5px;
+  border-radius: 9px;
+  background: #f5f7fe;
+  border: 1px solid #e8edfa;
+}
+/* Rahmen, der kurz aufleuchtet, wenn das Feld gefüllt wird */
+.lo-at-feld::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1.5px solid rgba(63, 116, 255, 0.55);
+  box-shadow: 0 0 0 3px rgba(63, 116, 255, 0.1);
+  opacity: 0;
+}
+.lo-at-feld dt {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #6a7699;
+}
+.lo-at-feld dd {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #1d2236;
+}
+.lo-at-leer {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 58%;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 4px;
+  background: #dfe6f7;
+  opacity: 0;
+}
+.lo-at-wert {
+  display: inline-block;
+}
+.lo-at-fertig {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  padding: 2px 10px 2px 2px;
+  border-radius: 999px;
+  background: #eef3ff;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #3557e0;
+}
+.lo-at-ok {
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--lo-glas);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 3px 8px -3px rgba(52, 88, 255, 0.7);
+  color: #fff;
+}
+
+/* breite Karte: Mail links, Linie mit Lichtpunkt, TMS rechts */
+@container lo-bild (min-width: 540px) {
+  .lo-at {
+    grid-template-columns: 172px minmax(32px, 1fr) minmax(0, 300px);
+    align-items: center;
+    max-width: 620px;
+    margin-inline: auto;
+    padding: 0 28px;
+  }
+  .lo-at-mail {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 10px 9px;
+    max-width: none;
+    padding: 12px;
+    border-radius: 16px;
+  }
+  .lo-at-datei {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .lo-at-weg {
+    position: relative;
+    display: block;
+    align-self: center;
+    width: 100%;
+    height: 1.5px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, rgba(63, 116, 255, 0.3), rgba(63, 116, 255, 0.55));
+  }
+  .lo-at-puls {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  .lo-at-puls::before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: -0.75px;
+    width: 22px;
+    height: 3px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, rgba(63, 116, 255, 0), #3f74ff 70%, #8fb0ff);
+    box-shadow: 0 0 8px rgba(63, 116, 255, 0.5);
+  }
+  .lo-at-form {
+    gap: 10px;
+    max-width: none;
+    margin-top: 0;
+    padding: 12px;
+  }
+  .lo-at-feld {
+    padding: 5px 10px 6px;
+  }
+}
+/* sehr schmale Karte (kleines Handy): in der Mail-Zeile nur der Anhang */
+@container lo-bild (max-width: 300px) {
+  .lo-at {
+    padding: 0 14px;
+  }
+  .lo-at-mail-kopf {
+    display: none;
+  }
+  .lo-at-datei {
+    margin-right: auto;
+  }
+}
+
+/* ------------------------------------------------------------ Logistik b · Sendung und Ablieferbeleg */
+
+.lo-sd {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 0 18px;
+}
+.lo-sd-chat {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  max-width: 320px;
+}
+.lo-sd-frage {
+  justify-self: start;
+  max-width: 86%;
+  padding: 5px 11px 6px;
+  border-radius: 13px 13px 13px 4px;
+  background: #e6eaf2;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.38;
+  color: #1d2236;
+  transform-origin: 0 100%;
+}
+.lo-sd-platz {
+  position: relative;
+}
+/* „KI tippt“ zwischen Frage und Antwort (nur während der Bewegung zu sehen) */
+.lo-sd-tippt {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  gap: 4px;
+  padding: 8px 11px;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 4px 12px -6px rgba(20, 30, 120, 0.4);
+  opacity: 0;
+}
+.lo-sd-tippt i {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8aa6ff;
+}
+.lo-sd-antwort {
+  display: grid;
+  gap: 9px;
+  padding: 9px 11px 8px;
+  border-radius: 14px;
+}
+.lo-sd-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--page-ink);
+}
+.lo-sd-ki {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+.lo-sd-strecke {
+  position: relative;
+}
+.lo-sd-linie {
+  position: absolute;
+  left: calc(100% / 6);
+  right: calc(100% / 6);
+  top: 9.5px;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #e3e9f8;
+}
+.lo-sd-fuell {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #3f74ff, #6a55ff);
+  transform-origin: 0 50%;
+  transform: scaleX(0.5);
+}
+.lo-sd-schritte {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.lo-sd-schritt {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+.lo-sd-name {
+  max-width: 100%;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: center;
+  color: #3a4466;
+}
+.lo-sd-s2 .lo-sd-name {
+  font-weight: 600;
+  color: #3557e0;
+}
+/* der aktuelle Schritt: Lkw im Kreis, ein ruhiger Ring */
+.lo-sd-ok2::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(63, 116, 255, 0.45);
+  opacity: 0;
+}
+
+.lo-sd-beleg {
+  width: 100%;
+  max-width: 320px;
+  padding: 7px 9px 7px 7px;
+  border-radius: 13px;
+}
+.lo-sd-beleg-kopf {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.lo-sd-beleg-ico {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--lo-blau);
+  box-shadow: 0 3px 8px -3px rgba(20, 30, 120, 0.5);
+}
+.lo-sd-beleg-txt {
+  display: grid;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.lo-sd-beleg-txt b,
+.lo-sd-beleg-txt small {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.lo-sd-beleg-txt b {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.lo-sd-beleg-txt small {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  opacity: 0.9;
+}
+/* weißer Kreis mit blauem Haken (wie bei den Aufgaben der Business-Karte) */
+.lo-sd-haken {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--lo-blau);
+  box-shadow: 0 2px 6px -2px rgba(20, 30, 120, 0.45);
+}
+.lo-sd-breit {
+  display: none !important;
+}
+
+/* breite Karte: Chat links, Beleg rechts mit drei Schritten */
+@container lo-bild (min-width: 540px) {
+  .lo-sd {
+    grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    max-width: 640px;
+    margin-inline: auto;
+    padding: 0 28px;
+  }
+  .lo-sd-chat,
+  .lo-sd-beleg {
+    max-width: none;
+  }
+  .lo-sd-chat {
+    gap: 8px;
+  }
+  .lo-sd-antwort {
+    gap: 11px;
+    padding: 11px 12px 10px;
+  }
+  .lo-sd-beleg {
+    display: grid;
+    gap: 8px;
+    padding: 12px 12px 8px;
+    border-radius: 16px;
+  }
+  .lo-sd-schmal {
+    display: none !important;
+  }
+  .lo-sd-breit {
+    display: grid !important;
+  }
+  .lo-sd-beleg-liste {
+    padding-top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.26);
+  }
+  .lo-sd-beleg-liste li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .lo-sd-punkt {
+    position: relative;
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.5);
+  }
+  .lo-sd-punkt .lo-sd-haken {
+    position: absolute;
+    inset: -1.5px;
+    width: auto;
+    height: auto;
+  }
+}
+@container lo-bild (max-width: 300px) {
+  .lo-sd {
+    padding: 0 14px;
+  }
+}
+
+/* Handy: kompakte Bildflächen für die zwei Logistik-Karten */
+@media (max-width: 639px) {
+  .lo-lg {
+    margin-top: 40px;
+  }
+  .lo-lg-kopf {
+    gap: 6px;
+  }
+  .lo-lg-label {
+    gap: 12px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+  }
+  .lo-lg-text {
+    font-size: 15.5px;
+  }
+  .lo-lg-raster {
+    gap: 12px;
+    margin-top: 18px;
+  }
+  /* Inhalt 183 bzw. 176 px, rundum gut 12 px Luft wie bei den anderen Karten */
+  .lo-karte--auftrag .lo-bild {
+    height: 208px;
+  }
+  .lo-karte--sendung .lo-bild {
+    height: 202px;
+  }
+  .lo-at-form {
+    gap: 7px;
+    margin-top: 7px;
+  }
+}
+
+/* kleines Handy: Label passt nur ohne Linien in eine Zeile */
+@media (max-width: 379px) {
+  .lo-lg-label {
+    font-size: 11.5px;
+    letter-spacing: 0.11em;
+  }
+  .lo-lg-text {
+    font-size: 15px;
+  }
+  .lo-lg-label::before,
+  .lo-lg-label::after {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------ Logistik: Bewegung (10-s-Takt) */
+
+/* a · Mail kommt, Lichtpunkt läuft zum TMS, Felder füllen sich nacheinander, dann „Im TMS angelegt“ */
+@keyframes lo-at-mail {
+  0%, 2% { opacity: 0; transform: translateY(6px); }
+  7%, 88% { opacity: 1; transform: none; }
+  92%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-at-puls {
+  0%, 8% { transform: translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  16% { transform: translateX(100%); opacity: 1; }
+  18%, 100% { transform: translateX(100%); opacity: 0; }
+}
+@keyframes lo-at-w1 {
+  0%, 16% { opacity: 0; transform: translateY(4px); }
+  19%, 89% { opacity: 1; transform: none; }
+  92%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-at-w2 {
+  0%, 23% { opacity: 0; transform: translateY(4px); }
+  26%, 89% { opacity: 1; transform: none; }
+  92%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-at-w3 {
+  0%, 30% { opacity: 0; transform: translateY(4px); }
+  33%, 89% { opacity: 1; transform: none; }
+  92%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-at-w4 {
+  0%, 37% { opacity: 0; transform: translateY(4px); }
+  40%, 89% { opacity: 1; transform: none; }
+  92%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-at-l1 {
+  0%, 16% { opacity: 1; }
+  19%, 89% { opacity: 0; }
+  92%, 100% { opacity: 1; }
+}
+@keyframes lo-at-l2 {
+  0%, 23% { opacity: 1; }
+  26%, 89% { opacity: 0; }
+  92%, 100% { opacity: 1; }
+}
+@keyframes lo-at-l3 {
+  0%, 30% { opacity: 1; }
+  33%, 89% { opacity: 0; }
+  92%, 100% { opacity: 1; }
+}
+@keyframes lo-at-l4 {
+  0%, 37% { opacity: 1; }
+  40%, 89% { opacity: 0; }
+  92%, 100% { opacity: 1; }
+}
+@keyframes lo-at-r1 {
+  0%, 15% { opacity: 0; }
+  18%, 21% { opacity: 1; }
+  25%, 100% { opacity: 0; }
+}
+@keyframes lo-at-r2 {
+  0%, 22% { opacity: 0; }
+  25%, 28% { opacity: 1; }
+  32%, 100% { opacity: 0; }
+}
+@keyframes lo-at-r3 {
+  0%, 29% { opacity: 0; }
+  32%, 35% { opacity: 1; }
+  39%, 100% { opacity: 0; }
+}
+@keyframes lo-at-r4 {
+  0%, 36% { opacity: 0; }
+  39%, 42% { opacity: 1; }
+  46%, 100% { opacity: 0; }
+}
+@keyframes lo-at-fertig {
+  0%, 46% { opacity: 0; transform: scale(0.92); }
+  50%, 88% { opacity: 1; transform: none; }
+  91%, 100% { opacity: 0; transform: none; }
+}
+
+/* b · Frage, Antwort mit Stand, Lkw rückt vor; danach wird der Ablieferbeleg zugeordnet */
+@keyframes lo-sd-frage {
+  0%, 3% { opacity: 0; transform: translateY(6px) scale(0.96); }
+  8%, 88% { opacity: 1; transform: none; }
+  92%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-sd-tippt {
+  0%, 8% { opacity: 0; transform: translateY(4px); }
+  10%, 14% { opacity: 1; transform: none; }
+  16%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-sd-antwort {
+  0%, 14% { opacity: 0; transform: translateY(8px); }
+  19%, 88% { opacity: 1; transform: none; }
+  92%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-sd-fuell {
+  0%, 22% { transform: scaleX(0); }
+  34%, 92% { transform: scaleX(0.5); }
+  95%, 100% { transform: scaleX(0); }
+}
+@keyframes lo-sd-ok1 {
+  0%, 19% { opacity: 0; transform: scale(0.4); }
+  23%, 88% { opacity: 1; transform: scale(1); }
+  92%, 100% { opacity: 0; transform: scale(0.4); }
+}
+@keyframes lo-sd-ok2 {
+  0%, 32% { opacity: 0; transform: scale(0.4); }
+  36%, 88% { opacity: 1; transform: scale(1); }
+  92%, 100% { opacity: 0; transform: scale(0.4); }
+}
+@keyframes lo-sd-beleg {
+  0%, 46% { opacity: 0; transform: translateY(8px); }
+  51%, 88% { opacity: 1; transform: none; }
+  92%, 100% { opacity: 0; transform: none; }
+}
+@keyframes lo-sd-b1 {
+  0%, 54% { opacity: 0; transform: scale(0.4); }
+  58%, 88% { opacity: 1; transform: scale(1); }
+  92%, 100% { opacity: 0; transform: scale(0.4); }
+}
+@keyframes lo-sd-b2 {
+  0%, 61% { opacity: 0; transform: scale(0.4); }
+  65%, 88% { opacity: 1; transform: scale(1); }
+  92%, 100% { opacity: 0; transform: scale(0.4); }
+}
+@keyframes lo-sd-b3 {
+  0%, 68% { opacity: 0; transform: scale(0.4); }
+  72%, 88% { opacity: 1; transform: scale(1); }
+  92%, 100% { opacity: 0; transform: scale(0.4); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* a */
+  .lo-an .lo-at-mail {
+    animation: lo-at-mail 10s var(--ease) infinite both;
+  }
+  .lo-an .lo-at-puls {
+    animation: lo-at-puls 10s cubic-bezier(0.45, 0, 0.4, 1) infinite both;
+  }
+  .lo-an .lo-at-f1 .lo-at-wert { animation: lo-at-w1 10s var(--ease) infinite both; }
+  .lo-an .lo-at-f2 .lo-at-wert { animation: lo-at-w2 10s var(--ease) infinite both; }
+  .lo-an .lo-at-f3 .lo-at-wert { animation: lo-at-w3 10s var(--ease) infinite both; }
+  .lo-an .lo-at-f4 .lo-at-wert { animation: lo-at-w4 10s var(--ease) infinite both; }
+  .lo-an .lo-at-f1 .lo-at-leer { animation: lo-at-l1 10s linear infinite both; }
+  .lo-an .lo-at-f2 .lo-at-leer { animation: lo-at-l2 10s linear infinite both; }
+  .lo-an .lo-at-f3 .lo-at-leer { animation: lo-at-l3 10s linear infinite both; }
+  .lo-an .lo-at-f4 .lo-at-leer { animation: lo-at-l4 10s linear infinite both; }
+  .lo-an .lo-at-f1::after { animation: lo-at-r1 10s ease-in-out infinite both; }
+  .lo-an .lo-at-f2::after { animation: lo-at-r2 10s ease-in-out infinite both; }
+  .lo-an .lo-at-f3::after { animation: lo-at-r3 10s ease-in-out infinite both; }
+  .lo-an .lo-at-f4::after { animation: lo-at-r4 10s ease-in-out infinite both; }
+  .lo-an .lo-at-fertig {
+    animation: lo-at-fertig 10s var(--ease) infinite both;
+  }
+
+  /* b */
+  .lo-an .lo-sd-frage {
+    animation: lo-sd-frage 10s var(--ease) infinite both;
+  }
+  .lo-an .lo-sd-tippt {
+    animation: lo-sd-tippt 10s var(--ease) infinite both;
+  }
+  .lo-an .lo-sd-tippt i {
+    animation: lo-hupf 1s ease-in-out infinite;
+  }
+  .lo-an .lo-sd-tippt i:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .lo-an .lo-sd-tippt i:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .lo-an .lo-sd-antwort {
+    animation: lo-sd-antwort 10s var(--ease) infinite both;
+  }
+  .lo-an .lo-sd-fuell {
+    animation: lo-sd-fuell 10s cubic-bezier(0.45, 0, 0.3, 1) infinite both;
+  }
+  .lo-an .lo-sd-ok1 {
+    animation: lo-sd-ok1 10s var(--ease) infinite both;
+  }
+  .lo-an .lo-sd-ok2 {
+    animation: lo-sd-ok2 10s var(--ease) infinite both;
+  }
+  .lo-an .lo-sd-ok2::after {
+    animation: lo-ring 2.4s ease-out infinite;
+  }
+  .lo-an .lo-sd-beleg {
+    animation: lo-sd-beleg 10s var(--ease) infinite both;
+  }
+  .lo-an .lo-sd-b1 { animation: lo-sd-b1 10s var(--ease) infinite both; }
+  .lo-an .lo-sd-b2 { animation: lo-sd-b2 10s var(--ease) infinite both; }
+  .lo-an .lo-sd-b3 { animation: lo-sd-b3 10s var(--ease) infinite both; }
+}

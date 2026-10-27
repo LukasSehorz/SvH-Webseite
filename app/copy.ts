@@ -240,8 +240,81 @@ export const aktuelles = {
   channel: { label: "Alle Videos auf YouTube", href: "https://www.youtube.com/@jannikvomhofe" },
   watch: "Video ansehen", // alte Seite
   latest: "Neuestes Video", // ZUSATZ (Beschriftung)
-  // Liste übernommen aus der alten Seite (copy.ts Zeile 332 ff.)
+  // Alle normalen Videos des Kanals, neueste zuerst (Stand 27.10.2026: 11, keine Shorts). Titel und Datum wortgetreu
+  // von der Videoseite (yt-dlp/oEmbed). Zwei Titel testet YouTube gerade im A/B-Test (S5vHUX64f-4, aE8OmUYeTKM):
+  // in der Kanalliste wechselt die Fassung, hier steht der Haupttitel der Videoseite. body = kurze Inhaltsangabe nach
+  // der Videobeschreibung (für /aktuelles und die strukturierten Daten). Die unteren vier stammen aus der alten Seite.
   videos: [
+    {
+      id: "ryUl59kvblo",
+      titel: "In 5 Jahren sind alle Bürojobs weg...",
+      datum: "25. Oktober 2026",
+      datumIso: "2026-10-25",
+      body: "KI-Forscher Marcus Hutter sagt, KI kann in zwei bis fünf Jahren alle Bürojobs ersetzen. Welche Berufe es zuerst trifft, warum das Handwerk gewinnt und was Firmen droht, die abwarten.",
+      href: "https://www.youtube.com/watch?v=ryUl59kvblo",
+      bild: "/aktuelles/ryUl59kvblo.webp",
+      alt: "Vorschaubild des Videos darüber, ob KI alle Bürojobs ersetzt",
+    },
+    {
+      id: "S5vHUX64f-4",
+      titel: "Das sagt der CEO der wertvollsten Firma der Welt über Deutschland...",
+      datum: "21. Oktober 2026",
+      datumIso: "2026-10-21",
+      body: "Nvidia-Chef Jensen Huang sieht Deutschland bei KI zurückfallen. Was der Berliner KI-Pakt bringt, was bei Tests mit KI-Agenten passiert ist und drei Regeln für den sicheren Einsatz im Unternehmen.",
+      href: "https://www.youtube.com/watch?v=S5vHUX64f-4",
+      bild: "/aktuelles/S5vHUX64f-4.webp",
+      alt: "Vorschaubild des Videos über Nvidia-Chef Jensen Huang und Deutschland bei KI",
+    },
+    {
+      id: "aE8OmUYeTKM",
+      titel: "Dieses Open AI Update übersieht aktuell jeder",
+      datum: "19. Oktober 2026",
+      datumIso: "2026-10-19",
+      body: "ChatGPT sitzt jetzt als Seitenleiste im Browser und füllt selbst Formulare aus. Vier Anwendungen, die jede Woche Stunden sparen, und drei Grenzen, die eine Firma kennen muss.",
+      href: "https://www.youtube.com/watch?v=aE8OmUYeTKM",
+      bild: "/aktuelles/aE8OmUYeTKM.webp",
+      alt: "Vorschaubild des Videos über das neue ChatGPT-Update im Browser",
+    },
+    {
+      id: "DDEN6fFHAO8",
+      titel: "Dieses Tool beerdigt teure Software",
+      datum: "15. Oktober 2026",
+      datumIso: "2026-10-15",
+      body: "Ein Entwickler hat Photoshop mit KI nachgebaut und verschenkt es. Was KI beim Nachbauen von Software wirklich kann und warum gratis für eine Firma teuer werden kann.",
+      href: "https://www.youtube.com/watch?v=DDEN6fFHAO8",
+      bild: "/aktuelles/DDEN6fFHAO8.webp",
+      alt: "Vorschaubild des Videos über kostenlose KI-Nachbauten teurer Software",
+    },
+    {
+      id: "-8sNdu4Zas0",
+      titel: "Studieren lohnt sich nicht mehr? Die unbequeme Wahrheit",
+      datum: "11. Oktober 2026",
+      datumIso: "2026-10-11",
+      body: "Über zwei Drittel weniger Stellenanzeigen für Berufseinsteiger als im Sommer 2022. Wo KI wirklich Einstiegsjobs kostet, wo sie nur als Ausrede dient, und vier Tipps für den Berufseinstieg.",
+      href: "https://www.youtube.com/watch?v=-8sNdu4Zas0",
+      bild: "/aktuelles/-8sNdu4Zas0.webp",
+      alt: "Vorschaubild des Videos über Studium, Berufseinstieg und KI",
+    },
+    {
+      id: "G7hMwDAlbwE",
+      titel: "ES BEGINNT... Der Anfang vom Ende der Menschheit (KI bricht aus)",
+      datum: "8. Oktober 2026",
+      datumIso: "2026-10-08",
+      body: "72 Stunden, in denen eine KI aus ihrem Käfig ausbricht. Das Szenario ist erfunden, aber nach jeder Szene zeigt Jannik, was davon dieses Jahr schon wirklich passiert ist.",
+      href: "https://www.youtube.com/watch?v=G7hMwDAlbwE",
+      bild: "/aktuelles/G7hMwDAlbwE.webp",
+      alt: "Vorschaubild des Videos über ein Szenario, in dem KI-Agenten ausbrechen",
+    },
+    {
+      id: "aLHvghLugok",
+      titel: "Das ist AKTUELL das beste KI-Modell und es ist nicht mal knapp",
+      datum: "29. September 2026",
+      datumIso: "2026-09-29",
+      body: "Fast jede Woche kommt ein neues KI-Modell. Ein Ranking, welche Modelle sich wirklich lohnen und welches für welche Aufgabe am besten passt.",
+      href: "https://www.youtube.com/watch?v=aLHvghLugok",
+      bild: "/aktuelles/aLHvghLugok.webp",
+      alt: "Vorschaubild des Videos mit einem Ranking der KI-Modelle",
+    },
     {
       id: "neS8seYIg10",
       titel: "Das einzige KI-Video, das DU als CEO sehen musst | Top 9 aktuelle Praxis-Use Cases",

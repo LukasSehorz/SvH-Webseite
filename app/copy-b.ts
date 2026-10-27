@@ -25,7 +25,7 @@ export const metaB = {
 export type SubLink = { label: string; text: string; href: string };
 export type NavLink = { label: string; href: string; id: string; sub?: SubLink[]; foot?: { label: string; href: string } };
 
-// Google-Profil (5,0 Sterne, 7 Bewertungen, Stand 12.10.2026): Hero und Kunden verlinken dorthin
+// Google-Profil (5,0 Sterne, 9 Bewertungen, Stand 27.10.2026): Hero und Kunden verlinken dorthin
 const GOOGLE_PROFIL =
   "https://www.google.com/maps/place/SvH+Consulting/@48.3285982,11.8226616,10z/data=!4m6!3m5!1s0x8eafb3c841f9a22f:0xc493185e015a3928!8m2!3d48.3285982!4d11.8226616!16s%2Fg%2F11nvctpln1";
 
@@ -61,16 +61,21 @@ export const heroB = {
   zielgruppe: "Für mittelständische Unternehmen im DACH-Raum",
   h1: "Die _KI-Automatisierungen_, die deinem Unternehmen fehlen, um jede Woche Zeit zu sparen",
   // „12 Wochen“ am 06.10.2026 entfernt (war unbestätigt)
-  sub: "Wie du Angebote, E-Mails und Anfragen mit KI automatisierst – ohne neue Mitarbeiter einzustellen und ohne selbst Technik-Experte zu werden.",
+  sub: "Wie du Angebote, E-Mails und Anfragen mit KI automatisierst, ohne neue Mitarbeiter einzustellen und ohne selbst Technik-Experte zu werden.",
   // Jeder Haken beantwortet eine eigene Frage: Wie nutze ich KI? Wo verliere ich Zeit? Was bekomme ich? Warum klappt es bisher nicht?
   punkte: [
     "Erhalte Klarheit darüber, wie du KI richtig nutzt und in deinem Unternehmen einsetzt",
     "Finde im kostenlosen KI-Workshop heraus, welche Aufgaben in deinem Betrieb am meisten Zeit fressen",
     "Bekomme einen fertigen Plan mit den 3 Automatisierungen, die sich für dich am meisten lohnen",
-    "Verstehe, warum KI in deinem Unternehmen noch nicht richtig funktioniert – und wie sich das ändert",
+    "Verstehe, warum KI in deinem Unternehmen noch nicht richtig funktioniert und wie sich das ändert",
   ],
   // Bild der Gründer statt Video (transparenter Hintergrund, steht direkt auf Weiß)
-  bild: { src: "/b/hero-gruender.webp", w: 1353, h: 1069, alt: "Jannik vom Hofe und Lukas Sehorz, die Gründer von SvH Consulting" },
+  // Zwei Porträts im Anzug (Schwarz-Weiß-Fotos der früheren Flowstate-Seite, am 27.10.2026 per KI nachkoloriert und
+  // freigestellt, Originale in assets-ki/gruender/). Auf Lukas' Wunsch statt des Gruppenfotos.
+  bilder: [
+    { src: "/b/anzug-lukas-farbig-v2.webp", w: 780, h: 1040, alt: "Lukas Sehorz, Gründer von SvH Consulting, im Anzug mit verschränkten Armen" },
+    { src: "/b/anzug-jannik-farbig.webp", w: 780, h: 1040, alt: "Jannik vom Hofe, Gründer von SvH Consulting, im Anzug mit verschränkten Armen" },
+  ],
   video: {
     titel: "Kurz erklärt: So gewinnst du Zeit mit KI",
     platzhalter: "Video folgt",
@@ -80,9 +85,9 @@ export const heroB = {
   google: {
     schnitt: "5,0",
     text: "bei Google",
-    anzahl: "7 Bewertungen",
+    anzahl: "9 Bewertungen",
     href: GOOGLE_PROFIL,
-    label: "5,0 bei Google · 7 Bewertungen, Profil öffnen, neues Fenster",
+    label: "5,0 bei Google · 9 Bewertungen, Profil öffnen, neues Fenster",
   },
   // OFFEN: Foto von Jannik und Lukas, z. B. "/b/gruender.jpg". Leer = kein Hintergrundbild.
   hintergrund: "",
@@ -119,18 +124,26 @@ export const problemB = {
   label: "Das Problem",
   titel: "Es ist nicht deine _Schuld_.",
   text: "Jeder Anbieter verkauft dir sein eigenes Tool, aber keiner sorgt dafür, dass alles mit deinen Abläufen zusammenspielt. Deshalb probiert fast jeder Betrieb KI aus, aber kaum einer spart damit wirklich Zeit. Was fehlt, ist ein klarer Plan.",
+  // Seit 27.10.2026 als ruhiger Befund (Punkteraster, Wochenleiste, Liste), Zahlen unverändert
   studie1: {
-    balken: [
-      { wert: 88, label: "nutzen KI", farbe: "rot" },
-      { wert: 7, label: "richtig eingeführt", farbe: "gruen" },
-    ],
+    // McKinsey: 88 % nutzen KI, 7 % haben sie richtig (unternehmensweit) eingeführt; die 7 sind Teil der 88
+    nutzen: { wert: 88, label: "nutzen KI" },
+    richtig: { wert: 7, label: "haben sie richtig eingeführt" },
+    titel: "88 % nutzen KI, aber nur 7 % haben sie richtig eingeführt.",
+    raster: "1 Punkt = 1 % der befragten Unternehmen",
+    // Folgerung, nur ab Tablet sichtbar (gleicht die Karte neben der Atlassian-Karte aus)
+    fazit: "Es fehlt nicht am Tool, sondern an der richtigen Einführung.",
     quelle: "McKinsey, The State of AI, 2025",
     href: "https://www.mckinsey.com/featured-insights/charts/ai-at-work-but-not-at-scale",
   },
   studie2: {
     // Atlassian: ein Viertel der Arbeitszeit geht fürs Suchen drauf, bei 40 Std. also rund 10 Std.
-    titel: "10 Stunden pro Woche sucht jeder Mitarbeiter nach Informationen.",
-    unter: "Das ist ein Viertel seiner Arbeitszeit.",
+    titel: "10 Stunden pro Woche sucht jeder Mitarbeiter nach Informationen. Das ist ein Viertel seiner Arbeitszeit.",
+    stunden: { wert: 10, einheit: "Std.", label: "pro Woche sucht jeder Mitarbeiter nach Informationen" },
+    anteil: { wert: 25, einheit: "%", label: "seiner Arbeitszeit" },
+    woche: "40-Stunden-Woche",
+    suchen: "10 Std. Suchen",
+    tage: ["Mo", "Di", "Mi", "Do", "Fr"],
     fazit: "Bei vier Mitarbeitern ist das rechnerisch eine volle Stelle, nur fürs Suchen.",
     quelle: "Atlassian, State of Teams 2025",
     href: "https://www.atlassian.com/blog/state-of-teams-2025",
@@ -138,11 +151,12 @@ export const problemB = {
   quelleLabel: "Quelle",
   folgen: {
     titel: "Was passiert, wenn du nichts änderst",
+    // Symbol je Punkt (Linien-Symbole in Problem.tsx)
     punkte: [
-      "Riesiger Zeitverlust, jeden Tag",
-      "Anfragen bleiben liegen, Umsatz geht verloren",
-      "Dein Team ist überlastet und macht Fehler",
-      "Wettbewerber mit KI werden schneller und günstiger",
+      { text: "Riesiger Zeitverlust, jeden Tag", symbol: "uhr" },
+      { text: "Anfragen bleiben liegen, Umsatz geht verloren", symbol: "eingang" },
+      { text: "Dein Team ist überlastet und macht Fehler", symbol: "warnung" },
+      { text: "Wettbewerber mit KI werden schneller und günstiger", symbol: "trend" },
     ],
   },
   // Die Vorteile stehen seit Runde 2 in der Lösung (Zahnräder), Baulig: „Was du erwarten kannst“
@@ -174,35 +188,35 @@ export const leistungenB = {
       nr: 0,
       kurz: "KI-Workshop",
       titel: "KI-Workshop",
-      text: "Wir finden in 45 Minuten deine größten Zeitfresser – damit du weißt, wo sich KI für dich lohnt.",
+      text: "Wir finden in 45 Minuten deine größten Zeitfresser. So weißt du, wo sich KI für dich lohnt.",
       einfach: "Wir schauen zusammen, wo bei dir die Zeit verloren geht. Kostenlos.",
     },
     {
       nr: 1,
       kurz: "Wissen",
       titel: "KI-Wissensmanagement",
-      text: "Wir bündeln das Wissen aus Köpfen, Ordnern und Postfächern an einem Ort – damit dein Team in Sekunden Antworten findet, statt Stunden zu suchen.",
+      text: "Wir bündeln das Wissen aus Köpfen, Ordnern und Postfächern an einem Ort. So findet dein Team in Sekunden Antworten, statt Stunden zu suchen.",
       einfach: "Eine KI, die alles über deinen Betrieb weiß und sofort antwortet.",
     },
     {
       nr: 2,
       kurz: "Prozesse",
       titel: "Digitale Prozesse",
-      text: "Wir ersetzen Zettel, Excel-Listen und doppeltes Abtippen durch klare digitale Abläufe – damit jede Info von allein dort landet, wo sie gebraucht wird.",
+      text: "Wir ersetzen Zettel, Excel-Listen und doppeltes Abtippen durch klare digitale Abläufe. So landet jede Info von allein dort, wo sie gebraucht wird.",
       einfach: "Schluss mit Zettelwirtschaft.",
     },
     {
       nr: 3,
       kurz: "Automatisierung",
       titel: "KI-Automatisierungen",
-      text: "Wir bauen Automatisierungen für Angebote, Rechnungen, Anfragen und Berichte – damit dein Team die immer gleiche Arbeit los ist.",
+      text: "Wir bauen Automatisierungen für Angebote, Rechnungen, Anfragen und Berichte. So ist dein Team die immer gleiche Arbeit los.",
       einfach: "Wie ein Fließband für deine Büroarbeit.",
     },
     {
       nr: 4,
       kurz: "Agenten",
       titel: "KI-Agenten",
-      text: "Wir bauen digitale Kollegen, die ans Telefon gehen, E-Mails, Chats und WhatsApp beantworten und Termine eintragen – damit keine Anfrage mehr liegen bleibt, rund um die Uhr.",
+      text: "Wir bauen digitale Kollegen, die ans Telefon gehen, E-Mails, Chats und WhatsApp beantworten und Termine eintragen. So bleibt keine Anfrage mehr liegen, rund um die Uhr.",
       einfach: "Ein Kollege, der nie Feierabend macht.",
     },
   ],
@@ -271,8 +285,8 @@ export const loesungenB = {
   text: "Aus den fünf Stufen entstehen konkrete Helfer, verbunden mit den Programmen, die du schon hast.",
   ctaZeile: "Welche davon lohnt sich bei dir? Das finden wir im Workshop heraus.",
   ctaText: "Im kostenlosen Workshop sitzt du direkt mit uns beiden zusammen. Wir schauen uns deinen Betrieb an und sagen dir ehrlich, welche Helfer sich für dich lohnen.",
-  // Foto von Jannik (12.10.2026), vollständig und unbeschnitten (Seitenverhältnis 1122 × 2407)
-  foto: "/b/jannik-schreibtisch-ganz.webp",
+  // Foto von Jannik am Schreibtisch, Hintergrund am 27.10.2026 per KI aufgeräumt (Person unverändert), Original in assets-ki/gruender/
+  foto: "/b/jannik-schreibtisch-v2.webp",
   fotoAlt: "Jannik vom Hofe, Gründer von SvH Consulting, an seinem Schreibtisch",
   // Schild je Karte: „Stufe 1 · Wissen“ (Kurzname wie im Unendlichkeitszeichen darüber)
   stufe: (nr: number) => `Stufe ${nr} · ${leistungenB.teile.find((t) => t.nr === nr)?.kurz ?? ""}`,
@@ -351,9 +365,51 @@ export const loesungenB = {
       },
     },
   ],
+  /* Zwei Beispiele aus der Logistik unter dem Raster (Lukas 27.10.2026): zeigen, dass wir auch für Speditionen bauen.
+     Nur Beispiele, keine Kunden, keine Zahlen. Städte, Gewicht und Auftragsnummern in den Abbildungen sind erfunden. */
+  logistik: {
+    label: "Zum Beispiel in der Logistik",
+    text: "So kann das bei Speditionen aussehen.",
+    karten: [
+      {
+        id: "auftrag",
+        stufe: 3,
+        titel: "Speditionsaufträge von allein im System",
+        text: "Aufträge kommen per E-Mail oder PDF. Die KI legt sie im Transportprogramm (TMS) an. Dein Team gibt nur noch frei.",
+        ui: {
+          mail: "Neue E-Mail",
+          datei: "Transportauftrag.pdf",
+          kopf: "Neuer Auftrag",
+          felder: [
+            { name: "Laden", wert: "Augsburg" },
+            { name: "Entladen", wert: "Hamburg" },
+            { name: "Termin", wert: "Do., 08:00 Uhr" },
+            { name: "Gewicht", wert: "12,4 t" },
+          ],
+          fertig: "Im TMS angelegt",
+        },
+      },
+      {
+        id: "sendung",
+        stufe: 4,
+        titel: "Sendungsauskunft & Ablieferbelege",
+        text: "Kunden erfahren sofort, wo ihre Sendung ist. Ablieferbelege (POD) ordnet die KI dem Auftrag zu, bereit für die Rechnung.",
+        ui: {
+          frage: "Wo ist meine Sendung?",
+          antwort: "Unterwegs · Ankunft ca. 14:30 Uhr",
+          schritte: ["Abgeholt", "Unterwegs", "Zugestellt"],
+          datei: "CMR_4468.pdf",
+          belegArt: "Ablieferbeleg",
+          belegKurz: "Ablieferbeleg gelesen",
+          zugeordnet: "Auftrag 4468 zugeordnet",
+          belegSchritte: ["Gelesen", "Auftrag 4468 zugeordnet", "Bereit für die Rechnung"],
+        },
+      },
+    ],
+  },
 };
 
-/* Kunden: echte Google-Bewertungen (Profil „SvH Consulting“, 5,0 Sterne, Stand 04.10.2026), wortgetreu.
+/* Kunden: echte Google-Bewertungen (Profil „SvH Consulting“, 5,0 Sterne, 9 Bewertungen, Stand 27.10.2026), wortgetreu.
    Zuordnung laut Jannik (04.10.2026). 
    Bei Izzet Tüymen fehlt bewusst der Schlusssatz „Vielen Dank für deine Unterstützung! 🙌“ (klingt nach unserer Antwort). */
 export type Bewertung = { name: string; firma: string; logo: string; href: string; sterne: number; datum: string; text: string; umgesetzt: string };
@@ -373,7 +429,7 @@ export const kundenB = {
   pfeil: "auf",
   ctaZeile: "Das will ich für meinen Betrieb auch.",
   schnitt: "5,0",
-  anzahl: "7 Google-Bewertungen",
+  anzahl: "9 Google-Bewertungen",
   profil: GOOGLE_PROFIL,
   // Karussell: eine Reihe, Pfeile drehen endlos weiter
   zurueck: "Vorherige Bewertung",
@@ -419,6 +475,17 @@ export const kundenB = {
       umgesetzt: "Automatische Angebotserstellung, automatisiertes Marketing und eine neue Webseite.",
     },
     {
+      // neu 27.10.2026, wortgetreu von Google. OFFEN: Zuordnung zu KE Frästechnik (Krotzer & Eisele) bestätigen
+      name: "Klaus Eisele",
+      firma: "KE Frästechnik",
+      logo: "ke-fraestechnik",
+      href: "https://ke-fraestechnik.de/",
+      sterne: 5,
+      datum: "Oktober 2026",
+      text: "Die Zusammenarbeit war von Anfang an sehr angenehm und professionell. Unsere Wünsche und Vorstellungen wurden nicht nur zuverlässig umgesetzt, sondern durch eigene Ideen und hilfreiche Anregungen sinnvoll ergänzt. Besonders positiv fanden wir, dass stets mitgedacht und nach guten Lösungen gesucht wurde. Mit dem Ergebnis sind wir sehr zufrieden und können die Zusammenarbeit uneingeschränkt weiterempfehlen!",
+      umgesetzt: "Automatische Angebote mit einem KI\u2011Wissensspeicher.",
+    },
+    {
       name: "Izzet Tüymen",
       firma: "Taxi Izi",
       logo: "taxiizi",
@@ -430,6 +497,17 @@ export const kundenB = {
       umgesetzt: "Ein KI-WhatsApp-Kundenservice, der Kundenanfragen sofort beantwortet, rund um die Uhr.",
     },
     {
+      // neu 27.10.2026, wortgetreu von Google. OFFEN: Firma (neue Homepage) und was wir umgesetzt haben
+      name: "Christopher Ortler",
+      firma: "",
+      logo: "",
+      href: "",
+      sterne: 5,
+      datum: "Oktober 2026",
+      text: "Wir sind mit unserer neuen Homepage rundum zufrieden! Die Zusammenarbeit war von Anfang an sehr angenehm, zuverlässig und professionell. Unsere Wünsche und Vorstellungen wurden bestens umgesetzt und das Ergebnis hat unsere Erwartungen übertroffen. Man merkt, dass hier mit viel Engagement und Fachwissen gearbeitet wird. Wir können die Firma uneingeschränkt weiterempfehlen und würden jederzeit wieder zusammenarbeiten. Vielen Dank für die tolle Arbeit! 😊",
+      umgesetzt: "",
+    },
+    {
       name: "Max TV",
       firma: "Betthupferl",
       logo: "betthupferl",
@@ -439,6 +517,17 @@ export const kundenB = {
       text: "Absolut zuverlässig. Was abgemacht wurde, wurde auch eingehalten!",
       // laut Jannik (07.10.2026)
       umgesetzt: "Automatisierte Buchhaltung.",
+    },
+    {
+      // neu 27.10.2026, wortgetreu von Google (Leerzeichen vor dem Ausrufezeichen wie im Original). OFFEN: welche Praxis
+      name: "Andrea Srokovskyi",
+      firma: "",
+      logo: "",
+      href: "",
+      sterne: 5,
+      datum: "Oktober 2026",
+      text: "Wir waren mit unserer Praxis mit der Betreuung, Kommunikation sowie Umsetzung sehr zufrieden !",
+      umgesetzt: "",
     },
     {
       name: "zGraniT RxyaL",
@@ -496,6 +585,15 @@ export const aktuellesB = {
   alle: "Alle Videos auf YouTube",
   neuesFenster: " (YouTube, neues Fenster)",
   neuesFensterKurz: " (neues Fenster)",
+  // Karussell (VideoKarussell.tsx): alle Videos in einer Reihe, Pfeile, Wischen, Pfeiltasten
+  bereich: "Videos von Jannik",
+  zurueck: "Vorheriges Video",
+  vor: "Nächstes Video",
+  position: (von: number, bis: number, n: number) => (von === bis ? `Video ${von} von ${n}` : `Videos ${von} bis ${bis} von ${n}`),
+  // Reihenfolge im Karussell (Lukas, 27.10.2026): diese drei stehen vorn und sind ohne Klick zu sehen,
+  // danach alle übrigen Videos aus aktuelles.videos (copy.ts), neueste zuerst. Die Liste in copy.ts bleibt
+  // nach Datum sortiert, weil /aktuelles ihr erstes Video als „Neuestes Video“ zeigt.
+  zuerst: ["neS8seYIg10", "FS5eb2cIzHE", "ATlHA9p3zXc"],
 };
 
 // Nächster Schritt: schwarzer Kasten mit Bild-Logo links (Vorbild: andreasbaulig.de „Überzeuge dich selbst“)

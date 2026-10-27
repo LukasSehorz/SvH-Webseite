@@ -3,6 +3,7 @@ import { aktuelles } from "@/app/copy";
 import { company } from "@/app/content";
 import { aktuellesB, teamB } from "@/app/copy-b";
 import { Grad, stufe } from "./ui";
+import VideoKarussell from "./VideoKarussell";
 
 /* Über uns: die zwei Gründer als helle Karten (Kartenart wie bei den Lösungen). Das Foto steht
    neben dem Namen statt als riesige Kachel; ohne Foto ein ruhiger Platzhalter mit Initialen.
@@ -75,14 +76,19 @@ function LinkedInLogo() {
   );
 }
 
-/* Aktuelles: Janniks Videos (führen zu YouTube, also von der Seite weg). Seit Runde 3 hinter den Fragen,
-   direkt vor dem Abschluss: vor dem Angebot gibt es keinen Ausgang mehr. Kompaktes getöntes Band
-   zwischen den weißen Fragen und dem weißen Abschluss: die zwei neuesten Videos (Liste aus Variante A)
-   als weiße Karten und ein leiser Link zum Kanal.
-   Handy: Videos als flache Zeilen (Bild links, Titel rechts), der Kanal-Link darunter.
-   Ab 1000 px: Text und Kanal-Link links, Videos rechts. */
+/* Aktuelles: alle Videos von Janniks Kanal (führen zu YouTube, also von der Seite weg). Seit Runde 3 hinter den
+   Fragen, direkt vor dem Abschluss: vor dem Angebot gibt es keinen Ausgang mehr. Getöntes Band zwischen den weißen
+   Fragen und dem weißen Abschluss: Kopf, darunter die Videos als weiße Karten in einem Karussell
+   (VideoKarussell.tsx, drei feste Videos vorn, dann neueste zuerst, hält am Ende an), darunter Pfeile und der
+   leise Link zum Kanal.
+   Sichtbar: Computer drei Karten, Tablet zwei, Handy eine und die nächste schaut etwa 10 % herein. */
 export function Aktuelles() {
-  const videos = aktuelles.videos.slice(0, 2);
+  // Reihenfolge: die drei aus aktuellesB.zuerst vorn (ohne Klick zu sehen), dann alle übrigen, neueste zuerst
+  const vorn = aktuellesB.zuerst.flatMap((id) => aktuelles.videos.filter((v) => v.id === id));
+  const videos = [...vorn, ...aktuelles.videos.filter((v) => !aktuellesB.zuerst.includes(v.id))];
+  const n = videos.length;
+  // Ansage je Zahl sichtbarer Karten (1 bis 3, je nach Bildschirm): „Videos 1 bis 3 von 11“
+  const positionen = [1, 2, 3, 4].map((s) => videos.map((_, i) => aktuellesB.position(i + 1, Math.min(n, i + s), n)));
   return (
     <section className="sb sb--tint ak-band" id="aktuelles" aria-labelledby="aktuelles-titel">
       <div className="sb-wrap">
@@ -95,38 +101,32 @@ export function Aktuelles() {
             <p className="ak-lead">{aktuellesB.text}</p>
           </div>
 
-          <ul className="ak-liste">
-            {videos.map((v) => (
-              <li key={v.id}>
-                <a className="ak-zeile" href={v.href} target="_blank" rel="noopener noreferrer">
-                  <span className="ak-bild">
-                    <Image src={v.bild} alt={v.alt} fill sizes="(max-width: 699px) 132px, (max-width: 999px) 45vw, 320px" />
-                    <span className="ak-play" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" width="18" height="18">
-                        <path d="M8 5.5v13l11-6.5z" fill="currentColor" />
-                      </svg>
-                    </span>
-                  </span>
-                  <span className="ak-body">
-                    <time className="ak-datum" dateTime={v.datumIso}>
-                      {v.datum}
-                    </time>
-                    <span className="ak-titel">{v.titel}</span>
-                    <span className="ak-mehr">{aktuellesB.ansehen}</span>
-                    <span className="sr-only">{aktuellesB.neuesFenster}</span>
-                  </span>
+          {/* ohne JavaScript: Reihe mit sichtbarer Scrollleiste, Pfeile und Balken aus (sie brauchen JavaScript) */}
+          <noscript>
+            <style>
+              {".vk-steuerung{display:none!important}.vk-reihe{scrollbar-width:auto!important}" +
+                ".vk-reihe::-webkit-scrollbar{display:block;height:8px}.vk-reihe::-webkit-scrollbar-thumb{background:rgba(11,11,14,.22);border-radius:8px}"}
+            </style>
+          </noscript>
+          <VideoKarussell
+            videos={videos.map(({ id, titel, datum, datumIso, href, bild }) => ({ id, titel, datum, datumIso, href, bild }))}
+            ansehen={aktuellesB.ansehen}
+            neuesFenster={aktuellesB.neuesFenster}
+            bereich={aktuellesB.bereich}
+            zurueck={aktuellesB.zurueck}
+            vor={aktuellesB.vor}
+            positionen={positionen}
+            fuss={
+              // key: das Element steht im Karussell neben den Pfeilen (sonst Schlüssel-Warnung von React)
+              <p key="kanal" className="ak-mehr-link">
+                <a className="ak-link" href={company.youtube} target="_blank" rel="noopener noreferrer">
+                  <YouTubeLogo />
+                  {aktuellesB.alle}
+                  <span className="sr-only">{aktuellesB.neuesFensterKurz}</span>
                 </a>
-              </li>
-            ))}
-          </ul>
-
-          <p className="ak-mehr-link">
-            <a className="ak-link" href={company.youtube} target="_blank" rel="noopener noreferrer">
-              <YouTubeLogo />
-              {aktuellesB.alle}
-              <span className="sr-only">{aktuellesB.neuesFensterKurz}</span>
-            </a>
-          </p>
+              </p>
+            }
+          />
         </div>
       </div>
     </section>

@@ -220,19 +220,8 @@ const weiterAnfang = weiterWorte.join(" ");
 export default function Zahnraeder() {
   return (
     <section className="sb zr" id="vorteile" aria-labelledby="zr-titel">
-      {/* gestrichelte Linie vom Problem herüber: schwarz oben, Markenfarbe unten (aus Grau wird Farbe) */}
-      <div className="zr-faden" aria-hidden="true">
-        <svg viewBox="0 0 40 100" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="zr-faden-farbe" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
-              <stop stopColor="#0b0b0e" />
-              <stop offset="1" stopColor="#6a55ff" />
-            </linearGradient>
-          </defs>
-          <path d="M20 0 C 2 30, 38 60, 20 92" stroke="url(#zr-faden-farbe)" />
-        </svg>
-        <span className="zr-faden-spitze" />
-      </div>
+      {/* feine Linie vom Problem herüber: läuft aus dem Weiß in die Markenfarbe (Stile: styles/problem.css) */}
+      <div className="zr-faden" aria-hidden="true" />
       <div className="sb-wrap">
         <div className="b-kopf b-kopf--mitte zr-kopf" data-rv="">
           <p className="b-label">{zahnradB.label}</p>

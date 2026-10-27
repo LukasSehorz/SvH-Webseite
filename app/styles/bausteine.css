@@ -154,304 +154,6 @@
   }
 }
 
-/* ------------------------------------------------------------ Problem (die graue Welt) */
-
-/* Einziger Abschnitt im Comic-Stil: dicke schwarze Rahmen, gemalte Linien, Strichmännchen.
-   Lesart von oben nach unten: zwei Studien nebeneinander → Linien laufen zusammen → Folgen → Knopf. */
-
-.pv-wrap {
-  width: 100%;
-  max-width: calc(1360px + var(--gutter) * 2);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-.pv-kopf {
-  max-width: 860px;
-  margin-inline: auto;
-  text-align: center;
-}
-/* unten knapp: die Zahnräder darunter setzen den Faden fort (Linie zeigt auf „Die Lösung“) */
-.sb.pv {
-  padding-bottom: clamp(28px, 3.4vw, 48px);
-}
-.pv-kopf .b-h2 {
-  font-size: clamp(34px, 3.8vw, 56px);
-}
-.pv-kopf .b-lead {
-  max-width: 780px;
-  margin-inline: auto;
-}
-/* Desktop: Subline in zwei ruhigen Zeilen (in einer Zeile lief sie bei 1440 px über den Rand) */
-@media (min-width: 1200px) {
-  .pv-kopf {
-    max-width: 980px;
-  }
-  .pv-kopf .b-lead {
-    max-width: 900px;
-    text-wrap: balance;
-  }
-}
-/* eine Spalte, alles mittig: das Schaubild steht ausgewogen statt links gedrängt */
-.pv-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  justify-items: center;
-  margin-top: clamp(36px, 4vw, 56px);
-}
-
-/* Alle drei Kästen: weiß mit einem zarten Schimmer, Rahmen im Markenverlauf (Blau → Lila), deutliche Tiefe */
-.pv-box,
-.pv-kasten {
-  position: relative;
-  border-radius: 22px;
-  border: 2px solid transparent;
-  background:
-    radial-gradient(120% 70% at 0% 0%, rgba(63, 116, 255, 0.06), rgba(255, 255, 255, 0) 60%) padding-box,
-    radial-gradient(120% 70% at 100% 100%, rgba(140, 109, 255, 0.07), rgba(255, 255, 255, 0) 60%) padding-box,
-    linear-gradient(#fff, #fff) padding-box,
-    linear-gradient(135deg, #3f74ff 0%, #6a55ff 50%, #a855f7 100%) border-box;
-  box-shadow:
-    0 2px 0 rgba(106, 85, 255, 0.35),
-    0 18px 40px -18px rgba(60, 40, 180, 0.35);
-}
-.pv-boxen {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(20px, 2.4vw, 32px);
-  width: 100%;
-  max-width: 1040px;
-}
-.pv-box {
-  display: flex;
-  flex-direction: column;
-  padding: 24px 26px 16px;
-}
-.pv-box-titel {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.015em;
-  color: var(--page-ink);
-}
-.pv-box-unter {
-  margin-top: 4px;
-  font-size: 15.5px;
-  line-height: 1.45;
-  color: var(--page-ink-2);
-}
-.pv-quelle {
-  margin-top: auto;
-  padding-top: 12px;
-  font-size: 12.5px;
-  color: var(--page-ink-3);
-}
-/* Tippfläche 44 px hoch, ohne die Zeile zu verschieben */
-.pv-quelle a {
-  display: inline-block;
-  padding-block: 15px;
-  margin-block: -15px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--linie);
-}
-
-/* Säulen: nur zwei, schlank und hoch, darüber „88 % ≠ 7 %“ */
-.pv-chart {
-  display: grid;
-  gap: 12px;
-}
-.pv-vergleich {
-  display: flex;
-  justify-content: center;
-  align-items: baseline;
-  gap: 14px;
-  font-family: var(--font-display);
-  font-size: clamp(34px, 3vw, 44px);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-.pv-vergleich-rot {
-  color: #d9262f;
-}
-.pv-vergleich-gruen {
-  color: #16a34a;
-}
-.pv-vergleich-zeichen {
-  font-weight: 500;
-  color: var(--page-ink);
-}
-.pv-chart-saeulen {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  gap: clamp(36px, 5vw, 72px);
-  height: 210px;
-  border-bottom: 2px solid #0b0b0e;
-}
-.pv-saeule-spalte {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  width: 64px;
-  height: 100%;
-}
-.pv-saeule {
-  width: 100%;
-  height: var(--h);
-  border-radius: 10px 10px 0 0;
-  transform-origin: bottom;
-  transition: transform 1.1s var(--ease);
-  transition-delay: calc(var(--d, 0) * 200ms + 200ms);
-}
-.pv-saeule--rot {
-  background: linear-gradient(90deg, #f04a52 0%, #d9262f 55%, #b91c25 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
-}
-.pv-saeule--gruen {
-  min-height: 12px;
-  background: linear-gradient(90deg, #34d17a 0%, #16a34a 55%, #12873d 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
-}
-html.rv-an .pv-box:not([data-rv="in"]) .pv-saeule {
-  transform: scaleY(0);
-}
-.pv-saeule-label {
-  position: absolute;
-  top: calc(100% + 8px);
-  font-size: 13.5px;
-  font-weight: 700;
-  white-space: nowrap;
-  color: var(--page-ink);
-}
-.pv-chart + .pv-quelle {
-  padding-top: 40px;
-}
-
-/* vier Männchen, schwarz-weiß, eines rot durchgestrichen */
-.pv-figuren {
-  display: flex;
-  justify-content: center;
-  gap: clamp(10px, 1.8vw, 24px);
-  margin-top: 18px;
-}
-.pv-figur {
-  position: relative;
-  display: inline-block;
-}
-.pv-figur svg {
-  display: block;
-  width: clamp(42px, 4vw, 56px);
-  height: auto;
-}
-.pv-figur-x {
-  position: absolute;
-  inset: 8% -6% auto;
-  width: 112% !important;
-}
-/* Fazit: hell mit leichtem Verlauf in den Akzentfarben statt Schwarz */
-.pv-box-fazit {
-  margin-top: 16px;
-  padding: 12px 16px;
-  border-radius: 14px;
-  background: linear-gradient(110deg, rgba(63, 116, 255, 0.1) 0%, rgba(106, 85, 255, 0.12) 50%, rgba(168, 85, 247, 0.12) 100%);
-  border: 1px solid rgba(106, 85, 255, 0.25);
-  font-size: 16px;
-  font-weight: 700;
-  text-align: center;
-  color: #2a1f7a;
-}
-
-/* geschwungene Linien: laufen aus der Mitte beider Studien zusammen und zeigen auf die Folgen */
-.pv-verbinder {
-  position: relative;
-  width: 100%;
-  max-width: 1040px;
-  height: clamp(72px, 7vw, 104px);
-}
-.pv-verbinder svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  fill: none;
-  stroke: #0b0b0e;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-}
-.pv-verbinder svg path {
-  vector-effect: non-scaling-stroke;
-}
-.pv-pfeilspitze {
-  position: absolute;
-  left: 50%;
-  bottom: 1px;
-  width: 12px;
-  height: 12px;
-  border-top: 2.5px solid #0b0b0e;
-  border-right: 2.5px solid #0b0b0e;
-  transform: translate(-50%, -1px) rotate(135deg);
-}
-
-.pv-folgen {
-  width: 100%;
-  max-width: 560px;
-  padding: 24px 26px 22px;
-}
-.pv-kasten-titel {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.015em;
-  color: var(--page-ink);
-}
-.pv-folgen ul {
-  display: grid;
-  gap: 12px;
-  margin-top: 16px;
-}
-.pv-folgen li {
-  display: flex;
-  gap: 10px;
-  font-size: 16px;
-  line-height: 1.4;
-  color: var(--page-ink);
-}
-/* nur das rote X, ohne Kreis (wie die grünen Haken bei den Vorteilen) */
-.pv-folgen-x {
-  display: grid;
-  place-items: center;
-  flex: 0 0 24px;
-  width: 24px;
-  height: 22px;
-  color: #e5262f;
-}
-.pv-folgen-x svg path {
-  stroke-width: 2.8;
-}
-
-/* Knopf mittig unter dem Schaubild: wer das Problem erkennt, kann direkt einsteigen */
-.pv-cta {
-  display: flex;
-  justify-content: center;
-  margin-top: clamp(32px, 4vw, 52px);
-}
-
-/* Handy: Studien untereinander, Knopf über die ganze Breite (wie im Hero) */
-@media (max-width: 699px) {
-  .pv-boxen {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .pv-cta .btn {
-    width: 100%;
-  }
-}
-
 /* ------------------------------------------------------------ Unendlichkeitszeichen */
 
 /* Kapitelmarke: dunkle, ruhige Bühne im einen Dunkelton der Seite (--b-dunkel). Davor (Zahnräder) und
@@ -1752,24 +1454,19 @@ a.kd-logo:focus-visible {
 
 /* ------------------------------------------------------------ Einblicke: YouTube und LinkedIn */
 
-/* Aktuelles: kompaktes getöntes Band zwischen den weißen Fragen und dem weißen Abschluss (Runde 3).
-   Das Band selbst ist die Fläche, die Videos stehen als weiße Karten darauf. */
+/* Aktuelles: getöntes Band zwischen den weißen Fragen und dem weißen Abschluss (Runde 3).
+   Das Band selbst ist die Fläche, die Videos stehen als weiße Karten darauf, in einem Karussell
+   (VideoKarussell.tsx): Kopf, darunter die Reihe, darunter Pfeile mit Balken und der Link zum Kanal. */
 .sb.ak-band {
   padding-block: clamp(56px, 6vw, 88px);
 }
 .ak-kasten {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-areas:
-    "kopf"
-    "liste"
-    "mehr";
-  gap: 20px;
-  max-width: 1080px;
-  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 2.6vw, 34px);
 }
 .ak-kopf {
-  grid-area: kopf;
+  max-width: 620px;
 }
 .ak-h2 {
   margin-top: 10px;
@@ -1789,57 +1486,225 @@ a.kd-logo:focus-visible {
   color: var(--page-ink-2);
   text-wrap: pretty;
 }
-.ak-liste {
-  grid-area: liste;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+
+/* Reihe: echter waagerechter Scrollbereich mit Einrasten, Scrollleiste unsichtbar (Bedienung über Pfeile,
+   Finger, Trackpad, Pfeiltasten). Ränder: 12 px seitlich und Luft oben/unten für Schatten und Anheben,
+   per negativem Rand wieder ausgeglichen. Die nächste Karte (22 px Abstand) bleibt am Computer verdeckt. */
+.vk {
+  min-width: 0;
 }
-.ak-zeile {
+.vk-reihe {
+  --vk-gap: 22px;
+  --vk-rand: 12px;
+  position: relative; /* hält die unsichtbaren Screenreader-Texte (sr-only, absolut) in der Reihe, sonst verbreitern sie die Seite */
+  display: flex;
+  gap: var(--vk-gap);
+  margin: -8px calc(-1 * var(--vk-rand)) -36px;
+  padding: 8px var(--vk-rand) 36px;
+  scroll-padding-inline: var(--vk-rand);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain; /* am Ende kein „Zurück“-Wischen des Browsers */
+  scrollbar-width: none;
+}
+.vk-reihe::-webkit-scrollbar {
+  display: none;
+}
+.vk-karte {
+  flex: 0 0 calc((100% - 2 * var(--vk-gap)) / 3);
+  min-width: 0;
+  display: flex;
+  scroll-snap-align: start;
+}
+.vk-link {
+  position: relative;
+  isolation: isolate; /* Safari: runde Ecken bleiben beim Anheben sauber */
   display: flex;
   flex-direction: column;
-  height: 100%;
+  width: 100%;
   overflow: hidden;
   border-radius: 20px;
   border: 1px solid var(--linie);
   background: #fff;
   box-shadow: var(--schatten);
+  -webkit-tap-highlight-color: transparent;
   transition:
     transform 0.4s var(--ease),
     box-shadow 0.4s var(--ease);
 }
+.vk-link:focus-visible {
+  border-radius: 20px;
+}
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .ak-zeile:hover {
+  .vk-link:hover {
     transform: translateY(-3px);
     box-shadow:
       0 1px 2px rgba(11, 11, 14, 0.04),
       0 22px 44px -24px rgba(60, 40, 180, 0.32);
   }
 }
-.ak-band .ak-bild {
+.vk-bild {
   flex: 0 0 auto;
   overflow: hidden;
 }
-.ak-band .ak-play {
-  left: 10px;
-  bottom: 10px;
-  width: 36px;
-  height: 36px;
+.vk-bild img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.vk .ak-play {
+  left: 12px;
+  bottom: 12px;
+  width: 40px;
+  height: 40px;
   padding-left: 2px;
 }
-.ak-band .ak-body {
-  padding: 14px 16px 16px;
+.vk-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px 18px 18px;
 }
-.ak-band .ak-titel {
-  font-size: 15.5px;
-  -webkit-line-clamp: 2;
+.vk-datum {
+  font-size: 13.5px;
+  color: var(--page-ink-3);
 }
-.ak-band .ak-mehr {
-  margin-top: 10px;
+.vk-titel {
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--page-ink);
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+.vk-mehr {
+  margin-top: auto;
+  padding-top: 14px;
   font-size: 14.5px;
+  font-weight: 600;
+  color: var(--akzent);
 }
-.ak-mehr-link {
-  grid-area: mehr;
+
+/* Zeile unter der Reihe: links der Kanal-Link, rechts Pfeile mit Balken (Pfeile kommen im Code zuerst) */
+.vk-fuss {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-top: 26px;
+}
+.vk-steuerung {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.vk-pfeil {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--linie);
+  box-shadow: var(--schatten);
+  color: var(--page-ink);
+  cursor: pointer;
+  touch-action: manipulation; /* schnelles Tippen zoomt nicht */
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color 0.3s var(--ease),
+    color 0.3s var(--ease),
+    background-color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease),
+    transform 0.2s var(--ease);
+}
+.vk-pfeil:focus-visible {
+  border-radius: 999px;
+}
+@media (hover: hover) {
+  .vk-pfeil:not([aria-disabled="true"]):hover {
+    border-color: rgba(11, 11, 14, 0.2);
+  }
+}
+.vk-pfeil:not([aria-disabled="true"]):active {
+  transform: scale(0.94);
+}
+/* am Anfang oder Ende: Pfeil grau, bleibt aber fokussierbar (Fokus springt nicht weg) */
+.vk-pfeil[aria-disabled="true"] {
+  cursor: default;
+  color: rgba(11, 11, 14, 0.25);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: none;
+}
+/* Balken: welcher Teil der Reihe gerade zu sehen ist (Breite und Lage setzt VideoKarussell.tsx) */
+.vk-balken {
+  position: relative;
+  width: 96px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(11, 11, 14, 0.1);
+  overflow: hidden;
+}
+.vk-daumen {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 27.273%; /* 3 von 11, bis das Skript misst */
+  border-radius: inherit;
+  background: var(--akzent);
+}
+
+/* Tablet: zwei Karten */
+@media (max-width: 1099px) {
+  .vk-karte {
+    flex-basis: calc((100% - var(--vk-gap)) / 2);
+  }
+}
+/* Handy: Reihe läuft bis an den Bildschirmrand, eine Karte, die nächste schaut etwa 10 % herein.
+   Karte c = (Breite − Rand − Abstand) / 1,1, dann bleiben rechts 0,1 · c für die nächste Karte. */
+@media (max-width: 699px) {
+  .vk-reihe {
+    --vk-gap: 12px;
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+  }
+  .vk-karte {
+    flex-basis: calc((100% + var(--gutter) - var(--vk-gap)) / 1.1);
+  }
+  .vk-link {
+    border-radius: 18px;
+  }
+  .vk-link:focus-visible {
+    border-radius: 18px;
+  }
+  .vk .ak-play {
+    left: 10px;
+    bottom: 10px;
+    width: 36px;
+    height: 36px;
+  }
+  .vk-body {
+    padding: 14px 16px 16px;
+  }
+  .vk-datum {
+    font-size: 13px;
+  }
+  /* etwas größer: kurze Titel laufen so meist auf zwei Zeilen, die Karten wirken nicht leer */
+  .vk-titel {
+    font-size: 17px;
+    line-height: 1.35;
+  }
+  .vk-mehr {
+    padding-top: 12px;
+  }
+  /* Pfeile mittig direkt unter der Reihe (Daumen), der Kanal-Link darunter */
+  .vk-fuss {
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 22px;
+  }
 }
 /* leiser Link zum Kanal (gleiche Höhe wie die Knöpfe der Seite: Trefferfläche 44 px) */
 .ak-link {
@@ -1867,71 +1732,6 @@ a.kd-logo:focus-visible {
   .ak-link:hover {
     border-color: rgba(63, 116, 255, 0.35);
     box-shadow: var(--schatten);
-  }
-}
-/* Computer: Text und Kanal-Link links, Videos rechts */
-@media (min-width: 1000px) {
-  .ak-kasten {
-    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
-    grid-template-areas:
-      "kopf liste"
-      "mehr liste";
-    gap: 22px 44px;
-  }
-  .ak-kopf {
-    align-self: end;
-  }
-  .ak-mehr-link {
-    align-self: start;
-  }
-}
-/* Handy: Videos als flache Zeilen, Bild links, Titel rechts (die ganze Zeile ist der Link) */
-@media (max-width: 699px) {
-  .ak-kasten {
-    gap: 16px;
-  }
-  .ak-liste {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
-  }
-  .ak-zeile {
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    padding: 8px;
-    border-radius: 18px;
-  }
-  .ak-zeile:focus-visible {
-    border-radius: 18px;
-  }
-  .ak-band .ak-bild {
-    flex: 0 0 min(128px, 40%);
-    border-radius: 12px;
-  }
-  .ak-band .ak-play {
-    left: 6px;
-    bottom: 6px;
-    width: 30px;
-    height: 30px;
-  }
-  .ak-band .ak-play svg {
-    width: 14px;
-    height: 14px;
-  }
-  .ak-band .ak-body {
-    padding: 0 6px 0 0;
-  }
-  .ak-band .ak-datum {
-    font-size: 13px;
-  }
-  .ak-band .ak-titel {
-    margin-top: 3px;
-    font-size: 15px;
-    line-height: 1.35;
-    -webkit-line-clamp: 3;
-  }
-  .ak-band .ak-mehr {
-    display: none;
   }
 }
 
@@ -2248,45 +2048,11 @@ html[data-dialog-offen] {
 /* ------------------------------------------------------------ Zahnräder (Die Lösung) */
 
 /* Ab hier bringt SvH Farbe: Räder im Markenverlauf und hell mit feinem Rand, weiche Schatten.
-   Oben läuft die gestrichelte Linie aus dem Problem weiter: schwarz → Markenviolett. */
+   Oben läuft eine feine Linie aus dem Problem weiter (zr-faden, Stile in styles/problem.css). */
 .zr {
   padding-top: 0;
   padding-bottom: clamp(56px, 6.5vw, 96px);
   background: var(--page);
-}
-.zr-faden {
-  position: relative;
-  width: 40px;
-  height: clamp(64px, 6vw, 88px);
-  margin: 0 auto clamp(14px, 1.6vw, 22px);
-}
-.zr-faden svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  fill: none;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-}
-.zr-faden path {
-  vector-effect: non-scaling-stroke;
-  stroke-dasharray: 11 8;
-}
-/* die „Ameisen“ laufen einmal nach unten, sobald der Abschnitt erscheint, dann steht die Linie */
-.zr:has(.zr-kopf[data-rv="in"]) .zr-faden path {
-  animation: b-ameisen 2.4s var(--ease) backwards;
-}
-.zr-faden-spitze {
-  position: absolute;
-  left: 50%;
-  bottom: 1px;
-  width: 12px;
-  height: 12px;
-  border-top: 2.5px solid #6a55ff;
-  border-right: 2.5px solid #6a55ff;
-  transform: translate(-50%, -1px) rotate(135deg);
 }
 .zr-kopf {
   max-width: 860px;

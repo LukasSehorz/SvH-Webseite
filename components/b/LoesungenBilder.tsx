@@ -91,6 +91,14 @@ const PFADE: Record<string, ReactNode> = {
     </>
   ),
   zurueck: <path d="M14.5 5.5L8 12l6.5 6.5" />,
+  lkw: (
+    <>
+      <path d="M3 15.5V7a1.5 1.5 0 0 1 1.5-1.5h8A1.5 1.5 0 0 1 14 7v8.5" />
+      <path d="M14 9h3.6l3.4 4v2.5h-1.6M9 15.5h5.3M3 15.5h1.2" />
+      <circle cx="7" cy="16.5" r="2" />
+      <circle cx="17.3" cy="16.5" r="2" />
+    </>
+  ),
 };
 
 function Ico({ n, s = 16, w = 1.8 }: { n: string; s?: number; w?: number }) {
@@ -394,6 +402,145 @@ export function BildVoice({ anruf, agent, status }: { anruf: string; agent: stri
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------ Logistik a · Auftrag aus der E-Mail landet im TMS */
+
+export function BildAuftrag({ mail, datei, kopf, felder, fertig }: { mail: string; datei: string; kopf: string; felder: { name: string; wert: string }[]; fertig: string }) {
+  return (
+    <div className="lo-at">
+      <div className="lo-at-mail lo-glas">
+        <span className="lo-at-mail-ico">
+          <Ico n="mail" s={14} w={1.9} />
+        </span>
+        <b className="lo-at-mail-kopf">{mail}</b>
+        <span className="lo-at-datei">
+          <Ico n="dokument" s={12} w={1.9} />
+          {datei}
+        </span>
+      </div>
+      <span className="lo-at-weg">
+        <span className="lo-at-puls" />
+      </span>
+      <div className="lo-at-form lo-fenster">
+        <div className="lo-at-kopf">
+          <span className="lo-at-titel">{kopf}</span>
+          <span className="lo-at-fertig">
+            <span className="lo-at-ok">
+              <Ico n="haken" s={10} w={2.8} />
+            </span>
+            {fertig}
+          </span>
+        </div>
+        <dl className="lo-at-felder">
+          {felder.map((f, i) => (
+            <div key={f.name} className={`lo-at-feld lo-at-f${(i % 4) + 1}`}>
+              <dt>{f.name}</dt>
+              <dd>
+                <span className="lo-at-leer" />
+                <span className="lo-at-wert">{f.wert}</span>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------ Logistik b · Sendungsauskunft und Ablieferbeleg */
+
+export function BildSendung({
+  frage,
+  antwort,
+  schritte,
+  datei,
+  belegArt,
+  belegKurz,
+  zugeordnet,
+  belegSchritte,
+}: {
+  frage: string;
+  antwort: string;
+  schritte: string[];
+  datei: string;
+  belegArt: string;
+  belegKurz: string;
+  zugeordnet: string;
+  belegSchritte: string[];
+}) {
+  return (
+    <div className="lo-sd">
+      <div className="lo-sd-chat">
+        <p className="lo-sd-frage">{frage}</p>
+        <div className="lo-sd-platz">
+          <span className="lo-sd-tippt">
+            <i />
+            <i />
+            <i />
+          </span>
+          <div className="lo-sd-antwort lo-fenster">
+            <p className="lo-sd-status">
+              <span className="lo-sd-ki lo-glas">
+                <Ico n="funke" s={11} w={2} />
+              </span>
+              {antwort}
+            </p>
+            <div className="lo-sd-strecke">
+              <span className="lo-sd-linie">
+                <span className="lo-sd-fuell" />
+              </span>
+              <ol className="lo-sd-schritte">
+                {schritte.map((s, i) => (
+                  <li key={s} className={`lo-sd-schritt lo-sd-s${i + 1}`}>
+                    <span className="lo-kreis lo-sd-kreis">
+                      {i < 2 ? (
+                        <span className={`lo-kreis-ok lo-sd-ok${i + 1}`}>
+                          {i === 0 ? <Ico n="haken" s={10} w={2.6} /> : <Ico n="lkw" s={12} w={1.9} />}
+                        </span>
+                      ) : null}
+                    </span>
+                    <span className="lo-sd-name">{s}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="lo-sd-beleg lo-glas">
+        <div className="lo-sd-beleg-kopf">
+          <span className="lo-sd-beleg-ico">
+            <Ico n="dokument" s={14} w={1.9} />
+          </span>
+          {/* schmal: eine Zeile mit Haken; breit: Dateiname, darunter die drei Schritte */}
+          <span className="lo-sd-beleg-txt lo-sd-schmal">
+            <b>{belegKurz}</b>
+            <small>{zugeordnet}</small>
+          </span>
+          <span className="lo-sd-beleg-txt lo-sd-breit">
+            <b>{datei}</b>
+            <small>{belegArt}</small>
+          </span>
+          <span className="lo-sd-haken lo-sd-schmal lo-sd-b1">
+            <Ico n="haken" s={11} w={2.8} />
+          </span>
+        </div>
+        <ul className="lo-sd-beleg-liste lo-sd-breit">
+          {belegSchritte.map((s, i) => (
+            <li key={s}>
+              <span className="lo-sd-punkt">
+                <span className={`lo-sd-haken lo-sd-b${(i % 3) + 1}`}>
+                  <Ico n="haken" s={10} w={2.8} />
+                </span>
+              </span>
+              {s}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

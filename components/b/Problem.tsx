@@ -1,32 +1,85 @@
+import type { CSSProperties, ReactNode } from "react";
 import { cta } from "@/app/copy";
 import { problemB } from "@/app/copy-b";
 import Cta from "@/components/system/Cta";
-import { Grad, Kreuz, stufe } from "./ui";
+import { Grad, stufe } from "./ui";
 
-/* Problem als Schaubild, von oben nach unten (auch am Desktop, damit es mittig und ausgewogen steht):
-   zwei Studien-Kästen nebeneinander → geschwungene Linien laufen zusammen → „Was passiert, wenn du
-   nichts änderst“ → Knopf. Die Lösung mit den Gewinnen folgt in der nächsten Sektion (Zahnräder).
-   Bewusst schwarz-weiß im Comic-Stil („die graue Welt“): der einzige Abschnitt der Seite mit dicken
-   schwarzen Rahmen, gemalten Pfeilen und Strichmännchen. Farbe nur bei den Säulen (rot/grün) und den roten X. */
+/* Problem als ruhiger Befund (Runde 4, 27.10.2026, nach Lukas: „hochwertig und seriös, kein Comic“).
+   Zwei Studien-Karten nebeneinander, darunter die Folgen über die volle Breite, dann der Knopf.
+   Beide Studien sprechen dieselbe Bildsprache: Einheiten statt Säulen.
+   - McKinsey: 100 Punkte, 1 Punkt = 1 % der befragten Unternehmen (88 grau-blau, davon 7 in Markenblau)
+   - Atlassian: eine 40-Stunden-Woche als 40 Striche, die letzten 10 Stunden gedämpft rot
+   Gedämpftes Rot steht für Verlust, Markenblau für „richtig gemacht“. Stile: styles/problem.css */
 
 const s1 = problemB.studie1;
 const s2 = problemB.studie2;
-const [nutzen, richtig] = s1.balken;
 
-/** Zwei Säulen, die von unten nach oben wachsen */
-function Saeulen() {
+type Ton = "blau" | "grau" | "rot";
+
+/** Große Zahl mit kleiner Einheit, darunter die Beschriftung (mit Farbmarke = Legende zum Schaubild) */
+function Wert({ wert, einheit, label, ton, marke }: { wert: number; einheit: string; label: string; ton?: Ton; marke?: Ton }) {
   return (
-    <div className="pv-chart" role="img" aria-label={`${nutzen.wert} Prozent ${nutzen.label}, aber nur ${richtig.wert} Prozent ${richtig.label}.`}>
-      <p className="pv-vergleich" aria-hidden="true">
-        <span className="pv-vergleich-rot">{nutzen.wert}&#8239;%</span>
-        <span className="pv-vergleich-zeichen">≠</span>
-        <span className="pv-vergleich-gruen">{richtig.wert}&#8239;%</span>
-      </p>
-      <div className="pv-chart-saeulen" aria-hidden="true">
-        {s1.balken.map((b, i) => (
-          <div key={b.label} className="pv-saeule-spalte">
-            <div className={`pv-saeule pv-saeule--${b.farbe}`} style={{ "--h": `${b.wert}%`, "--d": i } as React.CSSProperties} />
-            <span className="pv-saeule-label">{b.label}</span>
+    <p className={`pb-wert${ton ? ` pb-wert--${ton}` : ""}`}>
+      {/* Tabellenziffern: eine einzelne Ziffer hat rechts Luft, die Einheit rückt dann etwas näher */}
+      <span className={`pb-zahl${wert < 10 ? " pb-zahl--einstellig" : ""}`}>
+        {wert}
+        <span className="pb-einheit">{einheit}</span>
+      </span>
+      <span className="pb-wert-label">
+        {marke ? <span className={`pb-marke pb-marke--${marke}`} /> : null}
+        {label}
+      </span>
+    </p>
+  );
+}
+
+/** 100 Punkte, spaltenweise gefüllt (liest sich von links nach rechts wie ein Balken): Handy 5 × 20, ab Tablet 4 × 25 */
+function Punkte() {
+  return (
+    <div
+      className="pb-schaubild"
+      role="img"
+      aria-label={`Von 100 befragten Unternehmen nutzen ${s1.nutzen.wert} KI. Nur ${s1.richtig.wert} haben sie richtig eingeführt.`}
+    >
+      <div className="pb-schaubild-kopf" aria-hidden="true">
+        <span>{s1.raster}</span>
+      </div>
+      <div className="pb-punkte" aria-hidden="true">
+        {Array.from({ length: 100 }, (_, i) => {
+          const art = i < s1.richtig.wert ? " pb-p--blau" : i < s1.nutzen.wert ? " pb-p--grau" : "";
+          return <span key={i} className={`pb-p${art}`} style={{ "--i": i } as CSSProperties} />;
+        })}
+      </div>
+    </div>
+  );
+}
+
+/** Arbeitswoche: 5 Tage × 8 Striche, je Strich eine Stunde. Die letzten 10 Stunden sind Suchen. */
+function Woche() {
+  const suchenAb = 40 - s2.stunden.wert;
+  return (
+    <div className="pb-schaubild" role="img" aria-label={`Von einer 40-Stunden-Woche gehen ${s2.stunden.wert} Stunden fürs Suchen drauf.`}>
+      <div className="pb-schaubild-kopf" aria-hidden="true">
+        <span>{s2.woche}</span>
+        <span className="pb-schaubild-rot">{s2.suchen}</span>
+      </div>
+      <div className="pb-tage" aria-hidden="true">
+        {s2.tage.map((tag, t) => (
+          <div key={tag} className="pb-tag">
+            <div className="pb-stunden">
+              {Array.from({ length: 8 }, (_, h) => {
+                const n = t * 8 + h;
+                const suchen = n >= suchenAb;
+                return (
+                  <span
+                    key={h}
+                    className={`pb-h${suchen ? " pb-h--suchen" : ""}`}
+                    style={suchen ? ({ "--c": n - suchenAb } as CSSProperties) : undefined}
+                  />
+                );
+              })}
+            </div>
+            <span className="pb-tag-name">{tag}</span>
           </div>
         ))}
       </div>
@@ -34,100 +87,102 @@ function Saeulen() {
   );
 }
 
-/** Ein Männchen im Comic-Stil, schwarz-weiß */
-function Figur({ weg = false }: { weg?: boolean }) {
+function Quelle({ name, href }: { name: string; href: string }) {
   return (
-    <span className={`pv-figur${weg ? " pv-figur--weg" : ""}`}>
-      <svg viewBox="0 0 60 84" width="60" height="84" aria-hidden="true">
-        <circle cx="30" cy="20" r="13" fill="#fff" stroke="#1b1640" strokeWidth="3" />
-        <path d="M25 18.5h.01M35 18.5h.01" stroke="#1b1640" strokeWidth="4" strokeLinecap="round" />
-        <path d={weg ? "M25 27q5-4 10 0" : "M25 24.5q5 5 10 0"} fill="none" stroke="#1b1640" strokeWidth="2.6" strokeLinecap="round" />
-        {/* Körper in den Markenfarben (Verlauf aus SvgDefsB), der durchgestrichene bleibt hell */}
-        <path d="M10 80c0-17 9-27 20-27s20 10 20 27z" fill={weg ? "#fff" : "url(#b-verlauf)"} stroke="#1b1640" strokeWidth="3" strokeLinejoin="round" />
-      </svg>
-      {weg ? (
-        <svg className="pv-figur-x" viewBox="0 0 60 60" width="60" height="60" aria-hidden="true">
-          <path d="M10 10l40 40M50 10L10 50" stroke="#e5262f" strokeWidth="7" strokeLinecap="round" />
+    <p className="pb-quelle">
+      <span className="pb-quelle-label">{problemB.quelleLabel}:</span>
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        {name}
+        <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
+          <path d="M5.5 4.5h6v6M11.5 4.5l-7 7" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-      ) : null}
-    </span>
+        <span className="sr-only"> (öffnet in neuem Fenster)</span>
+      </a>
+    </p>
   );
 }
 
-/** Zwei geschwungene Linien laufen von den beiden Studien zusammen und zeigen auf die Folgen */
-function Zusammenfuehrung() {
-  return (
-    <div className="pv-verbinder" aria-hidden="true">
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path d="M25 0 C 25 60, 50 40, 50 92" />
-        <path d="M75 0 C 75 60, 50 40, 50 92" />
-      </svg>
-      <span className="pv-pfeilspitze" />
-    </div>
-  );
-}
+/* feine Linien-Symbole für die Folgen */
+const SYMBOLE: Record<string, ReactNode> = {
+  uhr: (
+    <>
+      <circle cx="12" cy="12" r="8.25" />
+      <path d="M12 7.5V12l3 1.8" />
+    </>
+  ),
+  eingang: (
+    <>
+      <path d="M4 13.5h4.2l1.4 2.5h4.8l1.4-2.5H20" />
+      <path d="M6.2 5.5h11.6L20 13.5V18a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18v-4.5z" />
+    </>
+  ),
+  warnung: (
+    <>
+      <path d="M10.3 4.9a2 2 0 0 1 3.4 0l6.6 11.5a2 2 0 0 1-1.7 3H5.4a2 2 0 0 1-1.7-3z" />
+      <path d="M12 9.5v3.8M12 16.4v.1" />
+    </>
+  ),
+  trend: (
+    <>
+      <path d="M4 17l5.5-5.5 4 4L20 9" />
+      <path d="M15 9h5v5" />
+    </>
+  ),
+};
 
 export default function Problem() {
   return (
-    <section className="sb pv" id="problem" aria-labelledby="pv-titel">
-      <div className="pv-wrap">
-        <div className="pv-kopf" data-rv="">
+    <section className="sb pb" id="problem" aria-labelledby="pb-titel">
+      <div className="pb-wrap">
+        <div className="pb-kopf" data-rv="">
           <p className="b-label">{problemB.label}</p>
-          <h2 className="b-h2" id="pv-titel">
+          <h2 className="b-h2" id="pb-titel">
             <Grad text={problemB.titel} />
           </h2>
           <p className="b-lead">{problemB.text}</p>
         </div>
 
-        <div className="pv-grid">
-          <div className="pv-boxen">
-            <article className="pv-box" data-rv="">
-              <Saeulen />
-              <p className="pv-quelle">
-                {problemB.quelleLabel}:{" "}
-                <a href={s1.href} target="_blank" rel="noopener noreferrer">
-                  {s1.quelle}
-                </a>
-              </p>
-            </article>
+        <div className="pb-raster">
+          <article className="pb-karte" data-rv="">
+            <h3 className="sr-only">{s1.titel}</h3>
+            <div className="pb-werte" aria-hidden="true">
+              <Wert wert={s1.nutzen.wert} einheit="%" label={s1.nutzen.label} marke="grau" />
+              <Wert wert={s1.richtig.wert} einheit="%" label={s1.richtig.label} ton="blau" marke="blau" />
+            </div>
+            <Punkte />
+            <p className="pb-fazit pb-fazit--blau pb-ab-tablet">{s1.fazit}</p>
+            <Quelle name={s1.quelle} href={s1.href} />
+          </article>
 
-            <article className="pv-box" data-rv="" style={stufe(1)}>
-              <h3 className="pv-box-titel">{s2.titel}</h3>
-              <p className="pv-box-unter">{s2.unter}</p>
-              <div className="pv-figuren" role="img" aria-label="Von vier Mitarbeitern ist einer durchgestrichen.">
-                <Figur />
-                <Figur />
-                <Figur />
-                <Figur weg />
-              </div>
-              <p className="pv-box-fazit">{s2.fazit}</p>
-              <p className="pv-quelle">
-                {problemB.quelleLabel}:{" "}
-                <a href={s2.href} target="_blank" rel="noopener noreferrer">
-                  {s2.quelle}
-                </a>
-              </p>
-            </article>
-          </div>
+          <article className="pb-karte pb-karte--woche" data-rv="" style={stufe(1)}>
+            <h3 className="sr-only">{s2.titel}</h3>
+            <div className="pb-werte" aria-hidden="true">
+              <Wert wert={s2.stunden.wert} einheit={s2.stunden.einheit} label={s2.stunden.label} ton="rot" marke="rot" />
+              <Wert wert={s2.anteil.wert} einheit={s2.anteil.einheit} label={s2.anteil.label} />
+            </div>
+            <Woche />
+            <p className="pb-fazit">{s2.fazit}</p>
+            <Quelle name={s2.quelle} href={s2.href} />
+          </article>
 
-          <Zusammenfuehrung />
-
-          <div className="pv-folgen pv-kasten" data-rv="" style={stufe(2)}>
-            <h3 className="pv-kasten-titel">{problemB.folgen.titel}</h3>
-            <ul>
+          <div className="pb-folgen" data-rv="" style={stufe(2)}>
+            <h3 className="pb-folgen-titel">{problemB.folgen.titel}</h3>
+            <ul className="pb-folgen-liste">
               {problemB.folgen.punkte.map((p) => (
-                <li key={p}>
-                  <span className="pv-folgen-x">
-                    <Kreuz size={22} />
+                <li key={p.text}>
+                  <span className="pb-symbol" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                      {SYMBOLE[p.symbol]}
+                    </svg>
                   </span>
-                  {p}
+                  <span>{p.text}</span>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        <div className="pv-cta" data-rv="" style={stufe(3)}>
+        <div className="pb-cta" data-rv="" style={stufe(3)}>
           <Cta href="#termin">{cta.main}</Cta>
         </div>
       </div>
