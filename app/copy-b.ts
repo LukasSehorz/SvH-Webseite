@@ -188,7 +188,7 @@ export const leistungenB = {
       nr: 0,
       kurz: "KI-Workshop",
       titel: "KI-Workshop",
-      text: "Wir finden in 45 Minuten deine größten Zeitfresser. So weißt du, wo sich KI für dich lohnt.",
+      text: "Wir finden in 30 Minuten deine größten Zeitfresser. So weißt du, wo sich KI für dich lohnt.",
       einfach: "Wir schauen zusammen, wo bei dir die Zeit verloren geht. Kostenlos.",
     },
     {
@@ -231,7 +231,7 @@ export const workshopB = {
     {
       titel: "KI-Workshop",
       wann: "Dein Termin",
-      tag: "45 Minuten",
+      tag: "30 Minuten",
       text: "Das passiert im Workshop:",
       punkte: [
         "Du erzählst, wie dein Betrieb arbeitet.",
@@ -601,7 +601,7 @@ export const aktuellesB = {
 export const naechsterB = {
   titel: ["Überzeuge dich selbst.", "Ganz unverbindlich."],
   absaetze: [
-    "Um uns kennenzulernen, musst du nichts kaufen. Im kostenlosen Workshop siehst du in 45 Minuten, wie wir arbeiten und ob wir zu deinem Betrieb passen.",
+    "Um uns kennenzulernen, musst du nichts kaufen. Im kostenlosen Workshop siehst du in 30 Minuten, wie wir arbeiten und ob wir zu deinem Betrieb passen.",
     "Wir sind Lukas und Jannik. Du sprichst bei uns immer direkt mit den Gründern, vom ersten Gespräch bis zur fertigen Automatisierung.",
   ],
   telefon: "Lieber erst kurz sprechen? Ruf uns direkt an:",
@@ -650,7 +650,7 @@ export const masterplanB = {
   // Kennzeichnung über den drei Teilen (Reihenfolge)
   reihe: ["Zuerst", "Dann", "Zum Schluss"],
   preis: { label: "Wert des Masterplans", alt: "1.099\u00a0€", neu: "0\u00a0€", text: "Er gehört dir. Umsetzen kannst du ihn mit uns oder mit deinem eigenen Team." },
-  mikro: ["45\u00a0Minuten", "unverbindlich", "Plan nach 48\u00a0Std."],
+  mikro: ["30\u00a0Minuten", "unverbindlich", "Plan nach 48\u00a0Std."],
   doc: {
     titel: "KI-Masterplan",
     fuer: "für deinen Betrieb",
@@ -744,7 +744,7 @@ export const fuerWenB = {
 export const abschlussB = {
   label: "Dein Start",
   titel: "Wir stellen die KI auf, _du gewinnst die Zeit_.",
-  text: "Starte mit dem kostenlosen KI-Workshop. 45 Minuten, danach weißt du, wo dein Betrieb jede Woche Zeit verliert und was sich zuerst lohnt.",
+  text: "Starte mit dem kostenlosen KI-Workshop. 30 Minuten, danach weißt du, wo dein Betrieb jede Woche Zeit verliert und was sich zuerst lohnt.",
   punkte: ["0 € für Workshop und Masterplan", "Der Plan gehört dir, egal wie du dich entscheidest", "Geld-zurück-Garantie auf die Umsetzung"],
 };
 
